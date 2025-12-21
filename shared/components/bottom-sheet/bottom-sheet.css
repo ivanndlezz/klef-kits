@@ -1,0 +1,286 @@
+/* ==========================================
+ADAPTIVE SHEET COMPONENT STYLES
+Arquitectura modular y reutilizable
+========================================== */
+
+:root {
+  /* Variables del sistema de diseño */
+  --sheet-bg: var(--bg-primary);
+  --sheet-border: var(--border-light);
+  --sheet-shadow: var(--shadow-lg);
+  --sheet-radius: var(--radius-xl);
+  --sheet-handle-color: var(--gray-400);
+  --sheet-handle-hover: var(--gray-500);
+  --backdrop-bg: rgba(0, 0, 0, 0.5);
+  --backdrop-blur: 4px;
+  --transition-speed: var(--duration-slow);
+  --transition-easing: var(--ease-out);
+}
+
+body.sheet-open {
+  overflow: hidden;
+}
+
+/* ==========================================
+BACKDROP
+========================================== */
+.adaptive-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--backdrop-bg);
+  backdrop-filter: blur(var(--backdrop-blur));
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-speed) ease,
+    visibility var(--transition-speed) ease;
+  z-index: 998;
+}
+
+.adaptive-backdrop.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ==========================================
+SHEET BASE
+========================================== */
+.adaptive-sheet {
+  position: fixed;
+  background: var(--sheet-bg);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition-speed) var(--transition-easing);
+  overflow: hidden;
+  will-change: transform;
+}
+
+/* ==========================================
+HEADER
+========================================== */
+.sheet-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-3) var(--sp-5) var(--sp-4);
+  border-bottom: 1px solid var(--sheet-border);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.sheet-drag-handle {
+  width: 40px;
+  height: 5px;
+  background: var(--sheet-handle-color);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  transition: background 0.2s ease;
+  cursor: grab;
+}
+
+.sheet-header:active .sheet-drag-handle {
+  cursor: grabbing;
+}
+
+.sheet-drag-handle:hover {
+  background: var(--sheet-handle-hover);
+}
+
+.sheet-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.sheet-title {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.sheet-close-btn {
+  display: flex;
+  background: var(--bg-secondary);
+  border: none;
+  --wh: var(--sp-6);
+  width: var(--wh);
+  height: var(--wh);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast) var(--ease-out);
+  color: var(--text-secondary);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.sheet-close-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* ==========================================
+CONTENT AREA
+========================================== */
+.sheet-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+.sheet-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sheet-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sheet-content::-webkit-scrollbar-thumb {
+  background: var(--sheet-handle-color);
+  border-radius: 10px;
+}
+
+.sheet-content::-webkit-scrollbar-thumb:hover {
+  background: var(--sheet-handle-hover);
+}
+
+/* ==========================================
+CTA FOOTER (OPCIONAL)
+========================================== */
+.sheet-cta {
+  padding: var(--sp-4) var(--sp-5);
+  border-top: 1px solid var(--sheet-border);
+  background: var(--sheet-bg);
+  flex-shrink: 0;
+}
+
+/* ==========================================
+MOBILE: BOTTOM SHEET
+========================================== */
+@media (max-width: 767px) {
+  .adaptive-sheet {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 65vh;
+    max-height: 90vh;
+    transform: translateY(100%);
+    border-radius: var(--sheet-radius) var(--sheet-radius) 0 0;
+    box-shadow: 0 -4px 20px var(--sheet-shadow);
+    touch-action: none;
+  }
+
+  .adaptive-sheet.open {
+    transform: translateY(0);
+  }
+
+  .adaptive-sheet.full {
+    height: 95vh;
+  }
+
+  .sheet-header {
+    cursor: grab;
+  }
+
+  .sheet-header:active {
+    cursor: grabbing;
+  }
+
+  .sheet-drag-handle {
+    display: block;
+  }
+
+  .sheet-close-btn {
+    --wh: var(--sp-7);
+  }
+}
+
+/* ==========================================
+DESKTOP: SIDE PANEL
+========================================== */
+@media (min-width: 768px) {
+  .adaptive-sheet {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 480px;
+    max-width: 90vw;
+    height: 100vh;
+    transform: translateX(100%);
+    border-left: 1px solid var(--sheet-border);
+    box-shadow: -4px 0 20px var(--sheet-shadow);
+  }
+
+  .adaptive-sheet.open {
+    transform: translateX(0);
+  }
+
+  .adaptive-sheet.full {
+    width: 640px;
+  }
+
+  .sheet-header {
+    cursor: default;
+  }
+
+  .sheet-drag-handle {
+    display: none;
+  }
+}
+
+/* ==========================================
+TABLET ADJUSTMENTS
+========================================== */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .adaptive-sheet {
+    width: 420px;
+  }
+
+  .adaptive-sheet.full {
+    width: 560px;
+  }
+}
+
+/* ==========================================
+DEMO CONTENT STYLES (Remover en producción)
+========================================== */
+.demo-content {
+  padding: var(--sp-5);
+}
+
+.demo-content h3 {
+  color: var(--blue-hover);
+  margin-bottom: var(--sp-3);
+  font-size: var(--fs-lg);
+}
+
+.demo-content p {
+  line-height: var(--lh-relaxed);
+  margin-bottom: var(--sp-3);
+}
+
+.demo-item {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: solid 1px var(--bg-tertiary);
+  /*spacing*/
+  padding: var(--sp-3);
+  margin-bottom: var(--sp-2);
+}
+
+.demo-item strong {
+  display: block;
+  color: var(--text-primary);
+  margin-bottom: var(--sp-1);
+  font-size: var(--fs-sm);
+}
+
+.demo-item span {
+  color: var(--text-secondary);
+  font-size: var(--fs-base);
+}

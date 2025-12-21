@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive Sheet Component</title>
+    <link rel="stylesheet" href="../../assets/styles/design-system.css">
+    <link rel="stylesheet" href="../../../shared/components/bottom-sheet/bottom-sheet.css">
+</head>
+
+<body>
+    <!-- Demo Button -->
+    <button class="btn" onclick="sheet.open()">
+        🚀 Abrir Sheet
+    </button>
+
+    <!-- Backdrop -->
+    <div class="adaptive-backdrop" id="backdrop"></div>
+
+    <!-- Adaptive Sheet -->
+    <div class="adaptive-sheet" id="sheet">
+        <!-- Header -->
+        <div class="sheet-header" id="header">
+            <div class="sheet-drag-handle"></div>
+            <div class="sheet-title-bar">
+                <h2 class="sheet-title">Título del Sheet</h2>
+                <button class="sheet-close-btn" id="closeBtn">×</button>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="sheet-content" id="content">
+            <div class="demo-content">
+                <h3>🎯 Contenido Dinámico</h3>
+                <p>Este es un componente adaptativo que funciona como Bottom Sheet en móvil y Side Panel en desktop.</p>
+
+                <div class="demo-item">
+                    <strong>📱 Mobile (< 768px)</strong>
+                            <span>Se desliza desde abajo con drag handle</span>
+                </div>
+
+                <div class="demo-item">
+                    <strong>💻 Desktop (≥ 768px)</strong>
+                    <span>Se desliza desde la derecha con botón cerrar</span>
+                </div>
+
+                <div class="demo-item">
+                    <strong>✨ Estados</strong>
+                    <span>Normal y Full (expansión)</span>
+                </div>
+
+                <div class="demo-item">
+                    <strong>🎨 Personalizable</strong>
+                    <span>Variables CSS para colores, tamaños y animaciones</span>
+                </div>
+
+                <p>Arrastra desde el handle (móvil) o cambia el tamaño de la ventana para ver la adaptación.</p>
+
+                <h3 style="margin-top: 24px;">📋 Características</h3>
+                <p>• Drag to close/expand en mobile<br>
+                    • Soporte para touch y mouse<br>
+                    • Scroll independiente<br>
+                    • Transiciones suaves<br>
+                    • Accesible con teclado (ESC)<br>
+                    • Sin dependencias externas<br>
+                    • Arquitectura modular</p>
+            </div>
+        </div>
+
+        <!-- CTA Footer (Opcional) -->
+        <div class="sheet-cta">
+            <button class="btn" style="width: 100%; margin: 0;" onclick="sheet.close()">
+                Cerrar Sheet
+            </button>
+        </div>
+    </div>
+
+    <script src="../../../shared/components/bottom-sheet/bottom-sheet.js"></script>
+</body>
+
+</html>

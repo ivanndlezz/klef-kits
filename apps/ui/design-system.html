@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Klef Design System v2 - Demo</title>
+
+    <!-- Link al CSS del Design System -->
+    <link rel="stylesheet" href="../../assets/styles/design-system.css" />
+
+    <style>
+        /* Estilos específicos solo para esta demo */
+        .hero-gradient {
+            background: linear-gradient(135deg,
+                    rgba(0, 122, 255, 0.1) 0%,
+                    rgba(88, 86, 214, 0.1) 100%);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .code-preview {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            white-space: break-spaces;
+            margin-bottom: 1rem;
+        }
+
+        .code-keyword {
+            color: #569cd6;
+        }
+
+        .code-string {
+            color: #ce9178;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        .code-function {
+            color: #dcdcaa;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ============================================
+       NAVIGATION
+       ============================================ -->
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="#" class="nav-logo">Klef</a>
+
+            <ul class="nav-links">
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#components" class="nav-link">Components</a></li>
+                <li><a href="#examples" class="nav-link">Examples</a></li>
+                <li><a href="#docs" class="nav-link">Docs</a></li>
+            </ul>
+
+            <button class="btn btn-primary btn-sm">Get Started</button>
+        </div>
+    </nav>
+
+    <!-- ============================================
+       HERO SECTION
+       ============================================ -->
+    <section class="section-xl hero-gradient">
+        <div class="container container-lg" style="--ta: center">
+            <!-- Tag animado -->
+            <div class="animate-fade-in" style="--mb: var(--sp-5)">
+                <span style="
+              --d: inline-flex;
+              --items: center;
+              --gap: var(--sp-2);
+              --bg: var(--blue-light);
+              --c: var(--blue);
+              --py: var(--sp-2);
+              --px: var(--sp-4);
+              --br: var(--radius-full);
+              --fs: var(--fs-sm);
+              --fw: var(--fw-medium);
+            ">
+                    ✨ Nuevo: Design System v2
+                </span>
+            </div>
+
+            <!-- Título principal -->
+            <h1 class="display-xl animate-fade-in delay-1" style="--mb: var(--sp-4)">
+                Variable-Driven<br />
+                Design System
+            </h1>
+
+            <!-- Descripción -->
+            <p class="body-lg animate-fade-in delay-2" style="
+            --c: var(--text-secondary);
+            --max-w: 700px;
+            --mx: auto;
+            --mb: var(--sp-7);
+            --lh: var(--lh-relaxed);
+          ">
+                Un sistema de diseño moderno y declarativo inspirado en Apple.
+                Construye interfaces elegantes usando CSS variables en lugar de clases
+                utilitarias infinitas.
+            </p>
+
+            <!-- CTAs -->
+            <div class="animate-fade-in delay-3" style="
+            --flex: 1;
+            --gap: var(--sp-4);
+            --justify: center;
+            --flex-wrap: wrap;
+            --mb: var(--sp-9);
+          ">
+                <button class="btn btn-primary btn-lg" onclick="scrollToSection('features')">
+                    Explorar Features
+                </button>
+                <button class="btn btn-secondary btn-lg" onclick="openModal()">
+                    Ver Documentación
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="animate-fade-in delay-4" style="
+            --grid: 1;
+            --cols: repeat(3, 1fr);
+            --gap: var(--sp-6);
+            --max-w: 800px;
+            --mx: auto;
+          ">
+                <div style="
+              --p: var(--sp-5);
+              --bg: var(--bg-primary);
+              --br: var(--radius-lg);
+              --shadow: var(--shadow-md);
+            ">
+                    <div class="stat-number">50+</div>
+                    <p style="--c: var(--text-secondary); --fs: var(--fs-base)">
+                        Components
+                    </p>
+                </div>
+
+                <div style="
+              --p: var(--sp-5);
+              --bg: var(--bg-primary);
+              --br: var(--radius-lg);
+              --shadow: var(--shadow-md);
+            ">
+                    <div class="stat-number">14</div>
+                    <p style="--c: var(--text-secondary); --fs: var(--fs-base)">
+                        Variable Categories
+                    </p>
+                </div>
+
+                <div style="
+              --p: var(--sp-5);
+              --bg: var(--bg-primary);
+              --br: var(--radius-lg);
+              --shadow: var(--shadow-md);
+            ">
+                    <div class="stat-number">100%</div>
+                    <p style="--c: var(--text-secondary); --fs: var(--fs-base)">
+                        Declarativo
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+       FEATURES SECTION
+       ============================================ -->
+    <section id="features" class="section-lg">
+        <div class="container container-lg">
+            <!-- Header -->
+            <div style="--ta: center; --mb: var(--sp-8)">
+                <span class="badge badge-purple" style="--mb: var(--sp-3)">CARACTERÍSTICAS</span>
+                <h2 class="headline-xl" style="--mb: var(--sp-4)">
+                    Por qué elegir Klef v2
+                </h2>
+                <p class="body-lg" style="--c: var(--text-secondary); --max-w: 600px; --mx: auto">
+                    Un enfoque revolucionario para construir interfaces modernas
+                </p>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="bento-grid">
+                <!-- Feature 1 - Hero -->
+                <div class="bento-hero card card-interactive animate-slide-up delay-1" style="
+              --p: var(--sp-6);
+              --bg: linear-gradient(135deg, var(--blue), var(--purple));
+            ">
+                    <div class="feature-icon" style="--mb: var(--sp-4)">🎨</div>
+                    <h3 class="headline-md" style="--mb: var(--sp-3)">Declarativo</h3>
+                    <p style="--opacity: 0.9; --lh: var(--lh-relaxed)">
+                        Define qué necesitas, no cómo implementarlo. Las variables CSS
+                        hacen el trabajo pesado.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bento-square card card-interactive animate-slide-up delay-2" style="--p: var(--sp-5)">
+                    <div class="feature-icon" style="--mb: var(--sp-3)">⚡</div>
+                    <h3 style="
+                --fs: var(--fs-xl);
+                --fw: var(--fw-semibold);
+                --mb: var(--sp-2);
+              ">
+                        Rápido
+                    </h3>
+                    <p style="--c: var(--text-secondary); --fs: var(--fs-sm)">
+                        Optimizado para rendimiento con GPU acceleration
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bento-square card card-interactive animate-slide-up delay-3" style="--p: var(--sp-5)">
+                    <div class="feature-icon" style="--mb: var(--sp-3)">🧩</div>
+                    <h3 style="
+                --fs: var(--fs-xl);
+                --fw: var(--fw-semibold);
+                --mb: var(--sp-2);
+              ">
+                        Composable
+                    </h3>
+                    <p style="--c: var(--text-secondary); --fs: var(--fs-sm)">
+                        Combina variables libremente sin conflictos
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="bento-wide card card-interactive animate-slide-up delay-4"
+                    style="--p: var(--sp-5); --bg: var(--green-light)">
+                    <div style="--flex: 1; --items: center; --gap: var(--sp-4)">
+                        <div class="feature-icon">📱</div>
+                        <div>
+                            <h3 style="
+                    --fs: var(--fs-xl);
+                    --fw: var(--fw-semibold);
+                    --mb: var(--sp-1);
+                  ">
+                                Responsive
+                            </h3>
+                            <p style="--c: var(--text-secondary)">
+                                Mobile-first y totalmente adaptable
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="bento-tall card card-interactive animate-slide-up delay-5" style="
+              --p: var(--sp-5);
+              --bg: var(--pink-light);
+              --flex: 1;
+              --flex-col: 1;
+              --justify: space-between;
+            ">
+                    <div>
+                        <div class="feature-icon" style="--mb: var(--sp-3)">🎯</div>
+                        <h3 style="
+                  --fs: var(--fs-xl);
+                  --fw: var(--fw-semibold);
+                  --mb: var(--sp-2);
+                ">
+                            Token-First
+                        </h3>
+                        <p style="--c: var(--text-secondary); --fs: var(--fs-sm)">
+                            Todos los valores vienen de design tokens consistentes
+                        </p>
+                    </div>
+                    <div class="badge badge-pink" style="--mt: var(--sp-4)">
+                        Apple-Inspired
+                    </div>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="bento-square card card-interactive animate-slide-up delay-6" style="--p: var(--sp-5)">
+                    <div class="feature-icon" style="--mb: var(--sp-3)">♿</div>
+                    <h3 style="
+                --fs: var(--fs-xl);
+                --fw: var(--fw-semibold);
+                --mb: var(--sp-2);
+              ">
+                        Accesible
+                    </h3>
+                    <p style="--c: var(--text-secondary); --fs: var(--fs-sm)">
+                        WCAG AA compliant y keyboard-friendly
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+       COMPONENTS SHOWCASE
+       ============================================ -->
+    <section id="components" class="section-lg" style="--bg: var(--bg-secondary)">
+        <div class="container container-lg">
+            <!-- Header -->
+            <div style="--ta: center; --mb: var(--sp-8)">
+                <span class="badge badge-blue" style="--mb: var(--sp-3)">COMPONENTES</span>
+                <h2 class="headline-xl" style="--mb: var(--sp-4)">
+                    Librería completa
+                </h2>
+                <p class="body-lg" style="--c: var(--text-secondary); --max-w: 600px; --mx: auto">
+                    Más de 50 componentes listos para usar
+                </p>
+            </div>
+
+            <!-- Components Grid -->
+            <div style="--grid: 1; --cols: repeat(2, 1fr); --gap: var(--sp-6)">
+                <!-- Buttons -->
+                <div class="card" style="--p: var(--sp-6)">
+                    <h3 style="
+                --fs: var(--fs-xl);
+                --fw: var(--fw-semibold);
+                --mb: var(--sp-4);
+              ">
+                        Buttons
+                    </h3>
+                    <div style="--flex: 1; --gap: var(--sp-3); --flex-wrap: wrap">
+                        <button class="btn btn-primary">Primary</button>
+                        <button class="btn btn-secondary">Secondary</button>
+                        <button class="btn btn-ghost">Ghost</button>
+                        <button class="btn btn-primary btn-sm">Small</button>
+                    </div>
+                </div>
+
+                <!-- Badges -->
+                <div class="card" style="--p: var(--sp-6)">
+                    <h3 style="
+                --fs: var(--fs-xl);
+                --fw: var(--fw-semibold);
+                --mb: var(--sp-4);
+              ">
+                        Badges
+                    </h3>
+                    <div style="
+                --flex: 1;
+                --gap: var(--sp-3);
+                --flex-wrap: wrap;
+                --items: center;
+              ">
+                        <span class="badge badge-blue">Blue</span>
+                        <span class="badge badge-green">Green</span>
+                        <span class="badge badge-orange">Orange</span>
+                        <span class="badge badge-red">Red</span>
+                        <span class="badge badge-purple">Purple</span>
+                        <span class="badge badge-pink">Pink</span>
+                    </div>
+                </div>
+
+                <!-- Forms -->
+                <div class="card" style="--p: var(--sp-6)">
+                    <h3 style="
+                --fs: var(--fs-xl);
+                --fw: var(--fw-semibold);
+                --mb: var(--sp-4);
+              ">
+                        Forms
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="tu@email.com" />
+                    </div>
+                    <div class="form-group" style="--mb: 0">
+                        <label class="form-label">Mensaje</label>
+                        <textarea class="form-textarea" placeholder="Escribe aquí..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Alerts -->
+                <div class="card" style="--p: var(--sp-6)">
+                    <h3 style="
+                --fs: var(--fs-xl);
+                --fw: var(--fw-semibold);
+                --mb: var(--sp-4);
+              ">
+                        Alerts
+                    </h3>
+                    <div style="--flex: 1; --flex-col: 1; --gap: var(--sp-3)">
+                        <div class="alert alert-info">
+                            <span>ℹ️</span>
+                            <span>Información importante</span>
+                        </div>
+                        <div class="alert alert-success">
+                            <span>✅</span>
+                            <span>Operación exitosa</span>
+                        </div>
+                        <div class="alert alert-warning">
+                            <span>⚠️</span>
+                            <span>Ten cuidado con esto</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+       CODE EXAMPLES
+       ============================================ -->
+    <section id="examples" class="section-lg">
+        <div class="container container-lg">
+            <!-- Header -->
+            <div style="--ta: center; --mb: var(--sp-8)">
+                <span class="badge badge-orange" style="--mb: var(--sp-3)">CÓDIGO</span>
+                <h2 class="headline-xl" style="--mb: var(--sp-4)">Así de simple</h2>
+                <p class="body-lg" style="--c: var(--text-secondary); --max-w: 600px; --mx: auto">
+                    Compara el enfoque tradicional con Klef v2
+                </p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs" id="codeTabs" style="--mb: var(--sp-5)">
+                <button class="tab active" onclick="switchTab(0)">Variables</button>
+                <button class="tab" onclick="switchTab(1)">Flexbox</button>
+                <button class="tab" onclick="switchTab(2)">Grid</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content active" id="tab0">
+                <div class="code-preview">
+                    <span class="code-comment"><!-- Enfoque tradicional --></span>
+                    <span class="code-keyword">&lt;div</span>
+                    <span class="code-function">class</span>=<span class="code-string">"p-6 bg-gray-100 rounded-lg
+                        shadow-md"</span><span class="code-keyword">&gt;</span>
+                    Contenido
+                    <span class="code-keyword">&lt;/div&gt;</span>
+
+                    <span class="code-comment"><!-- Enfoque Klef v2 (Variable-Driven) --></span>
+                    <span class="code-keyword">&lt;div</span>
+                    <span class="code-function">style</span>=<span class="code-string">"--p:var(--sp-6);
+                        --bg:var(--bg-secondary);
+                        --br:var(--radius-lg); --shadow:var(--shadow-md)"</span><span class="code-keyword">&gt;</span>
+                    Contenido
+                    <span class="code-keyword">&lt;/div&gt;</span>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab1">
+                <div class="code-preview">
+                    <span class="code-comment"><!-- Tradicional --></span>
+                    <span class="code-keyword">&lt;div</span>
+                    <span class="code-function">class</span>=<span class="code-string">"flex items-center
+                        justify-between gap-4"</span><span class="code-keyword">&gt;</span>
+
+                    <span class="code-comment"><!-- Klef v2 --></span>
+                    <span class="code-keyword">&lt;div</span>
+                    <span class="code-function">style</span>=<span class="code-string">"--flex; --items:center;
+                        --justify:space-between;
+                        --gap:var(--sp-4)"</span><span class="code-keyword">&gt;</span>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab2">
+                <div class="code-preview">
+                    <span class="code-comment"><!-- Tradicional --></span>
+                    <span class="code-keyword">&lt;div</span>
+                    <span class="code-function">class</span>=<span class="code-string">"grid grid-cols-3
+                        gap-6"</span><span class="code-keyword">&gt;</span>
+                    <span class="code-keyword">&lt;/div&gt;</span>
+
+                    <span class="code-comment"><!-- Klef v2 --></span>
+                    <span class="code-keyword">&lt;div</span>
+                    <span class="code-function">style</span>=<span class="code-string">"--grid; --cols:repeat(3, 1fr);
+                        --gap:var(--sp-6)"</span><span class="code-keyword">&gt;</span><span
+                        class="code-keyword">&lt;/div&gt;</span>
+                    <span class="code-keyword">&lt;/div&gt;</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+       INTERACTIVE DEMO
+       ============================================ -->
+    <section class="section-lg" style="--bg: var(--bg-secondary)">
+        <div class="container container-lg">
+            <!-- Header -->
+            <div style="--ta: center; --mb: var(--sp-8)">
+                <span class="badge badge-green" style="--mb: var(--sp-3)">INTERACTIVO</span>
+                <h2 class="headline-xl" style="--mb: var(--sp-4)">
+                    Prueba los componentes
+                </h2>
+            </div>
+
+            <!-- Interactive Cards -->
+            <div style="--grid: 1; --cols: repeat(3, 1fr); --gap: var(--sp-5)">
+                <div class="card card-interactive" style="--p: var(--sp-6)" onclick="showAlert('info')">
+                    <div style="
+                --w: 48px;
+                --h: 48px;
+                --bg: var(--blue-light);
+                --br: var(--radius-md);
+                --flex: 1;
+                --items: center;
+                --justify: center;
+                --mb: var(--sp-4);
+                --fs: var(--fs-2xl);
+              ">
+                        💡
+                    </div>
+                    <h3 style="
+                --fs: var(--fs-lg);
+                --fw: var(--fw-semibold);
+                --mb: var(--sp-2);
+              ">
+                        Info Alert
+                    </h3>
+                    <p style="--c: var(--text-secondary); --fs: var(--fs-sm)">
+                        Click para mostrar
+                    </p>
+                </div>
+
+                <div class="card card-interactive" style="--p: var(--sp-6)" onclick="openModal()">
+                    <div style="
+                --w: 48px;
+                --h: 48px;
+                --bg: var(--purple-light);
+                --br: var(--radius-md);
+                --flex: 1;
+                --items: center;
+                --justify: center;
+                --mb: var(--sp-4);
+                --fs: var(--fs-2xl);
+              ">
+                        🪟
+                    </div>
+                    <h3 style="
+                --fs: var(--fs-lg);
+                --fw: var(--fw-semibold);
+                --mb: var(--sp-2);
+              ">
+                        Modal
+                    </h3>
+                    <p style="--c: var(--text-secondary); --fs: var(--fs-sm)">
+                        Click para abrir
+                    </p>
+                </div>
+
+                <div class="card card-interactive" style="--p: var(--sp-6)" onclick="toggleAccordion()">
+                    <div style="
+                --w: 48px;
+                --h: 48px;
+                --bg: var(--orange-light);
+                --br: var(--radius-md);
+                --flex: 1;
+                --items: center;
+                --justify: center;
+                --mb: var(--sp-4);
+                --fs: var(--fs-2xl);
+              ">
+                        📋
+                    </div>
+                    <h3 style="
+                --fs: var(--fs-lg);
+                --fw: var(--fw-semibold);
+                --mb: var(--sp-2);
+              ">
+                        Accordion
+                    </h3>
+                    <p style="--c: var(--text-secondary); --fs: var(--fs-sm)">
+                        Click para toggle
+                    </p>
+                </div>
+            </div>
+
+            <!-- Alert Container -->
+            <div id="alertContainer" style="
+            --pos: fixed;
+            --bottom: var(--sp-5);
+            --right: var(--sp-5);
+            --z: var(--z-toast);
+            --w: 350px;
+          "></div>
+
+            <!-- Accordion Demo -->
+            <div class="accordion" id="demoAccordion" style="--mt: var(--sp-8); --hidden: 1">
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span>¿Qué es Klef Design System?</span>
+                        <span>▼</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            Es un sistema de diseño variable-driven inspirado en Apple, que
+                            te permite construir interfaces modernas usando CSS variables en
+                            lugar de clases utilitarias.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+       FOOTER / CTA
+       ============================================ -->
+    <section class="section-xl" style="
+        --bg: linear-gradient(135deg, var(--k-black), var(--gray-800));
+        --c: var(--white);
+        --ta: center;
+      ">
+        <div class="container container-lg">
+            <h2 class="display-md" style="--mb: var(--sp-4)">
+                Comienza a construir hoy
+            </h2>
+
+            <p class="body-lg" style="--opacity: 0.9; --max-w: 600px; --mx: auto; --mb: var(--sp-7)">
+                Descarga Klef Design System v2 y transforma la forma en que construyes
+                interfaces
+            </p>
+
+            <div style="
+            --flex: 1;
+            --gap: var(--sp-4);
+            --justify: center;
+            --flex-wrap: wrap;
+          ">
+                <button class="btn btn-primary btn-lg">Descargar ahora</button>
+                <button class="btn btn-secondary btn-lg" style="--c: var(--white); --b: 1px solid var(--white)">
+                    Ver en GitHub
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+       MODAL
+       ============================================ -->
+    <div class="modal-overlay" id="demoModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Documentación</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <h4 style="
+              --fs: var(--fs-lg);
+              --fw: var(--fw-semibold);
+              --mb: var(--sp-3);
+            ">
+                    Filosofía del Sistema
+                </h4>
+                <p style="--mb: var(--sp-4); --lh: var(--lh-relaxed)">
+                    Klef v2 se basa en una idea central:
+                    <strong>"Si una variable existe, el estilo se aplica"</strong>. No
+                    hay clases obligatorias. No hay combinaciones infinitas de
+                    utilities. Solo variables CSS declarativas.
+                </p>
+
+                <h4 style="
+              --fs: var(--fs-lg);
+              --fw: var(--fw-semibold);
+              --mb: var(--sp-3);
+            ">
+                    Principios Clave
+                </h4>
+                <ul style="
+              --mb: var(--sp-4);
+              --pl: var(--sp-5);
+              --lh: var(--lh-relaxed);
+            ">
+                    <li style="--mb: var(--sp-2)">
+                        <strong>Declarativo:</strong> El HTML describe qué necesita el
+                        componente
+                    </li>
+                    <li style="--mb: var(--sp-2)">
+                        <strong>Token-first:</strong> Todos los valores vienen de design
+                        tokens
+                    </li>
+                    <li style="--mb: var(--sp-2)">
+                        <strong>Composable:</strong> Las variables se combinan libremente
+                    </li>
+                    <li style="--mb: var(--sp-2)">
+                        <strong>Escalable:</strong> Ideal para CMS y sistemas grandes
+                    </li>
+                </ul>
+
+                <div class="alert alert-info">
+                    <span>💡</span>
+                    <span>Las clases definen intención. Las variables definen
+                        comportamiento.</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeModal()">Cerrar</button>
+                <button class="btn btn-primary">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+       JAVASCRIPT
+       ============================================ -->
+    <script>
+        // Smooth scroll
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+
+        // Tab switching
+        function switchTab(index) {
+            // Remove active from all tabs and contents
+            document
+                .querySelectorAll(".tab")
+                .forEach((tab) => tab.classList.remove("active"));
+            document
+                .querySelectorAll(".tab-content")
+                .forEach((content) => content.classList.remove("active"));
+
+            // Add active to selected
+            document.querySelectorAll(".tab")[index].classList.add("active");
+            document.getElementById(`tab${index}`).classList.add("active");
+        }
+
+        // Modal
+        function openModal() {
+            document.getElementById("demoModal").classList.add("active");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+            document.getElementById("demoModal").classList.remove("active");
+            document.body.style.overflow = "";
+        }
+
+        // Close modal on overlay click
+        document
+            .getElementById("demoModal")
+            .addEventListener("click", function (e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+
+        // Close modal with ESC key
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") {
+                closeModal();
+            }
+        });
+
+        // Alert system
+        function showAlert(type) {
+            const container = document.getElementById("alertContainer");
+
+            const alerts = {
+                info: {
+                    icon: "ℹ️",
+                    text: "Esta es una alerta informativa",
+                    class: "alert-info",
+                },
+                success: {
+                    icon: "✅",
+                    text: "Operación completada con éxito",
+                    class: "alert-success",
+                },
+                warning: {
+                    icon: "⚠️",
+                    text: "Advertencia importante",
+                    class: "alert-warning",
+                },
+                error: {
+                    icon: "❌",
+                    text: "Ha ocurrido un error",
+                    class: "alert-error",
+                },
+            };
+
+            const alertData = alerts[type] || alerts.info;
+
+            const alertEl = document.createElement("div");
+            alertEl.className = `alert ${alertData.class}`;
+            alertEl.style.cssText =
+                "--mb:var(--sp-3); --shadow:var(--shadow-xl); animation: slideInUp 0.3s ease; --blur: 24px";
+            alertEl.innerHTML = `
+        <span>${alertData.icon}</span>
+        <span>${alertData.text}</span>
+        <button onclick="this.parentElement.remove()" style="margin-left: auto; background: transparent; border: none; cursor: pointer; font-size: 1.2rem; opacity: 0.7;">×</button>
+      `;
+
+            container.appendChild(alertEl);
+
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (alertEl.parentElement) {
+                    alertEl.style.animation = "fadeOut 0.3s ease";
+                    setTimeout(() => alertEl.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        // Accordion
+        function toggleAccordion() {
+            const accordion = document.getElementById("demoAccordion");
+            const item = accordion.querySelector(".accordion-item");
+
+            // Show accordion if hidden
+            accordion.style.removeProperty("--hidden");
+
+            // Toggle item
+            item.classList.toggle("active");
+        }
+
+        // Active nav link on scroll
+        window.addEventListener("scroll", () => {
+            const sections = ["features", "components", "examples"];
+            let current = "";
+
+            sections.forEach((sectionId) => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    const sectionTop = section.offsetTop;
+                    if (window.scrollY >= sectionTop - 100) {
+                        current = sectionId;
+                    }
+                }
+            });
+
+            document.querySelectorAll(".nav-link").forEach((link) => {
+                link.classList.remove("active");
+                if (link.getAttribute("href") === `#${current}`) {
+                    link.classList.add("active");
+                }
+            });
+        });
+
+        // Add fadeOut animation
+        const style = document.createElement("style");
+        style.textContent = `
+      @keyframes fadeOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-10px); }
+      }
+      
+      @keyframes slideInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    `;
+        document.head.appendChild(style);
+
+        // Console welcome message
+        console.log(
+            "%c🎨 Klef Design System v2",
+            "font-size: 20px; font-weight: bold; color: #007aff;"
+        );
+        console.log(
+            "%cVariable-Driven CSS Architecture",
+            "font-size: 14px; color: #6e6e73;"
+        );
+        console.log(
+            "%c\nPrueba estos comandos:",
+            "font-size: 12px; color: #2ecc71;"
+        );
+        console.log('showAlert("success") - Mostrar alerta de éxito');
+        console.log("openModal() - Abrir modal");
+        console.log("toggleAccordion() - Toggle accordion");
+    </script>
+</body>
+
+</html>
