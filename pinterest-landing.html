@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinterest - Inspírate y crea</title>
+    <link rel="stylesheet" href="assets/styles/design-system.css">
+    <link rel="stylesheet" href="assets/styles/css-short.css">
+    <style>
+        /* Pinterest-specific styles using Klef variables */
+        .pinterest-red {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .pinterest-black {
+            background: var(--k-black);
+            color: var(--white);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: var(--sp-3);
+            padding: var(--sp-3);
+            border-radius: var(--radius-xl);
+            background: var(--gray-100);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0;
+            margin: 0;
+            border: none;
+            background: transparent;
+            font-size: var(--fs-base);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .search-btn {
+            padding: 0;
+            margin: 0;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .hero {
+            padding-block: var(--sp-10);
+            text-align: center;
+            background: linear-gradient(135deg, var(--red), var(--pink));
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: var(--fw-bold);
+            color: var(--white);
+            margin-bottom: var(--sp-4);
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: var(--fs-xl);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: var(--sp-6);
+            max-width: 600px;
+            margin-inline: auto;
+        }
+
+        .categories {
+            padding-block: var(--sp-8);
+            background: var(--bg-secondary);
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--sp-4);
+            max-width: 1200px;
+            margin-inline: auto;
+        }
+
+        .category-card {
+            padding: var(--sp-4);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            transition: all var(--duration-base);
+        }
+
+        .category-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .pin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--sp-4);
+            max-width: 1400px;
+            margin-inline: auto;
+            padding-block: var(--sp-8);
+        }
+
+        .pin-card {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--duration-base);
+            background: var(--white);
+        }
+
+        .pin-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .pin-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .footer {
+            padding-block: var(--sp-8);
+            background: var(--k-black);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--sp-4);
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--sp-6);
+        }
+
+        .nav-links.hidden {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--white);
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div style="--flex:1; --items:center; --g:var(--sp-4)">
+            <div style="--fs:var(--fs-2xl); --fw:var(--fw-bold); --c:var(--red)">Pinterest</div>
+            <div class="nav-links">
+                <a href="#" style="--c:var(--text-primary); --td:none; --fs:var(--fs-base)">Inicio</a>
+                <a href="#" style="--c:var(--text-primary); --td:none; --fs:var(--fs-base)">Explorar</a>
+                <a href="#" style="--c:var(--text-primary); --td:none; --fs:var(--fs-base)">Crear</a>
+            </div>
+        </div>
+        <div style="--flex:1; --items:center; --g:var(--sp-4)">
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Buscar ideas">
+                <button class="search-btn">🔍</button>
+            </div>
+            <button class="btn pinterest-red">Iniciar sesión</button>
+            <button class="btn pinterest-black">Registrarse</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">Encuentra tu próxima inspiración</h1>
+            <p class="hero-subtitle">Descubre millones de ideas creativas para tu hogar, estilo y vida</p>
+            <div style="--flex:1; --g:var(--sp-3); --justify:center; --flex:1-wrap">
+                <button class="btn btn-primary" style="--bg:var(--white); --c:var(--red)">Explorar</button>
+                <button class="btn btn-secondary"
+                    style="--bd:2px solid var(--white); --c:var(--white); --bg:transparent">Crear tablero</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <div class="container">
+            <h2 style="--fs:var(--fs-3xl); --fw:var(--fw-semibold); --ta:center; --mb:var(--sp-6)">Explora categorías
+            </h2>
+            <div class="category-grid">
+                <div class="category-card">
+                    <div style="--fs:var(--fs-4xl); --mb:var(--sp-2)">🏠</div>
+                    <h3 style="--fs:var(--fs-lg); --fw:var(--fw-medium)">Hogar y jardín</h3>
+                </div>
+                <div class="category-card">
+                    <div style="--fs:var(--fs-4xl); --mb:var(--sp-2)">👗</div>
+                    <h3 style="--fs:var(--fs-lg); --fw:var(--fw-medium)">Moda</h3>
+                </div>
+                <div class="category-card">
+                    <div style="--fs:var(--fs-4xl); --mb:var(--sp-2)">🍳</div>
+                    <h3 style="--fs:var(--fs-lg); --fw:var(--fw-medium)">Cocina</h3>
+                </div>
+                <div class="category-card">
+                    <div style="--fs:var(--fs-4xl); --mb:var(--sp-2)">🎨</div>
+                    <h3 style="--fs:var(--fs-lg); --fw:var(--fw-medium)">Arte</h3>
+                </div>
+                <div class="category-card">
+                    <div style="--fs:var(--fs-4xl); --mb:var(--sp-2)">💼</div>
+                    <h3 style="--fs:var(--fs-lg); --fw:var(--fw-medium)">Trabajo</h3>
+                </div>
+                <div class="category-card">
+                    <div style="--fs:var(--fs-4xl); --mb:var(--sp-2)">✈️</div>
+                    <h3 style="--fs:var(--fs-lg); --fw:var(--fw-medium)">Viajes</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pin Grid -->
+    <section style="--bg:var(--bg-primary)">
+        <div class="container">
+            <h2 style="--fs:var(--fs-3xl); --fw:var(--fw-semibold); --ta:center; --mb:var(--sp-6)">Ideas para ti</h2>
+            <div class="pin-grid">
+                <div class="pin-card">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop"
+                        alt="Mountain landscape" class="pin-img">
+                    <div style="--p:var(--sp-3)">
+                        <p style="--fs:var(--fs-sm); --c:var(--text-secondary)">Viajes • Naturaleza</p>
+                    </div>
+                </div>
+                <div class="pin-card">
+                    <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=500&fit=crop"
+                        alt="Modern kitchen" class="pin-img">
+                    <div style="--p:var(--sp-3)">
+                        <p style="--fs:var(--fs-sm); --c:var(--text-secondary)">Hogar • Cocina</p>
+                    </div>
+                </div>
+                <div class="pin-card">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=550&fit=crop"
+                        alt="Fashion outfit" class="pin-img">
+                    <div style="--p:var(--sp-3)">
+                        <p style="--fs:var(--fs-sm); --c:var(--text-secondary)">Moda • Estilo</p>
+                    </div>
+                </div>
+                <div class="pin-card">
+                    <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=450&fit=crop"
+                        alt="Art painting" class="pin-img">
+                    <div style="--p:var(--sp-3)">
+                        <p style="--fs:var(--fs-sm); --c:var(--text-secondary)">Arte • Creatividad</p>
+                    </div>
+                </div>
+                <div class="pin-card">
+                    <img src="https://images.unsplash.com/photo-1486312338219-ce68e2c6f44d?w=400&h=650&fit=crop"
+                        alt="Workspace" class="pin-img">
+                    <div style="--p:var(--sp-3)">
+                        <p style="--fs:var(--fs-sm); --c:var(--text-secondary)">Trabajo • Productividad</p>
+                    </div>
+                </div>
+                <div class="pin-card">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=500&fit=crop"
+                        alt="Beach vacation" class="pin-img">
+                    <div style="--p:var(--sp-3)">
+                        <p style="--fs:var(--fs-sm); --c:var(--text-secondary)">Viajes • Playa</p>
+                    </div>
+                </div>
+                <div class="pin-card">
+                    <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=600&fit=crop"
+                        alt="Interior design" class="pin-img">
+                    <div style="--p:var(--sp-3)">
+                        <p style="--fs:var(--fs-sm); --c:var(--text-secondary)">Hogar • Decoración</p>
+                    </div>
+                </div>
+                <div class="pin-card">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=480&fit=crop"
+                        alt="Street fashion" class="pin-img">
+                    <div style="--p:var(--sp-3)">
+                        <p style="--fs:var(--fs-sm); --c:var(--text-secondary)">Moda • Urbano</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div style="--fs:var(--fs-2xl); --fw:var(--fw-bold); --mb:var(--sp-4)">Pinterest</div>
+            <p style="--fs:var(--fs-base); --c:var(--gray-400); --mb:var(--sp-4)">Conecta con ideas creativas</p>
+            <div style="--flex:1; --g:var(--sp-6); --justify:center; --flex:1-wrap">
+                <a href="#" style="--c:var(--gray-400); --td:none">Sobre nosotros</a>
+                <a href="#" style="--c:var(--gray-400); --td:none">Ayuda</a>
+                <a href="#" style="--c:var(--gray-400); --td:none">Política de privacidad</a>
+                <a href="#" style="--c:var(--gray-400); --td:none">Términos</a>
+            </div>
+            <p style="--fs:var(--fs-sm); --c:var(--gray-500); --mt:var(--sp-4)">© 2024 Pinterest. Todos los derechos
+                reservados.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

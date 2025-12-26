@@ -84,7 +84,7 @@ class AdaptiveSheet {
       }
     });
 
-    console.log("✅ AdaptiveSheet initialized");
+    //console.log("✅ AdaptiveSheet initialized");
   }
 
   // ==========================================
@@ -112,7 +112,7 @@ class AdaptiveSheet {
 
     if (this.onOpen) this.onOpen();
 
-    console.log("📱 Sheet opened");
+    //console.log("📱 Sheet opened");
   }
 
   close() {
@@ -126,18 +126,18 @@ class AdaptiveSheet {
 
     if (this.onClose) this.onClose();
 
-    console.log("❌ Sheet closed");
+    //console.log("❌ Sheet closed");
   }
 
   setState(state) {
     if (state === "FULL") {
       this.sheet.classList.add("full");
       this.state = "FULL";
-      console.log("⬆️ Sheet expanded to FULL");
+      //console.log("⬆️ Sheet expanded to FULL");
     } else if (state === "NORMAL") {
       this.sheet.classList.remove("full");
       this.state = "NORMAL";
-      console.log("⬇️ Sheet reduced to NORMAL");
+      //console.log("⬇️ Sheet reduced to NORMAL");
     }
 
     if (this.onStateChange) this.onStateChange(state);
@@ -268,7 +268,7 @@ class AdaptiveSheet {
 
   destroy() {
     // Cleanup event listeners
-    console.log("🗑️ AdaptiveSheet destroyed");
+    //console.log("🗑️ AdaptiveSheet destroyed");
   }
 }
 
@@ -284,14 +284,12 @@ const sheet = new AdaptiveSheet({
   closeBtnId: "closeBtn",
   contentId: "content",
   swipeThreshold: 100,
-  onOpen: () => console.log("🎉 Sheet abierto"),
-  onClose: () => console.log("👋 Sheet cerrado"),
-  onStateChange: (state) => console.log(`🔄 Estado cambiado a: ${state}`),
+  //onOpen: () => console.log("🎉 Sheet abierto"),
+  //onClose: () => console.log("👋 Sheet cerrado"),
+  //onStateChange: (state) => console.log(`🔄 Estado cambiado a: ${state}`),
 });
 
 // Exponer globalmente para uso en consola/debugging
 window.sheet = sheet;
 
-console.log(
-  "🚀 Demo listo - Prueba: sheet.open(), sheet.close(), sheet.toggleFull()"
-);
+//console.log("🚀 Demo listo - Prueba: sheet.open(), sheet.close(), sheet.toggleFull()");

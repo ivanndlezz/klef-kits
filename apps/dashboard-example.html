@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Klef CSS</title>
+    <link rel="stylesheet" href="../assets/styles/design-system.css">
+    <link rel="stylesheet" href="../assets/styles/css-short.css">
+    <link rel="stylesheet" href="../shared/components/bottom-sheet/bottom-sheet.css">
+</head>
+
+<body>
+    <!-- Navegación Desktop Sidebar -->
+    <aside class="sidebar" style="--hidden:1" id="sidebar">
+        <div style="--p:var(--sp-5); --bg:var(--bg-primary); --b:1px solid var(--border-light); --h-fill:1">
+            <div style="--flex:1; --items:center; --gap:var(--sp-3); --mb:var(--sp-6)">
+                <div
+                    style="--w:32px; --h:32px; --bg:var(--blue); --rad:var(--radius-md); --flex:1; --items:center; --justify:center; --c:var(--white); --fs:var(--fs-lg)">
+                    📊</div>
+                <span class="body-lg" style="--fw:var(--fw-semibold)">Klef Dashboard</span>
+            </div>
+            <nav>
+                <ul style="--flex:1; --fd:column; --gap:var(--sp-2)">
+                    <li><a href="#" class="sidebar-link active"
+                            style="
+                                --flex:1; 
+                                --items:center; 
+                                --gap:var(--sp-3); --p:var(--sp-3); --rad:var(--radius-md); --c:var(--blue); --bg:var(--blue-light)">🏠
+                            Inicio</a></li>
+                    <li><a href="#" class="sidebar-link"
+                            style="--flex:1; --items:center; --gap:var(--sp-3); --p:var(--sp-3); --rad:var(--radius-md); --c:var(--text-secondary)">📈
+                            Análisis</a></li>
+                    <li><a href="#" class="sidebar-link"
+                            style="--flex:1; --items:center; --gap:var(--sp-3); --p:var(--sp-3); --rad:var(--radius-md); --c:var(--text-secondary)">⚙️
+                            Configuración</a></li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Navegación Mobile -->
+    <nav class="nav">
+        <div class="nav-content">
+            <button id="menu-toggle" class="btn btn-ghost" style="--p:var(--sp-2)">☰</button>
+            <a href="#" class="nav-logo">Klef Dashboard</a>
+            <div></div> <!-- Spacer -->
+        </div>
+    </nav>
+
+    <!-- Contenedor Principal -->
+    <main style="--py:var(--sp-8)">
+        <div class="container">
+            <!-- Encabezado -->
+            <header style="--mb:var(--sp-6); --ta:center">
+                <h1 class="display-lg" style="--mb:var(--sp-2)">Panel de Control</h1>
+                <p class="body-lg" style="--c:var(--text-secondary)">Vista general de métricas y datos clave</p>
+            </header>
+
+            <!-- Métricas en Grid -->
+            <section style="--grid:1; --cols:repeat(auto-fit, minmax(250px, 1fr)); --gap:var(--sp-5); --mb:var(--sp-8)">
+                <div class="card" style="--p:var(--sp-5)"
+                    onclick="openMetricsSheet('Usuarios Activos', '1,234 usuarios activos actualmente. +12% desde el mes pasado.')">
+                    <div style="--flex:1; --justify:space-between; --items:center; --mb:var(--sp-3)">
+                        <span class="body-md" style="--c:var(--text-secondary)">Usuarios Activos</span>
+                        <span class="badge badge-green">+12%</span>
+                    </div>
+                    <div class="display-md" style="--c:var(--text-primary)">1,234</div>
+                </div>
+
+                <div class="card" style="--p:var(--sp-5)"
+                    onclick="openMetricsSheet('Ingresos', 'Ingresos totales de $45,678 este mes. Meta superada en 15%.')">
+                    <div style="--flex:1; --justify:space-between; --items:center; --mb:var(--sp-3)">
+                        <span class="body-md" style="--c:var(--text-secondary)">Ingresos</span>
+                        <span class="badge badge-blue">$</span>
+                    </div>
+                    <div class="display-md" style="--c:var(--text-primary)">$45,678</div>
+                </div>
+
+                <div class="card" style="--p:var(--sp-5)"
+                    onclick="openMetricsSheet('Conversiones', '234 conversiones completadas. Tasa del 8.5%.')">
+                    <div style="--flex:1; --justify:space-between; --items:center; --mb:var(--sp-3)">
+                        <span class="body-md" style="--c:var(--text-secondary)">Conversiones</span>
+                        <span class="badge badge-orange">8.5%</span>
+                    </div>
+                    <div class="display-md" style="--c:var(--text-primary)">234</div>
+                </div>
+            </section>
+
+            <!-- Gráfico Simulado y Acciones -->
+            <section style="--grid:1; --cols:2fr 1fr; --gap:var(--sp-6)">
+                <div class="card" style="--p:var(--sp-6)">
+                    <h3 class="headline-md" style="--mb:var(--sp-4)">Tendencias de Uso</h3>
+                    <div
+                        style="--bg:var(--bg-secondary); --p:var(--sp-4); --rad:var(--radius-md); --h:200px; --flex:1; --items:center; --justify:center">
+                        <span class="body-lg" style="--c:var(--text-tertiary)">[Gráfico Placeholder]</span>
+                    </div>
+                </div>
+
+                <div style="--flex:1; --fd:column; --gap:var(--sp-4)">
+                    <div class="card" style="--p:var(--sp-4)">
+                        <h4 class="body-lg" style="--mb:var(--sp-3)">Acciones Rápidas</h4>
+                        <div style="--flex:1; --fd:column; --gap:var(--sp-2)">
+                            <button class="btn btn-primary" style="--w:100%">Exportar Datos</button>
+                            <button class="btn btn-secondary" style="--w:100%">Generar Reporte</button>
+                            <button class="btn btn-ghost" style="--w:100%">Configurar Alertas</button>
+                        </div>
+                    </div>
+
+                    <div class="card" style="--p:var(--sp-4)">
+                        <h4 class="body-lg" style="--mb:var(--sp-3)">Estado del Sistema</h4>
+                        <div style="--flex:1; --items:center; --gap:var(--sp-2)">
+                            <div style="--w:8px; --h:8px; --bg:var(--green); --rad:50%"></div>
+                            <span class="body-md">Todo operativo</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Bottom Sheet Component -->
+    <div class="adaptive-backdrop" id="backdrop"></div>
+    <div class="adaptive-sheet" id="sheet">
+        <div class="sheet-header" id="header">
+            <div class="sheet-drag-handle"></div>
+            <div class="sheet-title-bar">
+                <h2 class="sheet-title" id="sheet-title">Detalles</h2>
+                <button class="sheet-close-btn" id="closeBtn">×</button>
+            </div>
+        </div>
+        <div class="sheet-content" id="content">
+            <div class="demo-content">
+                <p id="sheet-content">Contenido del sheet aquí.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../shared/components/bottom-sheet/bottom-sheet.js"></script>
+    <script>
+        // Toggle sidebar en desktop
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        menuToggle.addEventListener('click', () => {
+            sidebar.style.setProperty('--hidden', sidebar.style.getPropertyValue('--hidden') === 'none' ? '' : 'none');
+        });
+
+        // Función para abrir sheet con detalles de métricas
+        function openMetricsSheet(title, content) {
+            document.getElementById('sheet-title').textContent = title;
+            document.getElementById('sheet-content').textContent = content;
+            window.sheet.open();
+        }
+
+        // Media query para mostrar sidebar en desktop
+        const mediaQuery = window.matchMedia('(min-width: 768px)');
+        function handleDesktopChange(e) {
+            if (e.matches) {
+                sidebar.style.setProperty('--hidden', '');
+            } else {
+                sidebar.style.setProperty('--hidden', 'none');
+            }
+        }
+        mediaQuery.addListener(handleDesktopChange);
+        handleDesktopChange(mediaQuery);
+    </script>
+</body>
+
+</html>
