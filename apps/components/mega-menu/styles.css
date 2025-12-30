@@ -1,20 +1,3 @@
-.megamenu-style-1 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  border-bottom: 1px solid hsl(var(--border));
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  min-height: 4rem;
-  padding: 0 var(--space-6);
-  border-bottom: 1px solid #e5e5ea;
-}
-
-/* CSS extraído desde apps/components/mega-menu/index.html */
 * {
   box-sizing: border-box;
   margin: 0;

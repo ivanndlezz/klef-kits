@@ -5,12 +5,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Proyecto</title>
+    <link rel="stylesheet" href="assets/styles/design-system.css">
+    <link rel="stylesheet" href="assets/styles/css-short.css">
+    <link rel="stylesheet" href="/shared/components/mega-menu/styles.css">
     <!-- Incluir el script del cargador de iconos -->
     <script src="shared/utilities/icon-loader/iconloader.js"></script>
+    <script>constructIcons('/assets/icons/menu-icons.txt');//Llamar a paquete de íconos </script>
+    <!-- * Fin * de reglas de iconos -->
+
 </head>
 
 <body>
-    <!-- Contenido de tu página -->
+    <heade class="megamenu-style-1 bg-white shadow-sm">
+        <nav class="megamenu-container container-lg" role="navigation" aria-label="Main Navigation"
+            style="--flex:1; --ai:center; --jc:space-between; --w-fill:1; padding: var(--sp-4) 0;">
+            <div class="header-left megamenu-logo" style="--flex:1; --ai:center; --jc:flex-start;">
+                <a href="#" class="logo">
+                    <div class="logo-icon">
+                        <svg>
+                            <use href="#icon-code"></use>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-title">Klef Apps</span>
+                        <span class="logo-subtitle">Tool Library</span>
+                    </div>
+                </a>
+            </div>
+            <div class="megamenu-items">
+                <ul class="megamenu-list" style="--flex:1; --ai:center; --jc:center; --gap:var(--sp-6);">
+                    <li class="megamenu-item"><a href="#">Inicio</a>
+                    </li>
+                    <li class="megamenu-item"><a href="#">Servicios</a>
+                    </li>
+                    <li class="megamenu-item"><a href="#">Portafolio</a>
+                    </li>
+                    <li class="megamenu-item"><a href="#">Contacto</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="megamenu-actions" style="--flex:1; --ai :center; --jc:flex-end; --gap:var(--sp-4);">
+                <button class="btn btn-primary">Iniciar Sesión</button>
+            </div>
+    </heade>
 </body>
 
 </html>

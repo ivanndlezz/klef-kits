@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Playground · HTML + JSON Pairing (Async)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../../assets/styles/design-system.css" />
+    <link rel="stylesheet" href="../../assets/styles/css-short.css" />
+    <style>
+        :root {
+            --bg: #ffffff;
+            --card: #ffffffcc;
+            --border: #e5e5ea;
+            --text: #1d1d1f;
+            --muted: #6e6e73;
+            --radius: 18px;
+            --accent: #007aff;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .header {
+            padding: 24px;
+            text-align: center;
+        }
+
+        .layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            padding: 24px;
+        }
+
+        section {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 20px;
+            width: calc(50% - 25px);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-top: 12px;
+            color: var(--muted);
+        }
+
+        input,
+        textarea {
+            width: -webkit-fill-available;
+            padding: 10px;
+            margin-top: 6px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        textarea {
+            min-height: 120px;
+        }
+
+        button {
+            padding: 10px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: white;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        button.copy {
+            margin-top: 8px;
+            background: #f0f0f2;
+            font-size: 12px;
+        }
+
+        button#generate {
+            margin-top: 16px;
+        }
+
+        .output {
+            margin-top: 8px;
+            padding: 12px;
+            background: #f9f9fb;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+
+        .preview {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+        }
+
+        .skeleton .line {
+            height: 14px;
+            background: #e5e5ea;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .skeleton .title {
+            width: 60%;
+            height: 18px;
+        }
+
+        .skeleton .short {
+            width: 40%;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                width: -webkit-fill-available;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="header">
+        <h1>Playground Declarativo (Async)</h1>
+        <p>HTML + JSON · Skeleton · Hidratación Asíncrona</p>
+    </div>
+
+    <div class="layout">
+        <section>
+            <h2>Declaración</h2>
+
+            <label>JSON ID</label>
+            <input id="json-id" value="myid-data" />
+
+            <label>JSON Data (simula API)</label>
+            <textarea id="json-data" class="code">
+
+{
+  "title": "Hola desde API",
+  "description": "Este contenido llegó de forma asíncrona"
+}</textarea>
+
+            <label>Template ID</label>
+            <input id="template-id" value="myid-html" />
+
+            <label>HTML Template</label>
+            <!--  --><textarea id="template-html" class="code">
+
+&#x3C;div class=&#x22;card&#x22; style=&#x22;--p:var(--sp-6)&#x22;&#x3E;
+    &#x3C;h2 data-bind=&#x22;title&#x22;&#x3E;&#x3C;/h2&#x3E;
+    &#x3C;p data-bind=&#x22;description&#x22;&#x3E;&#x3C;/p&#x3E;
+&#x3C;/div&#x3E;</textarea><!--  -->
+
+            <label>Target ID</label>
+            <input id="target-id" value="myid-target" />
+
+            <button id="generate">Generar + Simular API</button>
+            <hr class="divider" style="--mtb:var(--sp-6);--mt:var(--mtb); --mb:var(--mtb)" />
+            <textarea readonly class="code">
+        function waitForJSON(id) {
+            return new Promise((resolve) =&#x3E; {
+                const existing = document.getElementById(id);
+                if (existing) {
+                    resolve(JSON.parse(existing.textContent));
+                    return;
+                }
+
+                const observer = new MutationObserver(() =&#x3E; {
+                    const script = document.getElementById(id);
+                    if (script) {
+                        observer.disconnect();
+                        resolve(JSON.parse(script.textContent));
+                    }
+                });
+
+                observer.observe(document.body, { childList: true, subtree: true });
+            });
+        }
+
+        function hydrateAsync({ templateHTML, jsonId, target }) {
+            const skel = document.getElementById(&#x22;card-skeleton&#x22;);
+            target.innerHTML = &#x22;&#x22;;
+            target.appendChild(skel.content.cloneNode(true));
+
+            waitForJSON(jsonId).then((data) =&#x3E; {
+                const wrapper = document.createElement(&#x22;div&#x22;);
+                wrapper.innerHTML = templateHTML;
+
+                wrapper.querySelectorAll(&#x22;[data-bind]&#x22;).forEach((el) =&#x3E; {
+                    const key = el.dataset.bind;
+                    if (data[key] !== undefined) el.textContent = data[key];
+                });
+
+                target.innerHTML = &#x22;&#x22;;
+                target.appendChild(wrapper);
+            });
+        }
+
+        // COPY
+
+        document.addEventListener(&#x22;click&#x22;, (e) =&#x3E; {
+            const btn = e.target.closest(&#x22;.copy&#x22;);
+            if (!btn) return;
+
+            const target = document.getElementById(btn.dataset.copy);
+            navigator.clipboard.writeText(target.textContent);
+            btn.textContent = &#x22;Copiado &#x2713;&#x22;;
+            setTimeout(() =&#x3E; (btn.textContent = &#x22;Copiar&#x22;), 1200);
+        });
+
+        // GENERATE
+
+        document.getElementById(&#x22;generate&#x22;).addEventListener(&#x22;click&#x22;, () =&#x3E; {
+            const jsonId = document.getElementById(&#x22;json-id&#x22;).value;
+            const jsonData = document.getElementById(&#x22;json-data&#x22;).value;
+            const templateHTML = document.getElementById(&#x22;template-html&#x22;).value;
+
+            let parsed;
+            try {
+                parsed = JSON.parse(jsonData);
+            } catch {
+                alert(&#x22;JSON inv&#xE1;lido&#x22;);
+                return;
+            }
+
+            document.getElementById(
+                &#x22;out-target&#x22;
+            ).textContent = &#x60;&#x3C;div id=&#x22;content&#x22;&#x3E;&#x3C;/div&#x3E;&#x60;;
+            document.getElementById(
+                &#x22;out-button&#x22;
+            ).textContent = &#x60;&#x3C;button data-json=&#x22;${jsonId}&#x22; data-target=&#x22;content&#x22;&#x3E;Cargar&#x3C;/button&#x3E;&#x60;;
+            document.getElementById(
+                &#x22;out-json&#x22;
+            ).textContent = &#x60;&#x3C;script type=&#x22;application/json&#x22; id=&#x22;${jsonId}&#x22;&#x3E;\n${JSON.stringify(
+                parsed,
+                null,
+                2
+            )}\n&#x3C;\/script&#x3E;&#x60;;
+
+            // Mostrar el contenido del template
+            const templateContent = document.getElementById(&#x22;template-html&#x22;).value;
+            document.getElementById(&#x22;out-template&#x22;).textContent = templateContent;
+
+            // Mostrar el contenido del skeleton template
+            const skeletonContent = document.getElementById(&#x22;card-skeleton&#x22;).innerHTML;
+            document.getElementById(&#x22;out-skeleton&#x22;).textContent = skeletonContent;
+
+            const preview = document.getElementById(&#x22;preview&#x22;);
+
+            const existing = document.getElementById(jsonId);
+            if (existing) existing.remove();
+
+            hydrateAsync({ templateHTML, jsonId, target: preview });
+
+            setTimeout(() =&#x3E; {
+                const script = document.createElement(&#x22;script&#x22;);
+                script.type = &#x22;application/json&#x22;;
+                script.id = jsonId;
+                script.textContent = JSON.stringify(parsed);
+                document.body.appendChild(script);
+            }, 1500);
+        });
+            </textarea>
+        </section>
+
+        <section>
+            <h2>Resultados</h2>
+
+            <label>HTML Target</label>
+            <div class="output" id="out-target"></div>
+            <button class="copy" data-copy="out-target">Copiar</button>
+
+            <label>HTML Button</label>
+            <div class="output" id="out-button"></div>
+            <button class="copy" data-copy="out-button">Copiar</button>
+
+            <label>HTML &lt;script json&gt;</label>
+            <div class="output" id="out-json"></div>
+
+            <button class="copy" data-copy="out-json">Copiar</button>
+
+            <label>Template HTML</label>
+            <div class="output" id="out-template"></div>
+            <button class="copy" data-copy="out-template">Copiar</button>
+
+            <label>Skeleton Template</label>
+            <div class="output" id="out-skeleton"></div>
+            <button class="copy" data-copy="out-skeleton">Copiar</button>
+
+            <label>Preview (Skeleton → Data)</label>
+            <div class="preview" id="preview"></div>
+        </section>
+    </div>
+
+    <template id="card-skeleton">
+        <div class="card skeleton" style="--p:var(--sp-6);">
+            <div class="line title"></div>
+            <div class="line"></div>
+            <div class="line short"></div>
+        </div>
+    </template>
+
+    <script>
+        function waitForJSON(id) {
+            return new Promise((resolve) => {
+                const existing = document.getElementById(id);
+                if (existing) {
+                    resolve(JSON.parse(existing.textContent));
+                    return;
+                }
+
+                const observer = new MutationObserver(() => {
+                    const script = document.getElementById(id);
+                    if (script) {
+                        observer.disconnect();
+                        resolve(JSON.parse(script.textContent));
+                    }
+                });
+
+                observer.observe(document.body, { childList: true, subtree: true });
+            });
+        }
+
+        function hydrateAsync({ templateHTML, jsonId, target }) {
+            const skel = document.getElementById("card-skeleton");
+            target.innerHTML = "";
+            target.appendChild(skel.content.cloneNode(true));
+
+            waitForJSON(jsonId).then((data) => {
+                const wrapper = document.createElement("div");
+                wrapper.innerHTML = templateHTML;
+
+                wrapper.querySelectorAll("[data-bind]").forEach((el) => {
+                    const key = el.dataset.bind;
+                    if (data[key] !== undefined) el.textContent = data[key];
+                });
+
+                target.innerHTML = "";
+                target.appendChild(wrapper);
+            });
+        }
+
+        // COPY
+
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest(".copy");
+            if (!btn) return;
+
+            const target = document.getElementById(btn.dataset.copy);
+            navigator.clipboard.writeText(target.textContent);
+            btn.textContent = "Copiado ✓";
+            setTimeout(() => (btn.textContent = "Copiar"), 1200);
+        });
+
+        // GENERATE
+
+        document.getElementById("generate").addEventListener("click", () => {
+            const jsonId = document.getElementById("json-id").value;
+            const jsonData = document.getElementById("json-data").value;
+            const templateHTML = document.getElementById("template-html").value;
+
+            let parsed;
+            try {
+                parsed = JSON.parse(jsonData);
+            } catch {
+                alert("JSON inválido");
+                return;
+            }
+
+            document.getElementById(
+                "out-target"
+            ).textContent = `<div id="content"></div>`;
+            document.getElementById(
+                "out-button"
+            ).textContent = `<button data-json="${jsonId}" data-target="content">Cargar</button>`;
+            document.getElementById(
+                "out-json"
+            ).textContent = `<script type="application/json" id="${jsonId}">\n${JSON.stringify(
+                parsed,
+                null,
+                2
+            )}\n<\/script>`;
+
+            // Mostrar el contenido del template
+            const templateContent = document.getElementById("template-html").value;
+            document.getElementById("out-template").textContent = templateContent;
+
+            // Mostrar el contenido del skeleton template
+            const skeletonContent = document.getElementById("card-skeleton").innerHTML;
+            document.getElementById("out-skeleton").textContent = skeletonContent;
+
+            const preview = document.getElementById("preview");
+
+            const existing = document.getElementById(jsonId);
+            if (existing) existing.remove();
+
+            hydrateAsync({ templateHTML, jsonId, target: preview });
+
+            setTimeout(() => {
+                const script = document.createElement("script");
+                script.type = "application/json";
+                script.id = jsonId;
+                script.textContent = JSON.stringify(parsed);
+                document.body.appendChild(script);
+            }, 1500);
+        });
+    </script>
+</body>
+<footer>
+    <div class="klef-footer">
+        <p class="footer-text">
+            Made with <span class="heart">♥</span> in Los Cabos
+            <span class="by">by</span>
+            <strong>Klef</strong>
+            <small class="tag green">Dev</small>
+            <span class="divider">|</span>
+            <a href="https://klef.agency/" class="agency" target="_blank">Klef Agency</a>
+        </p>
+    </div>
+</footer>
+
+</html>

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/styles/design-system.css">
+    <link rel="stylesheet" href="/assets/styles/css-short.css">
+    <title>Mega Menu Mobile First</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-system);
+            background: var(--bg-secondary);
+        }
+
+        /* MOBILE FIRST */
+        nav {
+            background: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: var(--z-dropdown);
+            box-shadow: var(--shadow-xs);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--sp-5);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-weight: var(--fw-bold);
+            font-size: var(--fs-xl);
+            color: var(--black);
+        }
+
+        .menu-btn {
+            background: var(--gray-100);
+            border: none;
+            color: var(--black);
+            cursor: pointer;
+            padding: var(--sp-3) var(--sp-5);
+            border-radius: var(--radius-full);
+            font-weight: var(--fw-medium);
+            font-size: var(--fs-base);
+            transition: background var(--duration-base);
+        }
+
+        .menu-btn:hover {
+            background: var(--gray-200);
+        }
+
+        .desktop-menu {
+            display: none;
+        }
+
+        /* MEGA MENU OVERLAY - Mobile */
+        .mobile-mega-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: -webkit-fill-available;
+            height: fit-content;
+            background: var(--white);
+            transition: all var(--duration-slow) var(--ease-out);
+            z-index: var(--z-modal);
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            margin: var(--sp-2);
+            border-radius: var(--radius-md);
+        }
+
+        .mobile-mega-overlay.active .main-menu-item {
+            transform: scaleY(1);
+        }
+
+        .mobile-mega-overlay:not(.active) .main-menu-item {
+            transform: scaleY(0);
+        }
+
+        .mobile-mega-overlay:not(.active) {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* TOP BAR del Mega Menu */
+        .mega-topbar {
+            padding: var(--sp-4);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--sp-4);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            margin-bottom: calc(var(--sp-4) * -1);
+        }
+
+        .back-btn,
+        .close-btn {
+            background: var(--gray-100);
+            border: none;
+            color: var(--black);
+            cursor: pointer;
+            padding: var(--sp-2) var(--sp-5);
+            border-radius: var(--radius-full);
+            font-weight: var(--fw-medium);
+            font-size: var(--fs-sm);
+            transition: background var(--duration-base);
+        }
+
+        .back-btn:hover,
+        .close-btn:hover {
+            background: var(--gray-200);
+        }
+
+        .back-btn {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .back-btn.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* CONTENIDO del Mega Menu */
+        .mega-content {
+            display: none;
+            padding: var(--sp-6) var(--sp-5);
+            max-width: 800px;
+            margin: 0 auto;
+            transition: all var(--duration-slow) var(--ease-out);
+        }
+
+        .mega-content.active {
+            display: block;
+        }
+
+        .mega-content[data-level="0"] {
+            padding-top: 0;
+        }
+
+        .section-label {
+            font-size: var(--fs-xs);
+            font-weight: var(--fw-semibold);
+            letter-spacing: var(--ls-wider);
+            color: var(--text-tertiary);
+            margin-bottom: var(--sp-5);
+            text-transform: uppercase;
+        }
+
+        /* MAIN MENU */
+        .main-menu-item {
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--sp-4);
+            cursor: pointer;
+            transition: transform var(--duration-base), box-shadow var(--duration-base);
+        }
+
+        .main-menu-item:active {
+            transform: scale(0.98);
+        }
+
+        .main-menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--sp-5);
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .main-menu-text {
+            font-weight: var(--fw-medium);
+            font-size: var(--fs-lg);
+        }
+
+        .main-menu-arrow {
+            width: 20px;
+            height: 20px;
+            color: var(--black);
+        }
+
+        /* SUBMENU */
+        .submenu-item {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--sp-5);
+            margin-bottom: var(--sp-5);
+            transition: transform var(--duration-base);
+            display: flex;
+        }
+
+        .submenu-item:active {
+            transform: scale(0.98);
+        }
+
+        .submenu-header {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--sp-4);
+            margin-bottom: var(--sp-3);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .submenu-icon {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            border-radius: var(--radius-xs);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .submenu-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .submenu-title {
+            font-weight: var(--fw-semibold);
+            font-size: var(--fs-lg);
+            color: var(--black);
+            margin-bottom: var(--sp-1);
+        }
+
+        .submenu-desc {
+            font-size: var(--fs-sm);
+            color: var(--text-secondary);
+            line-height: var(--lh-normal);
+        }
+
+        /* CTA BUTTONS */
+        .cta-section {
+            margin-top: var(--sp-6);
+        }
+
+        .cta-btn {
+            display: block;
+            width: 100%;
+            padding: var(--sp-4);
+            border: none;
+            border-radius: var(--radius-full);
+            font-weight: var(--fw-semibold);
+            font-size: var(--fs-base);
+            cursor: pointer;
+            transition: transform var(--duration-base);
+            text-align: center;
+            text-decoration: none;
+            margin-bottom: var(--sp-3);
+        }
+
+        .cta-btn:active {
+            transform: scale(0.98);
+        }
+
+        .cta-primary {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .cta-secondary {
+            background: var(--gray-100);
+            color: var(--black);
+        }
+
+        /* TABLET/DESKTOP */
+        @media (min-width: 768px) {
+            .menu-btn {
+                display: none;
+            }
+
+            .mobile-mega-overlay {
+                display: none;
+            }
+
+            .desktop-menu {
+                display: flex;
+                list-style: none;
+                gap: var(--sp-6);
+                align-items: center;
+            }
+
+            .desktop-menu>li {
+                position: relative;
+            }
+
+            .desktop-menu>li>a {
+                color: var(--black);
+                text-decoration: none;
+                font-weight: var(--fw-medium);
+                padding: var(--sp-2) 0;
+                transition: opacity var(--duration-base);
+            }
+
+            .desktop-menu>li>a:hover {
+                opacity: 0.6;
+            }
+
+            .desktop-mega {
+                position: absolute;
+                top: calc(100% + var(--sp-4));
+                left: 50%;
+                transform: translateX(-50%) translateY(-10px);
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity var(--duration-slow) var(--ease-out), visibility var(--duration-slow) var(--ease-out), transform var(--duration-slow) var(--ease-out);
+                background: var(--white);
+                border-radius: var(--radius-xl);
+                box-shadow: var(--shadow-xl);
+                padding: var(--sp-6);
+                min-width: 700px;
+                z-index: var(--z-modal);
+            }
+
+            .desktop-menu>li:hover .desktop-mega {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .desktop-mega .section-label {
+                margin-bottom: var(--sp-5);
+            }
+
+            .desktop-submenu-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--sp-4);
+            }
+
+            .desktop-submenu-item {
+                background: var(--bg-secondary);
+                border-radius: var(--radius-sm);
+                padding: var(--sp-5);
+                transition: background var(--duration-base), transform var(--duration-base);
+                text-decoration: none;
+                color: inherit;
+                display: block;
+            }
+
+            .desktop-submenu-item:hover {
+                background: var(--gray-100);
+                transform: translateY(-2px);
+            }
+
+            .desktop-submenu-header {
+                display: flex;
+                align-items: center;
+                gap: var(--sp-3);
+                margin-bottom: var(--sp-2);
+            }
+
+            .desktop-submenu-icon {
+                width: 32px;
+                height: 32px;
+                border-radius: var(--radius-xs);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .desktop-submenu-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .desktop-submenu-title {
+                font-weight: var(--fw-semibold);
+                font-size: var(--fs-base);
+                color: var(--black);
+            }
+
+            .desktop-submenu-desc {
+                font-size: var(--fs-sm);
+                color: var(--text-secondary);
+                line-height: var(--lh-snug);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">MiTienda</div>
+
+            <button class="menu-btn" onclick="openMenu()">Menu</button>
+
+            <ul class="desktop-menu">
+                <li>
+                    <a href="#">Product</a>
+                    <div class="desktop-mega">
+                        <div class="section-label">PRODUCT</div>
+                        <div class="desktop-submenu-grid">
+                            <a href="#" class="desktop-submenu-item">
+                                <div class="desktop-submenu-header">
+                                    <div class="desktop-submenu-icon" style="background: #e8e3ff;">
+                                        <svg fill="none" stroke="#6366f1" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                                        </svg>
+                                    </div>
+                                    <div class="desktop-submenu-title">Team Workspace</div>
+                                </div>
+                                <div class="desktop-submenu-desc">Keep track of the information that's important to you
+                                </div>
+                            </a>
+
+                            <a href="#" class="desktop-submenu-item">
+                                <div class="desktop-submenu-header">
+                                    <div class="desktop-submenu-icon" style="background: #ffe8e3;">
+                                        <svg fill="none" stroke="#f97316" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                                        </svg>
+                                    </div>
+                                    <div class="desktop-submenu-title">Flexible Database</div>
+                                </div>
+                                <div class="desktop-submenu-desc">Manage every job from creation to completion</div>
+                            </a>
+
+                            <a href="#" class="desktop-submenu-item">
+                                <div class="desktop-submenu-header">
+                                    <div class="desktop-submenu-icon" style="background: #d1fae5;">
+                                        <svg fill="none" stroke="#10b981" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                        </svg>
+                                    </div>
+                                    <div class="desktop-submenu-title">Collaboration</div>
+                                </div>
+                                <div class="desktop-submenu-desc">Delight your customers with a self-service experience
+                                </div>
+                            </a>
+
+                            <a href="#" class="desktop-submenu-item">
+                                <div class="desktop-submenu-header">
+                                    <div class="desktop-submenu-icon" style="background: #fef3c7;">
+                                        <svg fill="none" stroke="#f59e0b" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                        </svg>
+                                    </div>
+                                    <div class="desktop-submenu-title">Automation</div>
+                                </div>
+                                <div class="desktop-submenu-desc">Automate workflows and save time</div>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+
+                <li>
+                    <a href="#">Solutions</a>
+                    <div class="desktop-mega">
+                        <div class="section-label">SOLUTIONS</div>
+                        <div class="desktop-submenu-grid">
+                            <a href="#" class="desktop-submenu-item">
+                                <div class="desktop-submenu-header">
+                                    <div class="desktop-submenu-icon" style="background: #e8e3ff;">
+                                        <svg fill="none" stroke="#6366f1" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5z" />
+                                        </svg>
+                                    </div>
+                                    <div class="desktop-submenu-title">Flexible CRM</div>
+                                </div>
+                                <div class="desktop-submenu-desc">Keep track of the information that's important to you
+                                </div>
+                            </a>
+
+                            <a href="#" class="desktop-submenu-item">
+                                <div class="desktop-submenu-header">
+                                    <div class="desktop-submenu-icon" style="background: #dbeafe;">
+                                        <svg fill="none" stroke="#3b82f6" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                        </svg>
+                                    </div>
+                                    <div class="desktop-submenu-title">Custom ERP</div>
+                                </div>
+                                <div class="desktop-submenu-desc">Create the core system that powers your business</div>
+                            </a>
+
+                            <a href="#" class="desktop-submenu-item">
+                                <div class="desktop-submenu-header">
+                                    <div class="desktop-submenu-icon" style="background: #d1fae5;">
+                                        <svg fill="none" stroke="#10b981" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                    </div>
+                                    <div class="desktop-submenu-title">Customer Portal</div>
+                                </div>
+                                <div class="desktop-submenu-desc">Delight your customers with a self-service experience
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+
+                <li><a href="#">Resources</a></li>
+                <li><a href="#">Pricing</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- MOBILE MEGA MENU -->
+    <div class="mobile-mega-overlay">
+        <div class="mega-topbar">
+            <button class="back-btn" onclick="goBack()">Go Back</button>
+            <button class="close-btn" onclick="closeMenu()">Close</button>
+        </div>
+
+        <!-- NIVEL 0: MENÚ PRINCIPAL -->
+        <div class="mega-content active" data-level="0">
+            <div class="section-label">MENU</div>
+
+            <div class="main-menu-item" onclick="showSubmenu('product', 'PRODUCT')">
+                <div class="main-menu-link">
+                    <span class="main-menu-text">Product</span>
+                    <svg class="main-menu-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="main-menu-item" onclick="showSubmenu('solutions', 'SOLUTIONS')">
+                <div class="main-menu-link">
+                    <span class="main-menu-text">Solutions</span>
+                    <svg class="main-menu-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="main-menu-item">
+                <a href="#" class="main-menu-link">
+                    <span class="main-menu-text">Resources</span>
+                    <svg class="main-menu-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+
+            <div class="main-menu-item">
+                <a href="#" class="main-menu-link">
+                    <span class="main-menu-text">Pricing</span>
+                </a>
+            </div>
+
+            <div class="cta-section">
+                <a href="#" class="cta-btn cta-secondary">Sign in</a>
+                <a href="#" class="cta-btn cta-primary">Try Stacker for free</a>
+            </div>
+        </div>
+
+        <!-- NIVEL 1: PRODUCT -->
+        <div class="mega-content" data-level="1" data-section="product">
+            <div class="section-label">PRODUCT</div>
+
+            <a href="#" class="submenu-item">
+                <div class="submenu-header">
+                    <div class="submenu-icon" style="background: #e8e3ff;">
+                        <svg fill="none" stroke="#6366f1" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="submenu-title">Team Workspace</div>
+                        <div class="submenu-desc">Keep track of the information that's important to you</div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" class="submenu-item">
+                <div class="submenu-header">
+                    <div class="submenu-icon" style="background: #ffe8e3;">
+                        <svg fill="none" stroke="#f97316" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="submenu-title">Flexible Database</div>
+                        <div class="submenu-desc">Manage every job from creation to completion, effortlessly</div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" class="submenu-item">
+                <div class="submenu-header">
+                    <div class="submenu-icon" style="background: #d1fae5;">
+                        <svg fill="none" stroke="#10b981" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="submenu-title">Collaboration</div>
+                        <div class="submenu-desc">Delight your customers with an self-service experience</div>
+                    </div>
+                </div>
+            </a>
+
+            <div class="cta-section">
+                <a href="#" class="cta-btn cta-secondary">Sign in</a>
+                <a href="#" class="cta-btn cta-primary">Try Stacker for free</a>
+            </div>
+        </div>
+
+        <!-- NIVEL 1: SOLUTIONS -->
+        <div class="mega-content" data-level="1" data-section="solutions">
+            <div class="section-label">SOLUTIONS</div>
+
+            <a href="#" class="submenu-item">
+                <div class="submenu-header">
+                    <div class="submenu-icon" style="background: #e8e3ff;">
+                        <svg fill="none" stroke="#6366f1" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="submenu-title">Flexible CRM</div>
+                        <div class="submenu-desc">Keep track of the information that's important to you</div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" class="submenu-item">
+                <div class="submenu-header">
+                    <div class="submenu-icon" style="background: #dbeafe;">
+                        <svg fill="none" stroke="#3b82f6" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="submenu-title">Custom ERP</div>
+                        <div class="submenu-desc">Create the core system that powers your business on stacker</div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" class="submenu-item">
+                <div class="submenu-header">
+                    <div class="submenu-icon" style="background: #d1fae5;">
+                        <svg fill="none" stroke="#10b981" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="submenu-title">Customer Portal</div>
+                        <div class="submenu-desc">Delight your customers with an self-service experience</div>
+                    </div>
+                </div>
+            </a>
+
+            <div class="cta-section">
+                <a href="#" class="cta-btn cta-secondary">Sign in</a>
+                <a href="#" class="cta-btn cta-primary">Try Stacker for free</a>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding: 3rem 1.5rem; text-align: center; color: #666;">
+        <h1 style="font-size: 2rem; margin-bottom: 1rem; color: #000;">Mega Menu Mobile First</h1>
+        <p style="margin-bottom: 0.5rem;">📱 En móvil: Click en "Menu"</p>
+        <p>🖥️ En desktop: Hover sobre "Product" o "Solutions"</p>
+    </div>
+
+    <script>
+        let navigationStack = [];
+
+        function openMenu() {
+            const overlay = document.querySelector('.mobile-mega-overlay');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            navigationStack = [];
+            showLevel(0);
+            updateBackButton();
+        }
+
+        function closeMenu() {
+            const overlay = document.querySelector('.mobile-mega-overlay');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            navigationStack = [];
+
+            document.querySelectorAll('.mobile-mega-overlay .mega-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelector('.mobile-mega-overlay [data-level="0"]').classList.add('active');
+
+            updateBackButton();
+        }
+
+        function showSubmenu(section, label) {
+            navigationStack.push({
+                level: 0
+            });
+
+            document.querySelectorAll('.mobile-mega-overlay .mega-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            const submenu = document.querySelector(`.mobile-mega-overlay [data-section="${section}"]`);
+            if (submenu) {
+                submenu.classList.add('active');
+                updateBackButton();
+            }
+        }
+
+        function goBack() {
+            if (navigationStack.length === 0) return;
+
+            navigationStack.pop();
+
+            document.querySelectorAll('.mobile-mega-overlay .mega-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            showLevel(0);
+            updateBackButton();
+        }
+
+        function showLevel(level) {
+            const content = document.querySelector(`.mobile-mega-overlay [data-level="${level}"]`);
+            if (content) {
+                content.classList.add('active');
+            }
+        }
+
+        function updateBackButton() {
+            const backBtn = document.querySelector('.back-btn');
+            if (navigationStack.length > 0) {
+                backBtn.classList.add('visible');
+            } else {
+                backBtn.classList.remove('visible');
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+
+        // Ajustar el posicionamiento del menú desktop para evitar que se salga del viewport
+        function adjustDesktopMegaPosition() {
+            const desktopMegaMenus = document.querySelectorAll('.desktop-mega');
+            desktopMegaMenus.forEach(menu => {
+                const rect = menu.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+
+                // Si el menú se sale por la derecha, ajustar su posición
+                if (rect.right > viewportWidth) {
+                    menu.style.left = 'auto';
+                    menu.style.right = '0';
+                    menu.style.transform = 'translateY(-10px)';
+                } else {
+                    menu.style.left = '50%';
+                    menu.style.right = 'auto';
+                    menu.style.transform = 'translateX(-50%) translateY(-10px)';
+                }
+            });
+        }
+
+        // Ajustar el posicionamiento al hacer hover en los elementos del menú
+        const desktopMenuItems = document.querySelectorAll('.desktop-menu > li');
+        desktopMenuItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                setTimeout(adjustDesktopMegaPosition, 10);
+            });
+        });
+
+        // Ajustar el posicionamiento al cargar la página y al redimensionar la ventana
+        window.addEventListener('load', adjustDesktopMegaPosition);
+        window.addEventListener('resize', adjustDesktopMegaPosition);
+    </script>
+</body>
+
+</html>

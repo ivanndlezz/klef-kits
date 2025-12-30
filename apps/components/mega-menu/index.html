@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
+    <title>Mega Menu Template System</title>
+    <link href="../mega-menu/styles.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="layout">
+        <!-- MARKDOWN -->
+        <section>
+            <h3>
+                Markdown Definition
+                <span class="badge">.md</span>
+            </h3>
+            <textarea id="markdown"># Mega Menu
+
+## Controllers
+- Home → /
+- Products → #products
+- Docs → /docs
+- Login → /login @align:right
+
+---
+
+## #products
+@layout grid
+@columns desktop:2
+
+### Featured
+@display card-icon
+
+- Team Workspace → /teams
+  icon: users
+  color: purple
+  desc: Manage your team
+
+- Analytics → /analytics
+  icon: chart
+  color: orange
+  desc: Track metrics
+
+- Integrations → /integrations
+  icon: plug
+  color: green
+  desc: Connect tools</textarea>
+            <div class="actions">
+                <button id="btnExample" class="secondary">Example</button>
+                <button id="btnGenerate">Generate</button>
+            </div>
+        </section>
+
+        <!-- JSON MODEL -->
+        <section>
+            <h3>
+                Data Model
+                <span class="badge">JSON</span>
+            </h3>
+            <div class="code-viewer" id="jsonOutput"></div>
+        </section>
+
+        <!-- HTML TEMPLATE -->
+        <section>
+            <h3>
+                HTML Template
+                <span class="badge">data-bind</span>
+            </h3>
+            <textarea id="htmlTemplate"><nav class="navbar">
+  <button data-repeat="controllers" 
+          data-text="label" 
+          data-menu="target"
+          data-align="align"
+          data-if-megamenu="isMegaMenu"></button>
+</nav>
+
+<div data-repeat-menus="menus" 
+     class="mega-menu" 
+     data-id="id">
+  
+  <div data-repeat="sections" 
+       class="section">
+    <h3 data-text="title"></h3>
+    
+    <a data-repeat="items" 
+       data-href="url"
+       data-class="className"
+       data-color="props.color"
+       class="card">
+      <span class="icon" data-text="props.icon"></span>
+      <strong data-text="label"></strong>
+      <span data-text="props.desc"></span>
+    </a>
+  </div>
+</div></textarea>
+            <div class="actions">
+                <button id="btnRender">Render Preview</button>
+            </div>
+        </section>
+
+        <!-- PREVIEW -->
+        <section>
+            <h3>
+                Live Preview
+                <span class="badge">hydrated</span>
+            </h3>
+            <iframe class="preview-frame" id="preview"></iframe>
+        </section>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

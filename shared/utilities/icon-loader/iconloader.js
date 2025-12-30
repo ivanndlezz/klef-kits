@@ -21,4 +21,4 @@ function constructIcons(route) {
 }
 
 // Cargar el set de iconos principal por defecto
-constructIcons("/assets/icons/symbols-svg.html");
+//constructIcons("/assets/icons/symbols-svg.html");
