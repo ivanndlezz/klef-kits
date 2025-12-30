@@ -7,6 +7,23 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
     <title>Mega Menu Template System</title>
     <link href="../mega-menu/styles.css" rel="stylesheet">
+    <link href="/assets/styles/design-system.css" rel="stylesheet">
+    <link href="/assets/styles/css-short.css" rel="stylesheet">
+    <style>
+        .badge-sm {
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0b0b0c;
+            color: #e5e5e5;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,7 +33,7 @@
         <section>
             <h3>
                 Markdown Definition
-                <span class="badge">.md</span>
+                <span class="badge-sm" style="--bg: var(--blue)">.md</span>
             </h3>
             <textarea id="markdown"># Mega Menu
 
@@ -59,7 +76,7 @@
         <section>
             <h3>
                 Data Model
-                <span class="badge">JSON</span>
+                <span class="badge-sm" style="--bg: var(--blue)">JSON</span>
             </h3>
             <div class="code-viewer" id="jsonOutput"></div>
         </section>
@@ -68,7 +85,7 @@
         <section>
             <h3>
                 HTML Template
-                <span class="badge">data-bind</span>
+                <span class="badge-sm" style="--bg: var(--blue)">data-bind</span>
             </h3>
             <textarea id="htmlTemplate"><nav class="navbar">
   <button data-repeat="controllers" 
@@ -106,7 +123,7 @@
         <section>
             <h3>
                 Live Preview
-                <span class="badge">hydrated</span>
+                <span class="badge-sm" style="--bg: var(--blue)">hydrated</span>
             </h3>
             <iframe class="preview-frame" id="preview"></iframe>
         </section>
