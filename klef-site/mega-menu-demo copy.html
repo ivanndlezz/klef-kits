@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klef Agency - Navigation System</title>
+    <style>
+        :root {
+            --k-blue: #0066CC;
+            --k-purple: #6E6EFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f7;
+        }
+
+        /* ============================================
+           MOBILE TOPBAR
+        ============================================ */
+        .mobile-topbar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 24px;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+        }
+
+        /* ============================================
+           MEGA TOPBAR
+        ============================================ */
+        .mega-topbar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 24px;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            z-index: 1002;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mega-topbar.active {
+            display: flex;
+            transform: translateY(0);
+        }
+
+        .back-btn,
+        .close-btn {
+            background: #f0f0f0;
+            border: none;
+            color: #1d1d1f;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover,
+        .close-btn:hover {
+            background: #e5e5e5;
+        }
+
+        .back-btn {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .back-btn.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ============================================
+           MAIN NAVIGATION (NAVBAR)
+        ============================================ */
+        .navbar {
+            display: flex;
+            gap: 24px;
+            padding: 12px 32px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1d1d1f;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar .logo::before {
+            content: '';
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--k-blue), var(--k-purple));
+            border-radius: 8px;
+        }
+
+        .menu-links {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .section-label {
+            display: none;
+        }
+
+        .menu-links>a {
+            padding: 8px 16px;
+            color: #1d1d1f;
+            text-decoration: none;
+            font-size: 15px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu-links>a:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .menu-links .icon {
+            display: none;
+        }
+
+        .right-menu {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: #1d1d1f;
+        }
+
+        /* ============================================
+           MEGA MENUS CONTAINER
+        ============================================ */
+        .mega-menus-container {
+            position: fixed;
+            top: 65px;
+            left: 0;
+            right: 0;
+            z-index: 998;
+            pointer-events: none;
+        }
+
+        .mega-menu {
+            display: none;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border-radius: 0 0 20px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            pointer-events: all;
+        }
+
+        .mega-menu.active {
+            display: block;
+        }
+
+        .mega-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+        }
+
+        .mega-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .mega-sidebar-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #86868b;
+            margin-bottom: 12px;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+        }
+
+        .mega-sidebar a {
+            padding: 12px 16px;
+            color: #1d1d1f;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mega-sidebar a:hover {
+            background: #f5f5f7;
+        }
+
+        .mega-sidebar a svg {
+            width: 16px;
+            height: 16px;
+            stroke: #86868b;
+        }
+
+        .mega-main {
+            background: #f9f9f9;
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .mega-featured {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .featured-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #FFE8C0, #FFB6A3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            flex-shrink: 0;
+        }
+
+        .featured-content h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .featured-content p {
+            font-size: 15px;
+            color: #6e6e73;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .featured-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            font-size: 12px;
+            color: #6e6e73;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #1d1d1f;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #000;
+        }
+
+        /* ============================================
+           SEARCH OVERLAY (APPLE STYLE)
+        ============================================ */
+        .search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(0px);
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.28, 0.11, 0.32, 1);
+        }
+
+        .search-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+            background: rgba(0, 0, 0, 0.48);
+            backdrop-filter: blur(20px);
+        }
+
+        .search-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            transform: translateY(-100%);
+            transition: transform 0.5s cubic-bezier(0.28, 0.11, 0.32, 1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-overlay.active .search-panel {
+            transform: translateY(0);
+        }
+
+        .search-content {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 60px 40px 80px;
+        }
+
+        .search-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #d2d2d7;
+            margin-bottom: 40px;
+        }
+
+        .search-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .search-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #86868b;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 28px;
+            color: #1d1d1f;
+            background: transparent;
+            font-family: inherit;
+        }
+
+        .search-input::placeholder {
+            color: #6e6e73;
+        }
+
+        .close-search {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            opacity: 0;
+        }
+
+        .search-overlay.active .close-search {
+            opacity: 1;
+            transition-delay: 0.3s;
+        }
+
+        .close-search:hover {
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        .close-search svg {
+            width: 16px;
+            height: 16px;
+            stroke: #1d1d1f;
+        }
+
+        .quick-links {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s cubic-bezier(0.28, 0.11, 0.32, 1);
+        }
+
+        .search-overlay.active .quick-links {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.2s;
+        }
+
+        .quick-links-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #86868b;
+            margin-bottom: 20px;
+        }
+
+        .links-list {
+            list-style: none;
+        }
+
+        .links-list li {
+            border-bottom: 1px solid #d2d2d7;
+        }
+
+        .links-list li:last-child {
+            border-bottom: none;
+        }
+
+        .links-list a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 0;
+            text-decoration: none;
+            color: #1d1d1f;
+            font-size: 17px;
+            transition: opacity 0.2s ease;
+        }
+
+        .links-list a:hover {
+            opacity: 0.6;
+        }
+
+        .link-arrow {
+            width: 16px;
+            height: 16px;
+        }
+
+        .link-arrow svg {
+            width: 100%;
+            height: 100%;
+            stroke: #86868b;
+        }
+
+        /* ============================================
+           DEMO CONTENT
+        ============================================ */
+        .demo-content {
+            padding-top: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 40px;
+            padding-right: 40px;
+        }
+
+        .demo-content h1 {
+            font-size: 48px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+        }
+
+        .demo-content>p {
+            font-size: 21px;
+            line-height: 1.5;
+            color: #6e6e73;
+            margin-bottom: 40px;
+        }
+
+        /* ============================================
+           RESPONSIVE - MOBILE
+        ============================================ */
+        @media (max-width: 768px) {
+            .mobile-topbar {
+                display: flex;
+            }
+
+            .navbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                flex-direction: column;
+                align-items: flex-start;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                overflow-y: auto;
+                padding-top: 80px;
+                z-index: 1001;
+            }
+
+            .navbar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .navbar .logo {
+                display: none;
+            }
+
+            .section-label {
+                display: block;
+                font-size: 11px;
+                text-transform: uppercase;
+                color: #86868b;
+                margin: 16px 0 8px;
+                letter-spacing: 0.08em;
+                font-weight: 600;
+            }
+
+            .menu-links {
+                flex-direction: column;
+                width: 100%;
+                gap: 8px;
+            }
+
+            .menu-links>a {
+                width: 100%;
+                padding: 16px;
+                background: #f8f8f8;
+                border-radius: 12px;
+                justify-content: space-between;
+            }
+
+            .menu-links .icon {
+                display: flex;
+                width: 20px;
+                height: 20px;
+            }
+
+            .menu-links .label {
+                flex: 1;
+            }
+
+            .menu-links>a[data-mega]::after {
+                content: '›';
+                font-size: 20px;
+                color: #86868b;
+            }
+
+            .right-menu {
+                display: none;
+            }
+
+            .mega-menus-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: white;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                overflow-y: auto;
+                z-index: 1001;
+                padding-top: 80px;
+            }
+
+            .mega-menus-container:has(.mega-menu.active) {
+                transform: translateX(0);
+            }
+
+            .mega-menu {
+                max-width: 100%;
+                border-radius: 0;
+                padding: 24px;
+                box-shadow: none;
+            }
+
+            .mega-menu.active {
+                display: block;
+            }
+
+            .mega-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .mega-main {
+                order: -1;
+            }
+
+            .mega-featured {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+                z-index: 998;
+            }
+
+            body:has(.navbar.mobile-open)::before {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .demo-content {
+                padding: 80px 20px 20px;
+            }
+
+            .demo-content h1 {
+                font-size: 32px;
+            }
+
+            .demo-content>p {
+                font-size: 17px;
+            }
+
+            .search-content {
+                padding: 40px 20px 60px;
+            }
+
+            .search-input {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Mobile Topbar -->
+    <div class="mobile-topbar">
+        <a href="#" class="logo">Klef Agency</a>
+        <button class="close-btn" onclick="toggleMenu()">Menu</button>
+    </div>
+
+    <!-- Mega Topbar -->
+    <div class="mega-topbar" id="sub-menu">
+        <button class="back-btn" onclick="goBack()">Volver</button>
+        <button class="close-btn" onclick="closeMenu()">Cerrar</button>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar" id="main-nav">
+        <a href="#" class="logo">Klef Agency</a>
+
+        <div class="menu-links center">
+            <div class="section-label menu">MENÚ</div>
+
+            <a href="#" data-name="#Home">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                </span>
+                <span class="label">Inicio</span>
+            </a>
+
+            <a data-mega="#Diseno" data-name="#Diseno">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                    </svg>
+                </span>
+                <span class="label">Diseño y Media</span>
+            </a>
+
+            <a data-mega="#Tecnologia" data-name="#Tecnologia">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                </span>
+                <span class="label">Tecnología</span>
+            </a>
+
+            <a data-mega="#Marketing" data-name="#Marketing">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                    </svg>
+                </span>
+                <span class="label">Marketing</span>
+            </a>
+        </div>
+
+        <div class="right-menu">
+            <button class="btn-icon" onclick="openSearch()" aria-label="Buscar">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </button>
+            <button class="btn-icon" aria-label="Tienda">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mega Menus Container -->
+    <div class="mega-menus-container">
+        <!-- Diseño y Media -->
+        <div class="mega-menu" id="Diseno">
+            <div class="mega-content">
+                <div class="mega-sidebar">
+                    <div class="mega-sidebar-title">Diseño y Media</div>
+                    <a href="#">
+                        <span>Branding</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <span>Studio Multimedia</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <span>Publicidad</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="mega-main">
+                    <div class="mega-featured">
+                        <div class="featured-image">🎨</div>
+                        <div class="featured-content">
+                            <div class="featured-tag">By Klef•Brand</div>
+                            <h3>Branding</h3>
+                            <p>Descubre las marcas que hemos desarrollado y nuestras estrategias de diseño</p>
+                            <a href="#" class="btn-primary">Ir a Brands</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tecnología -->
+        <div class="mega-menu" id="Tecnologia">
+            <div class="mega-content">
+                <div class="mega-sidebar">
+                    <div class="mega-sidebar-title">Tecnología</div>
+                    <a href="#">
+                        <span>Desarrollo Web</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <span>Apps Móviles</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <span>E-commerce</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="mega-main">
+                    <div class="mega-featured">
+                        <div class="featured-image" style="background: linear-gradient(135deg, #C0E8FF, #A3C7FF);">💻
+                        </div>
+                        <div class="featured-content">
+                            <div class="featured-tag">By Klef•Tech</div>
+                            <h3>Desarrollo Web</h3>
+                            <p>Soluciones tecnológicas modernas y escalables para tu negocio</p>
+                            <a href="#" class="btn-primary">Ver Proyectos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marketing -->
+        <div class="mega-menu" id="Marketing">
+            <div class="mega-content">
+                <div class="mega-sidebar">
+                    <div class="mega-sidebar-title">Marketing</div>
+                    <a href="#">
+                        <span>Social Media</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <span>SEO/SEM</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <span>Content Strategy</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="mega-main">
+                    <div class="mega-featured">
+                        <div class="featured-image" style="background: linear-gradient(135deg, #D4F1D4, #A3E6A3);">📊
+                        </div>
+                        <div class="featured-content">
+                            <div class="featured-tag">By Klef•Marketing</div>
+                            <h3>Marketing Digital</h3>
+                            <p>Estrategias data-driven para impulsar tu presencia online</p>
+                            <a href="#" class="btn-primary">Conocer Más</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Overlay (Apple Style) -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-panel">
+            <button class="close-search" onclick="closeSearch()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="search-content">
+                <div class="search-input-wrapper">
+                    <div class="search-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input type="text" class="search-input" placeholder="Buscar en klef.agency" id="searchInput"
+                        autocomplete="off" spellcheck="false">
+                </div>
+
+                <div class="quick-links">
+                    <div class="quick-links-title">Enlaces Rápidos</div>
+                    <ul class="links-list">
+                        <li>
+                            <a href="#">
+                                <span>Servicios de Branding</span>
+                                <span class="link-arrow">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span>Studio Multimedia</span>
+                                <span class="link-arrow">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span>Desarrollo Web</span>
+                                <span class="link-arrow">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span>Marketing Digital</span>
+                                <span class="link-arrow">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span>Contacto</span>
+                                <span class="link-arrow">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Content -->
+    <main class="demo-content">
+        <h1>Klef Agency</h1>
+        <p>Creamos experiencias digitales que conectan marcas con sus audiencias. Diseño, estrategia y tecnología en
+            perfecta armonía.</p>
+        <div style="height: 200vh; padding: 40px 0;">
+            <p style="margin-top: 40px; color: #86868b;">Scroll para ver más contenido...</p>
+        </div>
+    </main>
+
+    <script>
+        // Configuración de menús
+        const MENU = {
+            el: {
+                nav: "#main-nav",
+                barraTop: ".mega-topbar",
+                btnVolver: ".back-btn",
+                btnCerrar: ".close-btn",
+                botones: "a[data-name]",
+                submenus: ".mega-menu"
+            },
+            viewport: {
+                movil: 768
+            }
+        };
+
+        // Estado del menú
+        let currentMegaMenu = null;
+        let navigationStack = [];
+        let dynamicStyle = null;
+
+        // Referencias a elementos del DOM
+        const navbar = document.querySelector(MENU.el.nav);
+        const megaTopbar = document.querySelector(MENU.el.barraTop);
+        const backBtn = document.querySelector(MENU.el.btnVolver);
+        const closeBtn = document.querySelector(MENU.el.btnCerrar);
+        const megaBtns = document.querySelectorAll(MENU.el.botones);
+        const megaMenus = document.querySelectorAll(MENU.el.submenus);
+
+        // Referencias para búsqueda
+        const searchOverlay = document.getElementById('searchOverlay');
+        const searchInput = document.getElementById('searchInput');
+
+        // Función para toggle del menú móvil
+        function toggleMenu() {
+            const isOpen = navbar.classList.toggle("mobile-open");
+            document.body.style.overflow = isOpen ? "hidden" : "";
+        }
+
+        // Función para cerrar completamente el menú
+        function closeMenu() {
+            navbar.classList.remove("mobile-open");
+            megaTopbar.classList.remove("active");
+            backBtn.classList.remove("visible");
+            document.body.style.overflow = "";
+            megaMenus.forEach(menu => menu.classList.remove("active"));
+            currentMegaMenu = null;
+            navigationStack = [];
+            removeDynamicStyle();
+        }
+
+        // Función para retroceder en navegación móvil
+        function goBack() {
+            if (currentMegaMenu) currentMegaMenu.classList.remove("active");
+            currentMegaMenu = null;
+            navigationStack = [];
+            megaTopbar.classList.remove("active");
+            backBtn.classList.remove("visible");
+        }
+
+        // Función para abrir un mega menú desde data-mega
+        function openMegaMenu(selector) {
+            const menu = document.querySelector(selector);
+            if (!menu) return console.error(`No se encontró el mega menú: ${selector}`);
+            megaMenus.forEach(m => m.classList.remove("active"));
+            navigationStack = [selector];
+            currentMegaMenu = menu;
+            menu.classList.add("active");
+            megaTopbar.classList.add("active");
+            backBtn.classList.add("visible");
+        }
+
+        // Función para crear y aplicar estilo dinámico en hover desktop
+        function applyDynamicStyle(value) {
+            removeDynamicStyle();
+            dynamicStyle = document.createElement("style");
+            dynamicStyle.dataset.origin = "mega-menu-runtime";
+            dynamicStyle.textContent = `
+        @media (min-width: ${MENU.viewport.movil + 1}px) {
+          [data-mega*="${value}"]:hover + .mega-menus-container ${value},
+          [data-mega*="${value}"] + .mega-menus-container ${value}:hover {
+            display: flex;
+            flex-direction: column;
+          }
+        }
+      `;
+            document.head.appendChild(dynamicStyle);
+        }
+
+        function removeDynamicStyle() {
+            if (dynamicStyle) {
+                dynamicStyle.remove();
+                dynamicStyle = null;
+            }
+        }
+
+        // Event listeners para mobile
+        megaBtns.forEach(btn => {
+            btn.addEventListener("click", e => {
+                if (window.innerWidth <= MENU.viewport.movil) {
+                    e.preventDefault();
+                    const selector = btn.dataset.mega;
+                    if (selector) openMegaMenu(selector);
+                }
+            });
+        });
+
+        // Event listeners para desktop hover
+        megaBtns.forEach(btn => {
+            btn.addEventListener("mouseenter", e => {
+                if (window.innerWidth > MENU.viewport.movil) {
+                    const value = e.currentTarget.dataset.name;
+                    navbar.dataset.mega = value;
+                    applyDynamicStyle(value);
+                }
+            });
+        });
+
+        // Cerrar mega menús al salir con el mouse en desktop
+        document.addEventListener("mousemove", e => {
+            if (window.innerWidth > MENU.viewport.movil) {
+                const overNavbar = navbar.contains(e.target);
+                const overMega = Array.from(megaMenus).some(menu => menu.contains(e.target));
+                if (!overNavbar && !overMega) removeDynamicStyle();
+            }
+        });
+
+        // Cerrar menú al cambiar tamaño a desktop
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > MENU.viewport.movil) closeMenu();
+        });
+
+        // ============================================
+        // BÚSQUEDA (ESTILO APPLE)
+        // ============================================
+        function openSearch() {
+            searchOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            removeDynamicStyle();
+
+            setTimeout(() => {
+                searchInput.focus();
+            }, 400);
+        }
+
+        function closeSearch() {
+            searchOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            searchInput.value = '';
+        }
+
+        // Cerrar con ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (searchOverlay.classList.contains('active')) {
+                    closeSearch();
+                } else if (navbar.classList.contains('mobile-open')) {
+                    closeMenu();
+                } else {
+                    removeDynamicStyle();
+                }
+            }
+        });
+
+        // Cerrar al hacer clic en el overlay
+        searchOverlay.addEventListener('click', (e) => {
+            if (e.target === searchOverlay) {
+                closeSearch();
+            }
+        });
+    </script>
+
+</body>
+
+</html>

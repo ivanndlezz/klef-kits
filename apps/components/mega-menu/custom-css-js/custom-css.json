@@ -1,0 +1,9 @@
+{
+  "presets": [
+    {
+      "name": "Mega Menu Hover",
+      "css": "@import url(mega-menu.css);",
+      "js": "const megaBtns = document.querySelectorAll(\"[data-name]\");\r\nconst navbar = document.getElementById(\"main-nav\");\r\n\r\nlet dynamicStyle = null;\r\n\r\nmegaBtns.forEach((btn) => {\r\n  btn.addEventListener(\"mouseenter\", (e) => {\r\n    const value = e.currentTarget.dataset.name;\r\n    navbar.setAttribute(\"data-mega\", value);\r\n\r\n    if (dynamicStyle) {\r\n      dynamicStyle.remove();\r\n    }\r\n\r\n    dynamicStyle = document.createElement(\"style\");\r\n    dynamicStyle.setAttribute(\"data-origin\", \"mega-menu-runtime\");\r\n\r\n    dynamicStyle.textContent = `\r\n      [data-mega*=\"${value}\"]:hover + .mega-menus-container ${value},\r\n      [data-mega*=\"${value}\"] + .mega-menus-container ${value}:hover {\r\n        display: flex;\r\n        flex-direction: column;\r\n      }\r\n    `;\r\n\r\n    \/\/ lo insertamos en el documento\r\n    document.head.appendChild(dynamicStyle);\r\n  });\r\n});\r\n"
+    }
+  ]
+}

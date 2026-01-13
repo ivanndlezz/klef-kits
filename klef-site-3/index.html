@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klef Agency - Navigation System</title>
+    <!-- Incluir el script del cargador de iconos -->
+    <script src="../shared/utilities/icon-loader/iconloader.js"></script>
+    <script>constructIcons('../assets/icons/klef-site-svg.txt');//Llamar a paquete de íconos </script>
+    <link rel="stylesheet" href="../klef-site-3/components/dynamic-island/dynamic-island.css">
+    <link rel="stylesheet" href="../assets/styles/design-system.css">
+    <link rel="stylesheet" href="../assets/styles/css-short.css">
+    <style>
+        :root {
+            --k-blue: #0066CC;
+            --k-purple: #6E6EFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f7;
+            padding-bottom: 10rem;
+        }
+
+        /* ============================================
+           MOBILE TOPBAR
+        ============================================ */
+        .mobile-topbar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 24px;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+        }
+
+        /* ============================================
+           MEGA TOPBAR
+        ============================================ */
+        .mega-topbar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 24px;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            z-index: 1002;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mega-topbar.active {
+            display: flex;
+            transform: translateY(0);
+        }
+
+        .back-btn,
+        .close-btn {
+            background: #f0f0f0;
+            border: none;
+            color: #1d1d1f;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .close-btn.toggle-menu {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+        }
+
+        .back-btn:hover,
+        .close-btn:hover {
+            background: #e5e5e5;
+        }
+
+        .back-btn {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-btn.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ============================================
+           MAIN NAVIGATION (NAVBAR)
+        ============================================ */
+        .navbar {
+            display: flex;
+            gap: 24px;
+            padding: 12px 32px;
+            background: white;
+            box-shadow: 0 0 60px 8px #00000024;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1d1d1f;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar .logo::before {
+            content: '';
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--k-blue), var(--k-purple));
+            border-radius: 8px;
+        }
+
+        .menu-links {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .section-label {
+            display: none;
+        }
+
+        .menu-links>a {
+            padding: 8px 16px;
+            color: #1d1d1f;
+            text-decoration: none;
+            font-size: 15px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu-links>a:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .menu-links .icon {
+            display: none;
+        }
+
+        .right-menu {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: #1d1d1f;
+        }
+
+        /* ============================================
+        NAVIGATION DECORATIONS
+     ============================================ */
+        nav#main-nav::before,
+        nav#main-nav::after {
+            content: "";
+            display: block;
+            --wh: 50px;
+            width: var(--wh);
+            height: var(--wh);
+            position: absolute;
+            background-color: transparent;
+            top: 0;
+            transform: translate(0px, 63px);
+            filter: opacity(1);
+        }
+
+        nav#main-nav::before {
+            left: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' id='Capa_2' data-name='Capa 2' viewBox='0 0 64.51 64.51'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %23ffffff; stroke-width: 0px; %7D %3C/style%3E%3C/defs%3E%3Cg id='Capa_1-2' data-name='Capa 1'%3E%3Cpath class='cls-1' d='m1.76,64.51H0V0h64.51v1.76c-34.66,0-62.75,28.09-62.75,62.75Z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        nav#main-nav::after {
+            right: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' id='Capa_2' data-name='Capa 2' viewBox='0 0 64.51 64.51'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %23ffffff; stroke-width: 0px; %7D %3C/style%3E%3C/defs%3E%3Cg id='Capa_1-2' data-name='Capa 1'%3E%3Cpath class='cls-1' d='m62.75,64.51h1.76s0-64.51,0-64.51H0s0,1.76,0,1.76c34.66,0,62.75,28.09,62.75,62.75Z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* ============================================
+           MEGA MENUS CONTAINER
+        ============================================ */
+        .mega-menus-container {
+            position: fixed;
+            top: 65px;
+            left: 0;
+            right: 0;
+            z-index: 998;
+            pointer-events: none;
+        }
+
+        .mega-menu {
+            display: none;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border-radius: 0 0 20px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            pointer-events: all;
+        }
+
+        .mega-menu.active {
+            display: block;
+        }
+
+        .mega-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+        }
+
+        .mega-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .mega-sidebar-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #86868b;
+            margin-bottom: 12px;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+        }
+
+        .mega-sidebar a {
+            padding: 12px 16px;
+            color: #1d1d1f;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mega-sidebar a:hover {
+            background: #f5f5f7;
+        }
+
+        .mega-sidebar a svg {
+            width: 16px;
+            height: 16px;
+            stroke: #86868b;
+        }
+
+        .mega-main {
+            background: #f9f9f9;
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .mega-featured {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .featured-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #FFE8C0, #FFB6A3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            flex-shrink: 0;
+        }
+
+        .featured-content h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .featured-content p {
+            font-size: 15px;
+            color: #6e6e73;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .featured-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            font-size: 12px;
+            color: #6e6e73;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #1d1d1f;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #000;
+        }
+
+        /* ============================================
+           SEARCH OVERLAY
+        ============================================ */
+        .search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(0px);
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.28, 0.11, 0.32, 1);
+        }
+
+        .search-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+            background: rgba(0, 0, 0, 0.48);
+            backdrop-filter: blur(20px);
+        }
+
+        .search-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            transform: translateY(-100%);
+            transition: transform 0.5s cubic-bezier(0.28, 0.11, 0.32, 1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-overlay.active .search-panel {
+            transform: translateY(0);
+        }
+
+        .search-content {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 60px 40px 80px;
+        }
+
+        .search-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #d2d2d7;
+            margin-bottom: 40px;
+        }
+
+        .search-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .search-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #86868b;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 28px;
+            color: #1d1d1f;
+            background: transparent;
+            font-family: inherit;
+        }
+
+        .search-input::placeholder {
+            color: #6e6e73;
+        }
+
+        .close-search {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            opacity: 0;
+        }
+
+        .search-overlay.active .close-search {
+            opacity: 1;
+            transition-delay: 0.3s;
+        }
+
+        .close-search:hover {
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        .close-search svg {
+            width: 16px;
+            height: 16px;
+            stroke: #1d1d1f;
+        }
+
+        .quick-links {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s cubic-bezier(0.28, 0.11, 0.32, 1);
+        }
+
+        .search-overlay.active .quick-links {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.2s;
+        }
+
+        .quick-links-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #86868b;
+            margin-bottom: 20px;
+        }
+
+        .links-list {
+            list-style: none;
+        }
+
+        .links-list li {
+            border-bottom: 1px solid #d2d2d7;
+        }
+
+        .links-list li:last-child {
+            border-bottom: none;
+        }
+
+        .links-list a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 0;
+            text-decoration: none;
+            color: #1d1d1f;
+            font-size: 17px;
+            transition: opacity 0.2s ease;
+        }
+
+        .links-list a:hover {
+            opacity: 0.6;
+        }
+
+        .link-arrow {
+            width: 16px;
+            height: 16px;
+        }
+
+        .link-arrow svg {
+            width: 100%;
+            height: 100%;
+            stroke: #86868b;
+        }
+
+        /* ============================================
+           DEMO CONTENT
+        ============================================ */
+        .demo-content {
+            padding-top: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 40px;
+            padding-right: 40px;
+        }
+
+        .demo-content h1 {
+            font-size: 48px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+        }
+
+        .demo-content>p {
+            font-size: 21px;
+            line-height: 1.5;
+            color: #6e6e73;
+            margin-bottom: 40px;
+        }
+
+        [data-name="#Home"] {
+            display: none !important;
+        }
+
+        /* ============================================
+           RESPONSIVE - MOBILE
+        ============================================ */
+        @media (max-width: 768px) {
+            [data-name="#Home"] {
+                display: flex !important;
+            }
+
+
+            .mobile-topbar {
+                display: flex;
+            }
+
+            .navbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                flex-direction: column;
+                align-items: flex-start;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                overflow-y: auto;
+                padding: 80px 24px 24px;
+                z-index: 999;
+                box-shadow: none;
+            }
+
+            .navbar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .navbar .logo {
+                display: none;
+            }
+
+            .section-label {
+                display: block;
+                font-size: 11px;
+                text-transform: uppercase;
+                color: #86868b;
+                margin: 16px 0 8px;
+                letter-spacing: 0.08em;
+                font-weight: 600;
+            }
+
+            .menu-links {
+                flex-direction: column;
+                width: 100%;
+                gap: 8px;
+            }
+
+            .menu-links>a {
+                width: 100%;
+                padding: 16px;
+                background: #f8f8f8;
+                border-radius: 12px;
+                justify-content: flex-start;
+                position: relative;
+            }
+
+            .menu-links .icon {
+                display: flex;
+                width: 24px;
+                height: 24px;
+                flex-shrink: 0;
+            }
+
+            .menu-links .icon svg {
+                width: 100%;
+                height: 100%;
+            }
+
+            .menu-links .label {
+                flex: 1;
+            }
+
+            .menu-links>a[data-mega]::after {
+                content: '›';
+                font-size: 24px;
+                color: #86868b;
+                margin-left: auto;
+            }
+
+            .right-menu {
+                width: 100%;
+                margin-top: 16px;
+                padding-top: 16px;
+                border-top: 1px solid #d2d2d7;
+            }
+
+            .mega-menus-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: white;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                overflow-y: auto;
+                z-index: 1001;
+                padding-top: 80px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .mega-menus-container.show {
+                transform: translateX(0);
+            }
+
+            .mega-menu {
+                display: none;
+                max-width: 100%;
+                border-radius: 0;
+                padding: 24px;
+                box-shadow: none;
+                position: relative;
+            }
+
+            .mega-menu.active {
+                display: block;
+            }
+
+            .mega-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .mega-main {
+                order: -1;
+            }
+
+            .mega-featured {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .featured-image {
+                width: 120px;
+                height: 120px;
+                font-size: 60px;
+            }
+
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+                z-index: 998;
+            }
+
+            body:has(.navbar.mobile-open)::before,
+            body:has(.mega-menus-container.show)::before {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .demo-content {
+                padding: 80px 20px 20px;
+            }
+
+            .demo-content h1 {
+                font-size: 32px;
+            }
+
+            .demo-content>p {
+                font-size: 17px;
+            }
+
+            .search-content {
+                padding: 40px 20px 60px;
+            }
+
+            .search-input {
+                font-size: 22px;
+            }
+
+            [data-logo="klef-logo-desktop"] {
+                display: none;
+            }
+        }
+
+
+        .close-btn.toggle-menu:before {
+            content: "Menu";
+            left: 0;
+            top: 0;
+            width: 100%;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .close-btn.toggle-menu:after {
+            content: "Cerrar";
+            position: absolute;
+            left: 0;
+            top: 100%;
+            width: 100%;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        body[style*="hidden"] .close-btn:before {
+            transform: translateY(calc(-100% - 8px));
+        }
+
+        body[style*="hidden"] .close-btn:after {
+            transform: translateY(calc(-100% - 8px));
+        }
+
+        #logo {
+            font-family: sans-serif;
+            letter-spacing: 0;
+            font-size: 20px;
+            line-height: 24px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 25px;
+            color: #333333;
+            text-decoration: none;
+            pointer-events: all;
+        }
+
+        [data-logo="klef-logo-mobile"] #logo {
+            margin-left: 0
+        }
+
+        [aria-label="Tienda"] {
+            display: none;
+        }
+
+        .dynamic-island-container:has([data-status="toast"]) {
+            padding: 0;
+        }
+    </style>
+    <style>
+        /* Reset y Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            color: #22323a;
+            background: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* Hero Container */
+        .hero-container {
+            height: 900px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .masonry-block {
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+            position: absolute;
+            height: 700px;
+            align-items: center;
+            top: 0;
+        }
+
+        [class*="half-"] {
+            width: 50%;
+            height: 100%;
+        }
+
+        .half-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .half-right {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        .hero-content h2,
+        .hero-content h2+p {
+            margin-left: 10px;
+        }
+
+        /* Hero Content */
+        .hero-content {
+            max-width: 540px;
+        }
+
+        .hero_title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .hero_text {
+            color: #6b7280;
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+            margin: 1.5rem 0 2rem 0;
+            margin-top: 0rem;
+        }
+
+        /* Text Animation */
+        .word {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .letter {
+            display: inline-block;
+            position: relative;
+
+            transform: translateZ(25px);
+            transform-origin: 50% 50% 25px;
+        }
+
+        .letter.out {
+            transform: rotateX(90deg);
+            transition: transform 0.32s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+        }
+
+        .letter.behind {
+            transform: rotateX(-90deg);
+        }
+
+        .letter.in {
+            transform: rotateX(0deg);
+            transition: transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Colors */
+        .purple {
+            color: #8e44ad;
+        }
+
+        .azul {
+            color: #2980b9;
+        }
+
+        .green {
+            color: #16a085;
+        }
+
+        .oxido {
+            color: #db4b10;
+        }
+
+        /* Images Masonry */
+        .images_container {
+            display: grid;
+            row-gap: 32px;
+            align-content: center;
+        }
+
+        .img_container {
+            width: 13vw;
+            height: auto;
+            min-width: 150px;
+        }
+
+        .images_container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .images_container img:hover {
+            transform: scale(1.05);
+        }
+
+        .images_container:nth-child(2) {
+            transform: translateY(0rem);
+        }
+
+        .images_container:not(:first-child) {
+            margin-left: 32px;
+        }
+
+        /* Search Box */
+        .white-shadow {
+            background: #f5f6f7ba;
+            padding: 2rem;
+            border-radius: 18px;
+            box-shadow: 0px 6px 54px 7px rgb(214 214 214);
+            border: inset 1px #cccccc44;
+        }
+
+        .search-container {
+            position: relative;
+            background: white;
+            border: 1px solid #e5e7ea;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-container .icon {
+            margin-right: 0.75rem;
+        }
+
+        .search-container svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: #8e8e93;
+        }
+
+        .is-search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .is-search-input::placeholder {
+            color: #b0b5ba;
+        }
+
+        .filter-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        #filterCheckbox {
+            display: none;
+        }
+
+        .filter-module {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7ea;
+        }
+
+        #filterCheckbox:checked~.filter-module {
+            display: block;
+        }
+
+        /* Tags */
+        #search-tags {
+            display: flex;
+            gap: 0.3rem;
+            margin-left: 0.3rem;
+            flex-wrap: wrap;
+        }
+
+        #search-tags>span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            border: 1px solid;
+            padding: 2px 10px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #fff;
+        }
+
+        #search-tags>span:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #search-tags>span svg {
+            margin-right: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .border-emerald-500 {
+            border-color: #16a085;
+            color: #16a085;
+        }
+
+        .border-amber-500 {
+            border-color: #e68600;
+            color: #e68600;
+        }
+
+        .border-blue-500 {
+            border-color: #2980b9;
+            color: #2980b9;
+        }
+
+        /* Search */
+
+        .input {
+            height: 2.75rem;
+            padding: 0 1rem;
+            font-size: 1rem;
+            border: 1px solid #d2d2d7;
+            border-radius: 0.75rem;
+            background: white;
+            color: #1d1d1f;
+            transition: all 0.2s ease;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #86868b;
+            pointer-events: none;
+        }
+
+        .input-icon-left {
+            left: 0.875rem;
+        }
+
+        .input-icon-right {
+            right: 0.875rem;
+        }
+
+        .input-has-icon-left {
+            padding-left: 2.75rem;
+        }
+
+        .input-has-icon-right {
+            padding-right: 2.75rem;
+        }
+
+        .hero-content .hero_title {
+            font-weight: 700;
+            font-size: 3rem;
+            line-height: 1;
+            margin: 0px;
+        }
+
+
+
+        /* Responsive */
+        @media screen and (max-width: 1024px) {
+            .hero_title {
+                font-size: 2.5rem;
+            }
+
+            .img_container {
+                width: 11vw;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+
+
+            .masonry-block {
+                flex-direction: column-reverse;
+                height: auto;
+                position: relative;
+            }
+
+            [class*="half-"] {
+                width: 100%;
+                gap: 0px;
+            }
+
+            .half-left {
+                order: 2;
+                padding: 2rem 1.5rem;
+            }
+
+            .half-right {
+                order: 1;
+                height: 400px;
+                margin-top: 2rem;
+            }
+
+            .hero-container {
+                height: auto;
+                margin-top: 4rem;
+            }
+
+            .hero_title {
+                font-size: 2rem;
+            }
+
+            .white-shadow {
+                padding: 2rem 1rem;
+            }
+
+
+        }
+    </style>
+    <style>
+        .brandsCarousel {
+            max-height: 100px;
+            margin: auto;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0px -16px 20px 20px #fff;
+        }
+
+        .carouselTrack {
+            width: calc(100px * 20);
+            animation: infiniteLoop 10s linear infinite;
+            animation-fill-mode: forwards;
+            will-change: transform;
+        }
+
+        @keyframes infiniteLoop {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(calc(-100px * 10), 0, 0);
+            }
+        }
+
+        .brandLogo {
+            width: 100px;
+            height: 95px;
+            align-items: center;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        /* ===============================
+    KLEF CSS · VARIABLE-DRIVEN
+================================ */
+        :root {
+            --k-max: 1000px;
+            --k-gap: 40px;
+            --k-step-w: 21rem;
+            --k-num-size: 4rem;
+            --k-radius: .375rem;
+            --k-gray: #6b7280;
+            --k-light: #e5e7eb;
+            --k-dark: #111;
+        }
+
+        .k-process {
+            padding: 4rem 0;
+        }
+
+        .k-process-title {
+            text-align: center;
+        }
+
+        .k-process-subtitle {
+            max-width: 32rem;
+            margin: 1rem auto 3rem;
+            font-size: 1rem;
+            font-weight: 300;
+            color: var(--k-gray);
+        }
+
+        .k-steps {
+            display: flex;
+            max-width: var(--k-max);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .k-step {
+            width: var(--k-step-w);
+        }
+
+        .k-step-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .k-step-num {
+            width: var(--k-num-size);
+            height: var(--k-num-size);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--k-light);
+            border-radius: var(--k-radius);
+            font-size: 1.875rem;
+        }
+
+        .k-step-line {
+            display: flex;
+            width: 80%;
+            margin: 0 20px;
+        }
+
+        .k-step-line::before,
+        .k-step-line::after {
+            content: '';
+            --wh: 9px;
+            min-width: var(--wh);
+            height: var(--wh);
+            background-color: #000;
+            display: flex;
+            transform: rotate(45deg);
+            margin: 5px;
+        }
+
+
+
+        .k-step-line i {
+            min-width: 100px;
+            height: 1em;
+            background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='30px' height='30px' viewBox='0,0,256,256'%3E%3Cg fill='%23222222' fill-rule='nonzero' stroke='none' stroke-width='1' stroke-linecap='butt' stroke-linejoin='miter' stroke-miterlimit='10' stroke-dasharray='' stroke-dashoffset='0' font-family='none' font-weight='none' font-size='none' text-anchor='none' style='mix-blend-mode: normal'%3E%3Cg transform='scale(8.53333,8.53333)'%3E%3Cpath d='M5,13c-0.72127,-0.0102 -1.39216,0.36875 -1.75578,0.99175c-0.36361,0.623 -0.36361,1.39351 0,2.01651c0.36361,0.623 1.0345,1.00195 1.75578,0.99175h20c0.72127,0.0102 1.39216,-0.36875 1.75578,-0.99175c0.36361,-0.623 0.36361,-1.39351 0,-2.01651c-0.36361,-0.623 -1.0345,-1.00195 -1.75578,-0.99175z'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            ;
+            background-repeat: repeat-x;
+            background-size: 1em 1em;
+        }
+
+        .k-step-title {
+            display: inline-block;
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-top: 2rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .k-step-text {
+            font-size: 1rem;
+            line-height: 1.5rem;
+            color: var(--k-gray);
+            padding-right: 1.25rem;
+        }
+
+        @media (max-width: 800px) {
+            .k-steps {
+                flex-direction: column;
+                gap: var(--k-gap);
+            }
+
+            .k-step {
+                display: flex;
+                gap: 5vw;
+            }
+
+            .k-step-line {
+                position: absolute;
+                transform: rotate(90deg) translate(64px, 10px);
+                max-width: 50px;
+            }
+
+            .k-step-line i {
+                min-width: 50px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Topbar -->
+    <div class="mobile-topbar">
+        <div data-logo="klef-logo-mobile">
+            <a id="logo" href="/" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false"
+                data-supplied-ml="false" class="no-image">
+                <img src="https://klef.agency/wp-content/uploads/2023/05/aIzMOocW7VlfG_mgYffnxgmOjZONsO2Q7zN037Djnyo.png"
+                    alt="Logo de Klef Agency" width="30" height="30">
+                Klef Agency
+            </a>
+        </div>
+        <button class="close-btn toggle-menu" onclick="toggleMenu()"><!-- Menu --></button>
+    </div>
+
+    <!-- Mega Topbar -->
+    <div class="mega-topbar">
+        <button class="back-btn" onclick="goBack()">Volver</button>
+        <button class="close-btn" onclick="closeMenu()">Cerrar</button>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar" id="main-nav">
+        <div data-logo="klef-logo-desktop">
+            <a id="logo" href="/" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false"
+                data-supplied-ml="false" class="no-image">
+                <img src="https://klef.agency/wp-content/uploads/2023/05/aIzMOocW7VlfG_mgYffnxgmOjZONsO2Q7zN037Djnyo.png"
+                    alt="Logo de Klef Agency" width="30" height="30">
+                Klef Agency
+            </a>
+        </div>
+
+        <div class="menu-links">
+            <div class="section-label">MENÚ</div>
+
+            <a href="#" data-name="#Home">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        style="--wh:20px; width: var(--wh); height: var(--wh);">
+                        <use href="#icon-home"></use>
+                    </svg>
+                </span>
+                <span class="label">Inicio</span>
+            </a>
+
+            <a href="#" data-mega="#Diseno" data-name="#Diseno">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        style="--wh:20px; width: var(--wh); height: var(--wh);">
+                        <use href="#icon-color-palette"></use>
+                    </svg>
+                </span>
+                <span class="label">Diseño y Media</span>
+            </a>
+
+            <a href="#" data-mega="#Tecnologia" data-name="#Tecnologia">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        style="--wh:20px; width: var(--wh); height: var(--wh);">
+                        <use href="#icon-code"></use>
+                    </svg>
+                </span>
+                <span class="label">Tecnología</span>
+            </a>
+
+            <a href="#" data-mega="#Marketing" data-name="#Marketing">
+                <span class="icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        style="--wh:20px; width: var(--wh); height: var(--wh);">
+                        <use href="#icon-megaphone"></use>
+                    </svg>
+                </span>
+                <span class="label">Marketing</span>
+            </a>
+        </div>
+
+        <div class="right-menu">
+            <button class="btn-icon" onclick="openSearch()" aria-label="Buscar">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    style="--wh:20px; width: var(--wh); height: var(--wh);">
+                    <use href="#icon-search"></use>
+                </svg>
+            </button>
+            <button class="btn-icon" aria-label="Tienda">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <use href="#shop-bag"></use>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mega Menus Container -->
+    <div class="mega-menus-container">
+        <!-- Diseño y Media -->
+        <div class="mega-menu" id="Diseno">
+            <div class="mega-content">
+                <div class="mega-sidebar">
+                    <div class="mega-sidebar-title">Diseño y Media</div>
+                    <a href="#">
+                        <span>Branding</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <span>Studio Multimedia</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <span>Publicidad</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="mega-main">
+                    <div class="mega-featured">
+                        <div class="featured-image">🎨</div>
+                        <div class="featured-content">
+                            <div class="featured-tag">By Klef•Brand</div>
+                            <h3>Branding</h3>
+                            <p>Descubre las marcas que hemos desarrollado y nuestras estrategias de diseño</p>
+                            <a href="#" class="btn-primary">Ir a Brands</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tecnología -->
+        <div class="mega-menu" id="Tecnologia">
+            <div class="mega-content">
+                <div class="mega-sidebar">
+                    <div class="mega-sidebar-title">Tecnología</div>
+                    <a href="#">
+                        <span>Desarrollo Web</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <span>Apps Móviles</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <span>E-commerce</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="mega-main">
+                    <div class="mega-featured">
+                        <div class="featured-image" style="background: linear-gradient(135deg, #C0E8FF, #A3C7FF);">💻
+                        </div>
+                        <div class="featured-content">
+                            <div class="featured-tag">By Klef•Tech</div>
+                            <h3>Desarrollo Web</h3>
+                            <p>Soluciones tecnológicas modernas y escalables para tu negocio</p>
+                            <a href="#" class="btn-primary">Ver Proyectos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marketing -->
+        <div class="mega-menu" id="Marketing">
+            <div class="mega-content">
+                <div class="mega-sidebar">
+                    <div class="mega-sidebar-title">Marketing</div>
+                    <a href="#">
+                        <span>Social Media</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <span>SEO/SEM</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <span>Content Strategy</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="mega-main">
+                    <div class="mega-featured">
+                        <div class="featured-image" style="background: linear-gradient(135deg, #D4F1D4, #A3E6A3);">📊
+                        </div>
+                        <div class="featured-content">
+                            <div class="featured-tag">By Klef•Marketing</div>
+                            <h3>Marketing Digital</h3>
+                            <p>Estrategias data-driven para impulsar tu presencia online</p>
+                            <a href="#" class="btn-primary">Conocer Más</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-panel">
+            <button class="close-search" onclick="closeSearch()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <div class="search-content">
+                <div class="search-input-wrapper">
+                    <div class="search-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input type="text" class="search-input" placeholder="Buscar en klef.agency" id="searchInput"
+                        autocomplete="off" spellcheck="false">
+                    <label for="searchInput" class="section-label"></label>
+                </div>
+                <div class="quick-links">
+                    <div class="quick-links-title">Enlaces Rápidos</div>
+                    <ul class="links-list">
+                        <li><a href="#"><span>Servicios de Branding</span><span class="link-arrow">›</span></a></li>
+                        <li><a href="#"><span>Studio Multimedia</span><span class="link-arrow">›</span></a></li>
+                        <li><a href="#"><span>Desarrollo Web</span><span class="link-arrow">›</span></a></li>
+                        <li><a href="#"><span>Marketing Digital</span><span class="link-arrow">›</span></a></li>
+                        <li><a href="#"><span>Contacto</span><span class="link-arrow">›</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Content -->
+    <main class="">
+        <section class="hero-section hero-container">
+            <div class="masonry-block">
+                <!-- Half Left: Hero Content -->
+                <div class="half-left">
+                    <div class="hero-content"
+                        style="--bg: linear-gradient(0deg, #ffffff55 1%, white 33%); --blur: 10px;">
+                        <h2>
+                            <div class="hero_title">
+                                Crece con
+                            </div>
+                            <div class="hero_title" style="position: relative; height: 85px;">
+
+                                <span class="word oxido">diseño</span>
+                                <span class="word green">una¨web</span>
+                                <span class="word purple">un¨logo¨nuevo</span>
+                                <span class="word azul">marketing</span>
+
+                            </div>
+                        </h2>
+
+                        <p class="hero_text">
+                            Descubre servicios creativos y digitales integrales en un solo click.
+                        </p>
+
+                        <div class="white-shadow">
+                            <div class="search-wrapper">
+                                <div style="--mb:1rem;">
+
+
+                                    <div class="input-group" style="--w-fill:1;">
+
+                                        <label for="klef-search" class="input-with-icon" style="--w-fill:1;">
+                                            <svg class="input-icon input-icon-left" width="20" height="20"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="11" cy="11" r="8" />
+                                                <path d="m21 21-4.3-4.3" />
+                                            </svg>
+                                            <input id="klef-search" type="text" class="input input-has-icon-left"
+                                                placeholder="Search: Mockups, Logos, Design..." autocomplete="off"
+                                                style="--w-fill:1;">
+                                        </label>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div id="search-tags">
+                                <span class="border-emerald-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5">
+                                        </path>
+                                    </svg>
+                                    Desarrollo
+                                </span>
+                                <span class="border-amber-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M4.098 19.902a3.75 3.75 0 0 0 5.304 0l6.401-6.402M6.75 21A3.75 3.75 0 0 1 3 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 0 0 3.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008Z">
+                                        </path>
+                                    </svg>
+                                    Diseño
+                                </span>
+                                <span class="border-blue-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z">
+                                        </path>
+                                    </svg>
+                                    Marketing
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Half Right: Masonry Images -->
+                <div class="half-right">
+                    <div class="images_container">
+                        <div class="img_container">
+                            <img loading="lazy"
+                                src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-00005.jpg"
+                                alt="Portfolio 1">
+                        </div>
+                        <div class="img_container">
+                            <img loading="lazy"
+                                src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-00002.jpg"
+                                alt="Portfolio 2">
+                        </div>
+                    </div>
+                    <div class="images_container">
+                        <div class="img_container">
+                            <img loading="lazy"
+                                src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-00006.jpg"
+                                alt="Portfolio 3">
+                        </div>
+                        <div class="img_container">
+                            <img loading="lazy"
+                                src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-00003.jpg"
+                                alt="Portfolio 4">
+                        </div>
+                        <div class="img_container">
+                            <img loading="lazy"
+                                src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-punta-medano.jpg"
+                                alt="Portfolio 5">
+                        </div>
+                    </div>
+                    <div class="images_container">
+                        <div class="img_container">
+                            <img loading="lazy"
+                                src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-00007.jpg"
+                                alt="Portfolio 6">
+                        </div>
+                        <div class="img_container">
+                            <img loading="lazy"
+                                src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-00004.jpg"
+                                alt="Portfolio 7">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="container brandsCarousel">
+            <div class="d-flex carouselTrack" style="--flex:1; margin: 10px 0px; gap: 1rem;">
+                <!---
+IMPORTANT: The content below includes the original logos, which will appear once in the carousel. To create the seamless infinite loop effect, you will need to clone the original logos. Each logo should be wrapped in a <div> with the class name 'brandLogo' or a custom class name of your choice.
+--->
+                <div class="brandLogo" itm="1">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-17.png"
+                        style="height: auto;margin: auto; max-width: 80px">
+                </div>
+                <div class="brandLogo" itm="2">
+
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-08.png"
+                        style="height: -webkit-fill-available;margin: auto; transform: translatey(-9px);">
+                </div>
+                <div class="brandLogo" itm="3">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-12.png"
+                        style="height: auto;margin: auto; max-width: 70px">
+                </div>
+                <div class="brandLogo" itm="4">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-13.png"
+                        style="height: auto;margin: auto; max-width: 80px">
+                </div>
+                <div class="brandLogo" itm="5">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-09.png"
+                        style="height: auto;margin: auto; max-width: 65px">
+                </div>
+                <div class="brandLogo" itm="6">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-07.png"
+                        style="height: auto;margin: auto; max-width: 91px; transform: translateY(-9px);">
+                </div>
+                <div class="brandLogo" itm="7">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-10.png"
+                        style="height: auto;margin: auto; max-width: 65px; transform: translateY(0px);">
+                </div>
+                <div class="brandLogo" itm="8">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-14.png"
+                        style="height: auto;margin: auto; transform: translateY(-10px);">
+                </div>
+                <div class="brandLogo" itm="9">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-15.png"
+                        style="height: auto;margin: auto; max-width: 75px; transform: translateY(-7px);">
+                </div>
+                <div class="brandLogo" itm="10">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-16.png"
+                        style="height: auto;margin: auto; max-width: 75px; transform: translateY(-7px);">
+                </div>
+                <!---
+
+IMPORTANT: The content below includes clones of the original logos, which are necessary to create a seamless infinite loop effect.
+
+--->
+                <div class="brandLogo" itm="1">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-17.png"
+                        style="height: auto;margin: auto; max-width: 80px">
+                </div>
+                <div class="brandLogo" itm="2">
+
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-08.png"
+                        style="height: -webkit-fill-available;margin: auto; transform: translatey(-9px);">
+                </div>
+                <div class="brandLogo" itm="3">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-12.png"
+                        style="height: auto;margin: auto; max-width: 70px">
+                </div>
+                <div class="brandLogo" itm="4">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-13.png"
+                        style="height: auto;margin: auto; max-width: 80px">
+                </div>
+                <div class="brandLogo" itm="5">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-09.png"
+                        style="height: auto;margin: auto; max-width: 65px">
+                </div>
+                <div class="brandLogo" itm="6">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-07.png"
+                        style="height: auto;margin: auto; max-width: 91px; transform: translateY(-9px);">
+                </div>
+                <div class="brandLogo" itm="7">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-10.png"
+                        style="height: auto;margin: auto; max-width: 65px; transform: translateY(0px);">
+                </div>
+                <div class="brandLogo" itm="8">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-14.png"
+                        style="height: auto;margin: auto; transform: translateY(-10px);">
+                </div>
+                <div class="brandLogo" itm="9">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-15.png"
+                        style="height: auto;margin: auto; max-width: 75px; transform: translateY(-7px);">
+                </div>
+                <div class="brandLogo" itm="10">
+                    <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-16.png"
+                        style="height: auto;margin: auto; max-width: 75px; transform: translateY(-7px);">
+                </div>
+            </div>
+        </div>
+
+        <section id="process" class="k-process">
+            <div class="k-process-title">
+                <h2>Nuestro proceso</h2>
+                <p class="k-process-subtitle">
+                    Obtén lo que necesitas en 3 sencillos pasos:
+                </p>
+            </div>
+
+            <div class="k-steps">
+                <div class="k-step">
+                    <div class="k-step-head">
+                        <div class="k-step-num">1</div>
+                        <div class="k-step-line"><i></i></div>
+                    </div>
+                    <div class="k-step-body">
+                        <span class="k-step-title">Elige tu servicio o paquete</span>
+                        <p class="k-step-text">Elige conforme a tus objetivos y necesidad; envía tu solicitud.</p>
+                    </div>
+                </div>
+
+                <div class="k-step">
+                    <div class="k-step-head">
+                        <div class="k-step-num">2</div>
+                        <div class="k-step-line"><i></i></div>
+                    </div>
+                    <div class="k-step-body">
+                        <span class="k-step-title">Brief meeting</span>
+                        <p class="k-step-text">Nos pondremos en contacto contigo y agendaremos una reunión para recabar
+                            los detalles.</p>
+                    </div>
+                </div>
+
+                <div class="k-step">
+                    <div class="k-step-head">
+                        <div class="k-step-num">3</div>
+                        <div class="k-step-line"><i></i></div>
+                    </div>
+                    <div class="k-step-body">
+                        <span class="k-step-title">Entregas</span>
+                        <p class="k-step-text">¡Listo!. Te entregamos conforme al plan de entregas. Puede ser inmediato
+                            o por fases semanales.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <script>
+            var words = document.getElementsByClassName('word');
+            var wordArray = [];
+            var currentWord = 0;
+
+            words[currentWord].style.opacity = 1;
+
+            for (var i = 0; i < words.length; i++) {
+                splitLetters(words[i]);
+            }
+
+            function changeWord() {
+                var cw = wordArray[currentWord];
+                var nw = currentWord == words.length - 1 ? wordArray[0] : wordArray[currentWord + 1];
+
+                for (var i = 0; i < cw.length; i++) {
+                    animateLetterOut(cw, i);
+                }
+
+                for (var i = 0; i < nw.length; i++) {
+                    nw[i].className = 'letter behind';
+                    nw[0].parentElement.style.opacity = 1;
+                    animateLetterIn(nw, i);
+                }
+
+                currentWord = (currentWord == wordArray.length - 1) ? 0 : currentWord + 1;
+            }
+
+            function animateLetterOut(cw, i) {
+                setTimeout(function () {
+                    cw[i].className = 'letter out';
+                }, i * 80);
+            }
+
+            function animateLetterIn(nw, i) {
+                setTimeout(function () {
+                    nw[i].className = 'letter in';
+                }, 340 + (i * 80));
+            }
+
+            function splitLetters(word) {
+                var content = word.innerHTML;
+                word.innerHTML = '';
+                var letters = [];
+
+                for (var i = 0; i < content.length; i++) {
+                    var letter = document.createElement('span');
+                    letter.className = 'letter';
+
+                    if (content.charAt(i) === '¨') {
+                        letter.innerHTML = '&nbsp;';
+                        letter.style.opacity = '0';
+                    } else {
+                        letter.innerHTML = content.charAt(i);
+                    }
+
+                    word.appendChild(letter);
+                    letters.push(letter);
+                }
+
+                wordArray.push(letters);
+            }
+
+            changeWord();
+            setInterval(changeWord, 4000);
+
+            // Search input focus
+            document.querySelector('.search-container').addEventListener('click', function (event) {
+                const isFilterButton = event.target.closest('.filter-toggle');
+                if (!isFilterButton) {
+                    document.getElementById('is-search-input-10380').focus();
+                }
+            });
+        </script>
+    </main>
+
+    <script>
+        // Referencias DOM
+        const navbar = document.getElementById('main-nav');
+        const megaTopbar = document.querySelector('.mega-topbar');
+        const backBtn = document.querySelector('.back-btn');
+        const megaMenusContainer = document.querySelector('.mega-menus-container');
+        const searchOverlay = document.getElementById('searchOverlay');
+        const searchInput = document.getElementById('searchInput');
+
+        let currentMegaMenu = null;
+        let dynamicStyle = null;
+
+        /*// Toggle menú móvil
+        function toggleMenu() {
+            const isOpen = navbar.classList.toggle('mobile-open');
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+
+        }*/
+
+        // Abrir mega menú (móvil)
+        function openMegaMenu(selector) {
+            console.log('Abriendo mega menú:', selector);
+            const menu = document.querySelector(selector);
+
+            if (!menu) {
+                console.error('No se encontró el mega menú:', selector);
+                return;
+            }
+
+            // Cerrar todos los mega menus
+            document.querySelectorAll('.mega-menu').forEach(m => m.classList.remove('active'));
+
+            // Mostrar el contenedor y el menú seleccionado
+            megaMenusContainer.classList.add('show');
+            menu.classList.add('active');
+
+            currentMegaMenu = menu;
+
+            megaTopbar.classList.add('active');
+            backBtn.classList.add('visible');
+
+            console.log('Mega menú abierto:', selector);
+        }
+
+        // Volver (cerrar mega menú)
+        function goBack() {
+            if (currentMegaMenu) {
+                currentMegaMenu.classList.remove('active');
+            }
+
+            megaMenusContainer.classList.remove('show');
+            currentMegaMenu = null;
+            megaTopbar.classList.remove('active');
+            backBtn.classList.remove('visible');
+        }
+
+        // Cerrar todo
+        function closeMenu() {
+            navbar.classList.remove('mobile-open');
+            megaMenusContainer.classList.remove('show');
+            megaTopbar.classList.remove('active');
+            backBtn.classList.remove('visible');
+            document.body.style.overflow = '';
+
+            document.querySelectorAll('.mega-menu').forEach(menu => menu.classList.remove('active'));
+            currentMegaMenu = null;
+            removeDynamicStyle();
+        }
+
+        // Búsqueda
+        function openSearch() {
+            searchOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            removeDynamicStyle();
+            // Enfocar el input después de que la transición termine
+            searchOverlay.addEventListener('transitionend', () => {
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            }, { once: true });
+        }
+
+        function closeSearch() {
+            searchOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            searchInput.value = '';
+        }
+
+        // Estilo dinámico para hover desktop
+        function applyDynamicStyle(value) {
+            removeDynamicStyle();
+            dynamicStyle = document.createElement('style');
+            dynamicStyle.dataset.origin = 'mega-menu-runtime';
+            dynamicStyle.textContent = `
+                @media (min-width: 769px) {
+                    [data-mega*="${value}"]:hover + .mega-menus-container ${value},
+                    [data-mega*="${value}"] + .mega-menus-container ${value}:hover {
+                        display: block;
+                    }
+                }
+            `;
+            document.head.appendChild(dynamicStyle);
+        }
+
+        function removeDynamicStyle() {
+            if (dynamicStyle) {
+                dynamicStyle.remove();
+                dynamicStyle = null;
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Click en items con mega menú (móvil)
+            document.querySelectorAll('[data-mega]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        const selector = btn.getAttribute('data-mega');
+                        if (selector) {
+                            openMegaMenu(selector);
+                        }
+                    }
+                });
+
+                // Hover en desktop
+                btn.addEventListener('mouseenter', (e) => {
+                    if (window.innerWidth > 768) {
+                        const value = e.currentTarget.getAttribute('data-name');
+                        navbar.dataset.mega = value;
+                        applyDynamicStyle(value);
+                    }
+                });
+            });
+
+            // Cerrar mega menús al salir con el mouse en desktop
+            document.addEventListener('mousemove', (e) => {
+                if (window.innerWidth > 768) {
+                    const overNavbar = navbar.contains(e.target);
+                    const overMega = Array.from(document.querySelectorAll('.mega-menu')).some(menu => menu.contains(e.target));
+                    if (!overNavbar && !overMega) {
+                        removeDynamicStyle();
+                    }
+                }
+            });
+
+            // Cerrar con ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (searchOverlay.classList.contains('active')) {
+                        closeSearch();
+                    } else if (navbar.classList.contains('mobile-open')) {
+                        closeMenu();
+                    } else {
+                        removeDynamicStyle();
+                    }
+                }
+            });
+
+            // Cerrar al hacer clic en overlay de búsqueda
+            searchOverlay.addEventListener('click', (e) => {
+                if (e.target === searchOverlay) {
+                    closeSearch();
+                }
+            });
+
+            // Cerrar al hacer clic en overlay oscuro
+            document.body.addEventListener('click', (e) => {
+                if (e.target === document.body && navbar.classList.contains('mobile-open')) {
+                    closeMenu();
+                }
+            });
+
+            // Cerrar menú al cambiar a desktop
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768) {
+                    closeMenu();
+                }
+            });
+        });
+    </script>
+    <script src="../klef-site-3/components/dynamic-island/dynamic-island.js"></script>
+    <script>
+        loadPreset('search_totop');
+        //loadPreset('search_menu_cart');
+
+        setTimeout(() => {
+            showCookieConsent(`
+            <span 
+            style="max-width: 70vw;display: flex;font-size: 13px;font-weight: 300;margin-top: 10px;"
+            > Utilizamos cookies esenciales para el funcionamiento del sitio y cookies analíticas para mejorar tu experiencia. 
+            <br>Puedes aceptar todas o configurar tus preferencias.</span>
+            `,
+                {
+                    acceptText: 'Aceptar todas',
+                    settingsText: 'Configurar',
+                    settingsCallback: () => {
+                        alert('Aquí se abriría el panel de configuración de cookies.');
+                    }
+                }
+
+            );
+        }, 250);
+    </script>
+
+</body>
+
+</html>

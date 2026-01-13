@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es" suppresshydrationwarning="true" data-lt-installed="true">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Klef Agency - Navigation System</title>
+  <link rel="preload"
+    href="https://klef.agency/wp-content/uploads/2023/05/aIzMOocW7VlfG_mgYffnxgmOjZONsO2Q7zN037Djnyo.png" as="image">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="components/mega-menu/mega-menu.css">
+  <link rel="stylesheet" href="components/dynamic-island/dynamic-island.css">
+  <style>
+    @keyframes ripple {
+      from {
+        transform: scale(0);
+        opacity: 1;
+      }
+
+      to {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+  </style>
+  <style type="text/css" media="print">
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="svg-symbols" style="display: none;">
+    <svg id="sprite" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="icon-globe" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418"
+          fill="none" stroke="currentColor" stroke-width="1.5"></path>
+      </symbol>
+      <symbol id="icon-code-app" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M14.25 9.75 16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z"
+          fill="none" stroke="currentColor" stroke-width="1.5"></path>
+      </symbol>
+      <symbol id="icon-code" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" fill="none" stroke="currentColor"
+          stroke-width="1.5"></path>
+      </symbol>
+      <symbol id="icon-book" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"
+          fill="none" stroke="currentColor" stroke-width="1.5"></path>
+      </symbol>
+      <symbol id="icon-paint" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42"
+          fill="none" stroke="currentColor" stroke-width="1.5"></path>
+      </symbol>
+      <symbol id="icon-folder" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"
+          fill="none" stroke="currentColor" stroke-width="1.5"></path>
+      </symbol>
+      <symbol id="icon-star-sparks" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"
+          fill="none" stroke="currentColor" stroke-width="1.5"></path>
+      </symbol>
+      <symbol id="icon-modules" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 0 1-1.125-1.125v-3.75ZM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-8.25ZM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-2.25Z"
+          fill="none" stroke="currentColor" stroke-width="1.5"></path>
+      </symbol>
+      <symbol id="icon-stacked-list" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"
+          fill="none" stroke="currentColor" stroke-width="1.5"></path>
+      </symbol>
+      <symbol id="icon-home" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+          fill="none" stroke="currentColor" stroke-width="1.5"></path>
+      </symbol>
+      <symbol id="icon-color-palette" viewBox="0 0 24 24">
+        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+        <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+        <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+        <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+        <path
+          d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
+          fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+      </symbol>
+      <symbol id="icon-search" viewBox="0 0 256 256">
+        <g fill="currentColor" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt"
+          stroke-linejoin="miter" stroke-miterlimit="10" style="mix-blend-mode: normal">
+          <g transform="scale(8.53333,8.53333)">
+            <path
+              d="M13,3c-5.511,0 -10,4.489 -10,10c0,5.511 4.489,10 10,10c2.39651,0 4.59738,-0.85101 6.32227,-2.26367l5.9707,5.9707c0.25082,0.26124 0.62327,0.36648 0.97371,0.27512c0.35044,-0.09136 0.62411,-0.36503 0.71547,-0.71547c0.09136,-0.35044 -0.01388,-0.72289 -0.27512,-0.97371l-5.9707,-5.9707c1.41266,-1.72488 2.26367,-3.92576 2.26367,-6.32227c0,-5.511 -4.489,-10 -10,-10zM13,5c4.43012,0 8,3.56988 8,8c0,4.43012 -3.56988,8 -8,8c-4.43012,0 -8,-3.56988 -8,-8c0,-4.43012 3.56988,-8 8,-8z">
+            </path>
+          </g>
+        </g>
+      </symbol>
+
+    </svg>
+  </div>
+
+
+
+
+  <!-- Mobile Topbar -->
+  <div class="mobile-topbar">
+    <div data-logo="klef-logo-mobile">
+      <a id="logo" href="/" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false"
+        data-supplied-ml="false" class="no-image">
+        <img src="https://klef.agency/wp-content/uploads/2023/05/aIzMOocW7VlfG_mgYffnxgmOjZONsO2Q7zN037Djnyo.png"
+          alt="Logo de Klef Agency" width="30" height="30">
+        Klef Agency
+      </a>
+    </div>
+    <button class="close-btn toggle-menu" onclick="toggleMenu()"></button>
+  </div>
+
+  <!-- Mega Topbar -->
+  <div class="mega-topbar" id="sub-menu">
+    <button class="back-btn" onclick="goBack()">Volver</button>
+    <button class="close-btn" onclick="closeMenu()">Cerrar</button>
+  </div>
+
+  <!-- Main Navigation -->
+  <nav class="navbar" id="main-nav">
+    <div data-logo="klef-logo-mobile">
+      <a id="logo" href="/" data-supplied-ml-starting-dark="false" data-supplied-ml-starting="false"
+        data-supplied-ml="false" class="no-image">
+        <img src="https://klef.agency/wp-content/uploads/2023/05/aIzMOocW7VlfG_mgYffnxgmOjZONsO2Q7zN037Djnyo.png"
+          alt="Logo de Klef Agency" width="30" height="30">
+        Klef Agency
+      </a>
+    </div>
+
+    <div class="menu-links center">
+      <div class="section-label menu">MENÚ</div>
+
+
+
+      <a data-mega="#Diseno" data-name="#Diseno">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01">
+            </path>
+          </svg>
+        </span>
+        <span class="label">Diseño y Media</span>
+      </a>
+
+      <a data-mega="#Tecnologia" data-name="#Tecnologia">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+          </svg>
+        </span>
+        <span class="label">Tecnología</span>
+      </a>
+
+      <a data-mega="#Marketing" data-name="#Marketing">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+          </svg>
+        </span>
+        <span class="label">Marketing</span>
+      </a>
+    </div>
+
+    <div class="right-menu">
+      <button class="btn-icon" onclick="openSearch()" aria-label="Buscar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <use href="#icon-search"></use>
+        </svg>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- Mega Menus Container -->
+  <div class="mega-menus-container">
+    <!-- Diseño y Media -->
+    <div class="mega-menu" id="Diseno">
+      <div class="mega-content">
+        <div class="mega-sidebar">
+          <div class="mega-sidebar-title">Diseño y Media</div>
+          <a href="#">
+            <span>Branding</span>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+          <a href="#">
+            <span>Studio Multimedia</span>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+          <a href="#">
+            <span>Publicidad</span>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="mega-main">
+          <div class="mega-featured">
+            <div class="featured-image">🎨</div>
+            <div class="featured-content">
+              <div class="featured-tag">By Klef•Brand</div>
+              <h3>Branding</h3>
+              <p>Descubre las marcas que hemos desarrollado y nuestras estrategias de diseño</p>
+              <a href="#" class="btn-primary">Ir a Brands</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tecnología -->
+    <div class="mega-menu" id="Tecnologia">
+      <div class="mega-content">
+        <div class="mega-sidebar">
+          <div class="mega-sidebar-title">Tecnología</div>
+          <a href="#">
+            <span>Desarrollo Web</span>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+          <a href="#">
+            <span>Apps Móviles</span>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+          <a href="#">
+            <span>E-commerce</span>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="mega-main">
+          <div class="mega-featured">
+            <div class="featured-image" style="background: linear-gradient(135deg, #C0E8FF, #A3C7FF);">💻</div>
+            <div class="featured-content">
+              <div class="featured-tag">By Klef•Tech</div>
+              <h3>Desarrollo Web</h3>
+              <p>Soluciones tecnológicas modernas y escalables para tu negocio</p>
+              <a href="#" class="btn-primary">Ver Proyectos</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marketing -->
+    <div class="mega-menu" id="Marketing">
+      <div class="mega-content">
+        <div class="mega-sidebar">
+          <div class="mega-sidebar-title">Marketing</div>
+          <a href="#">
+            <span>Social Media</span>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+          <a href="#">
+            <span>SEO/SEM</span>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+          <a href="#">
+            <span>Content Strategy</span>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="mega-main">
+          <div class="mega-featured">
+            <div class="featured-image" style="background: linear-gradient(135deg, #D4F1D4, #A3E6A3);">📊</div>
+            <div class="featured-content">
+              <div class="featured-tag">By Klef•Marketing</div>
+              <h3>Marketing Digital</h3>
+              <p>Estrategias data-driven para impulsar tu presencia online</p>
+              <a href="#" class="btn-primary">Conocer Más</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Overlay (Apple Style) -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-panel">
+      <button class="close-search" onclick="closeSearch()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <div class="search-content">
+        <div class="search-input-wrapper">
+          <div class="search-icon">
+            <svg>
+              <use href="#icon-search"></use>
+            </svg>
+          </div>
+          <input type="text" class="search-input" placeholder="Buscar en klef.agency" id="searchInput"
+            autocomplete="off" spellcheck="false">
+        </div>
+
+        <div class="quick-links">
+          <div class="quick-links-title">Enlaces Rápidos</div>
+          <ul class="links-list">
+            <li>
+              <a href="#">
+                <span>Servicios de Branding</span>
+                <span class="link-arrow">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span>Studio Multimedia</span>
+                <span class="link-arrow">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span>Desarrollo Web</span>
+                <span class="link-arrow">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span>Marketing Digital</span>
+                <span class="link-arrow">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span>Contacto</span>
+                <span class="link-arrow">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demo Content -->
+  <main class="demo-content">
+    <h1>Klef Agency</h1>
+    <p>Creamos experiencias digitales que conectan marcas con sus audiencias. Diseño, estrategia y tecnología en
+      perfecta armonía.</p>
+    <div style="height: 200vh; padding: 40px 0;">
+      <p style="margin-top: 40px; color: #86868b;">Scroll para ver más contenido...</p>
+    </div>
+  </main>
+
+  <div id="dynamic-island-placeholder"><!-- Bottom Dynamic Island -->
+
+  </div>
+
+  <script src="script.js"></script>
+  <script src="components/mega-menu/mega-menu.js"></script>
+  <script src="components/dynamic-island/dynamic-island.js"></script>
+  <script>
+    // Esperar a que el DOM esté listo y luego cargar el preset
+    document.addEventListener('DOMContentLoaded', function () {
+      // Cargar preset con Menú, Buscar, Carrito
+      loadPreset('html_preset_1');
+    });
+  </script>
+
+
+
+</body>
+
+</html>

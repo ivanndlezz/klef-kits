@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klef Agency - Crece con diseño</title>
+    <link rel="stylesheet" href="../assets/styles/design-system.css">
+    <link rel="stylesheet" href="../assets/styles/css-short.css">
+    <style>
+        /* Reset y Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            color: #22323a;
+            background: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* Hero Container */
+        .hero-container {
+            height: 800px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .masonry-block {
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+            position: absolute;
+            height: 700px;
+            align-items: center;
+            top: 0;
+        }
+
+        [class*="half-"] {
+            width: 50%;
+            height: 100%;
+        }
+
+        .half-left {
+            display: flex;
+            align-items: center;
+            padding: 2rem 3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .half-right {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        .hero-content h2,
+        .hero-content h2+p {
+            margin-left: 10px;
+        }
+
+        /* Hero Content */
+        .hero-content {
+            max-width: 540px;
+        }
+
+        .hero_title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .hero_text {
+            color: #6b7280;
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+            margin: 1.5rem 0 2rem 0;
+            margin-top: 0rem;
+        }
+
+        /* Text Animation */
+        .word {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .letter {
+            display: inline-block;
+            position: relative;
+
+            transform: translateZ(25px);
+            transform-origin: 50% 50% 25px;
+        }
+
+        .letter.out {
+            transform: rotateX(90deg);
+            transition: transform 0.32s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+        }
+
+        .letter.behind {
+            transform: rotateX(-90deg);
+        }
+
+        .letter.in {
+            transform: rotateX(0deg);
+            transition: transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Colors */
+        .purple {
+            color: #8e44ad;
+        }
+
+        .azul {
+            color: #2980b9;
+        }
+
+        .green {
+            color: #16a085;
+        }
+
+        .oxido {
+            color: #db4b10;
+        }
+
+        /* Images Masonry */
+        .images_container {
+            display: grid;
+            row-gap: 32px;
+            align-content: center;
+        }
+
+        .img_container {
+            width: 13vw;
+            height: auto;
+            min-width: 150px;
+        }
+
+        .images_container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .images_container img:hover {
+            transform: scale(1.05);
+        }
+
+        .images_container:nth-child(2) {
+            transform: translateY(0rem);
+        }
+
+        .images_container:not(:first-child) {
+            margin-left: 32px;
+        }
+
+        /* Search Box */
+        .white-shadow {
+            background: #f5f6f7ba;
+            padding: 2rem;
+            border-radius: 18px;
+            box-shadow: 0px 6px 54px 7px rgb(214 214 214);
+            border: inset 1px #cccccc44;
+        }
+
+        .search-container {
+            position: relative;
+            background: white;
+            border: 1px solid #e5e7ea;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-container .icon {
+            margin-right: 0.75rem;
+        }
+
+        .search-container svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: #8e8e93;
+        }
+
+        .is-search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .is-search-input::placeholder {
+            color: #b0b5ba;
+        }
+
+        .filter-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        #filterCheckbox {
+            display: none;
+        }
+
+        .filter-module {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7ea;
+        }
+
+        #filterCheckbox:checked~.filter-module {
+            display: block;
+        }
+
+        /* Tags */
+        #search-tags {
+            display: flex;
+            gap: 0.3rem;
+            margin-left: 0.3rem;
+            flex-wrap: wrap;
+        }
+
+        #search-tags>span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            border: 1px solid;
+            padding: 2px 10px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #fff;
+        }
+
+        #search-tags>span:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #search-tags>span svg {
+            margin-right: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .border-emerald-500 {
+            border-color: #16a085;
+            color: #16a085;
+        }
+
+        .border-amber-500 {
+            border-color: #e68600;
+            color: #e68600;
+        }
+
+        .border-blue-500 {
+            border-color: #2980b9;
+            color: #2980b9;
+        }
+
+        /* Search */
+
+        .input {
+            height: 2.75rem;
+            padding: 0 1rem;
+            font-size: 1rem;
+            border: 1px solid #d2d2d7;
+            border-radius: 0.75rem;
+            background: white;
+            color: #1d1d1f;
+            transition: all 0.2s ease;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #86868b;
+            pointer-events: none;
+        }
+
+        .input-icon-left {
+            left: 0.875rem;
+        }
+
+        .input-icon-right {
+            right: 0.875rem;
+        }
+
+        .input-has-icon-left {
+            padding-left: 2.75rem;
+        }
+
+        .input-has-icon-right {
+            padding-right: 2.75rem;
+        }
+
+        .hero-content .hero_title {
+            font-weight: 700;
+            font-size: 3rem;
+            line-height: 1;
+            margin: 0px;
+        }
+
+
+
+        /* Responsive */
+        @media screen and (max-width: 1024px) {
+            .hero_title {
+                font-size: 2.5rem;
+            }
+
+            .img_container {
+                width: 11vw;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+
+
+            .masonry-block {
+                flex-direction: column-reverse;
+                height: auto;
+                position: relative;
+            }
+
+            [class*="half-"] {
+                width: 100%;
+                gap: 0px;
+            }
+
+            .half-left {
+                order: 2;
+                padding: 2rem 1.5rem;
+            }
+
+            .half-right {
+                order: 1;
+                height: 400px;
+                margin-top: 2rem;
+            }
+
+            .hero-container {
+                height: auto;
+            }
+
+            .hero_title {
+                font-size: 2rem;
+            }
+
+            .white-shadow {
+                padding: 2rem 1rem;
+            }
+
+
+        }
+    </style>
+    <style>
+        .brandsCarousel {
+            max-height: 100px;
+            margin: auto;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0px -16px 20px 20px #fff;
+        }
+
+        .carouselTrack {
+            width: calc(100px * 20);
+            animation: infiniteLoop 10s linear infinite;
+            animation-fill-mode: forwards;
+            will-change: transform;
+        }
+
+        @keyframes infiniteLoop {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(calc(-100px * 10), 0, 0);
+            }
+        }
+
+        .brandLogo {
+            width: 100px;
+            height: 95px;
+            align-items: center;
+            margin: auto;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="hero-section hero-container">
+        <div class="masonry-block">
+            <!-- Half Left: Hero Content -->
+            <div class="half-left">
+                <div class="hero-content" style="--bg: linear-gradient(0deg, #ffffff55 1%, white 33%); --blur: 10px;">
+                    <h2>
+                        <div class="hero_title">
+                            Crece con
+                        </div>
+                        <div class="hero_title" style="position: relative; height: 85px;">
+
+                            <span class="word oxido">diseño</span>
+                            <span class="word green">una¨web</span>
+                            <span class="word purple">un¨logo¨nuevo</span>
+                            <span class="word azul">marketing</span>
+
+                        </div>
+                    </h2>
+
+                    <p class="hero_text">
+                        Descubre servicios creativos y digitales integrales en un solo click.
+                    </p>
+
+                    <div class="white-shadow">
+                        <div class="search-wrapper">
+                            <div style="--mb:1rem;">
+
+
+                                <div class="input-group" style="--w-fill:1;">
+
+                                    <label for="klef-search" class="input-with-icon" style="--w-fill:1;">
+                                        <svg class="input-icon input-icon-left" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="11" cy="11" r="8" />
+                                            <path d="m21 21-4.3-4.3" />
+                                        </svg>
+                                        <input id="klef-search" type="text" class="input input-has-icon-left"
+                                            placeholder="Search: Mockups, Logos, Design..." autocomplete="off"
+                                            style="--w-fill:1;">
+                                    </label>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div id="search-tags">
+                            <span class="border-emerald-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5">
+                                    </path>
+                                </svg>
+                                Desarrollo
+                            </span>
+                            <span class="border-amber-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M4.098 19.902a3.75 3.75 0 0 0 5.304 0l6.401-6.402M6.75 21A3.75 3.75 0 0 1 3 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 0 0 3.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008Z">
+                                    </path>
+                                </svg>
+                                Diseño
+                            </span>
+                            <span class="border-blue-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z">
+                                    </path>
+                                </svg>
+                                Marketing
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Half Right: Masonry Images -->
+            <div class="half-right">
+                <div class="images_container">
+                    <div class="img_container">
+                        <img loading="lazy"
+                            src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-00005.jpg"
+                            alt="Portfolio 1">
+                    </div>
+                    <div class="img_container">
+                        <img loading="lazy"
+                            src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-00002.jpg"
+                            alt="Portfolio 2">
+                    </div>
+                </div>
+                <div class="images_container">
+                    <div class="img_container">
+                        <img loading="lazy"
+                            src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-00006.jpg"
+                            alt="Portfolio 3">
+                    </div>
+                    <div class="img_container">
+                        <img loading="lazy"
+                            src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-00003.jpg"
+                            alt="Portfolio 4">
+                    </div>
+                    <div class="img_container">
+                        <img loading="lazy"
+                            src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-punta-medano.jpg"
+                            alt="Portfolio 5">
+                    </div>
+                </div>
+                <div class="images_container">
+                    <div class="img_container">
+                        <img loading="lazy"
+                            src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-00007.jpg"
+                            alt="Portfolio 6">
+                    </div>
+                    <div class="img_container">
+                        <img loading="lazy"
+                            src="https://klef.agency/wp-content/uploads/2025/04/quick-portfolio-klef-00004.jpg"
+                            alt="Portfolio 7">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        var words = document.getElementsByClassName('word');
+        var wordArray = [];
+        var currentWord = 0;
+
+        words[currentWord].style.opacity = 1;
+
+        for (var i = 0; i < words.length; i++) {
+            splitLetters(words[i]);
+        }
+
+        function changeWord() {
+            var cw = wordArray[currentWord];
+            var nw = currentWord == words.length - 1 ? wordArray[0] : wordArray[currentWord + 1];
+
+            for (var i = 0; i < cw.length; i++) {
+                animateLetterOut(cw, i);
+            }
+
+            for (var i = 0; i < nw.length; i++) {
+                nw[i].className = 'letter behind';
+                nw[0].parentElement.style.opacity = 1;
+                animateLetterIn(nw, i);
+            }
+
+            currentWord = (currentWord == wordArray.length - 1) ? 0 : currentWord + 1;
+        }
+
+        function animateLetterOut(cw, i) {
+            setTimeout(function () {
+                cw[i].className = 'letter out';
+            }, i * 80);
+        }
+
+        function animateLetterIn(nw, i) {
+            setTimeout(function () {
+                nw[i].className = 'letter in';
+            }, 340 + (i * 80));
+        }
+
+        function splitLetters(word) {
+            var content = word.innerHTML;
+            word.innerHTML = '';
+            var letters = [];
+
+            for (var i = 0; i < content.length; i++) {
+                var letter = document.createElement('span');
+                letter.className = 'letter';
+
+                if (content.charAt(i) === '¨') {
+                    letter.innerHTML = '&nbsp;';
+                    letter.style.opacity = '0';
+                } else {
+                    letter.innerHTML = content.charAt(i);
+                }
+
+                word.appendChild(letter);
+                letters.push(letter);
+            }
+
+            wordArray.push(letters);
+        }
+
+        changeWord();
+        setInterval(changeWord, 4000);
+
+        // Search input focus
+        document.querySelector('.search-container').addEventListener('click', function (event) {
+            const isFilterButton = event.target.closest('.filter-toggle');
+            if (!isFilterButton) {
+                document.getElementById('is-search-input-10380').focus();
+            }
+        });
+    </script>
+    <div class="container brandsCarousel">
+        <div class="d-flex carouselTrack" style="--flex:1; margin: 10px 0px; gap: 1rem;">
+            <!---
+IMPORTANT: The content below includes the original logos, which will appear once in the carousel. To create the seamless infinite loop effect, you will need to clone the original logos. Each logo should be wrapped in a <div> with the class name 'brandLogo' or a custom class name of your choice.
+--->
+            <div class="brandLogo" itm="1">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-17.png"
+                    style="height: auto;margin: auto; max-width: 80px">
+            </div>
+            <div class="brandLogo" itm="2">
+
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-08.png"
+                    style="height: -webkit-fill-available;margin: auto; transform: translatey(-9px);">
+            </div>
+            <div class="brandLogo" itm="3">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-12.png"
+                    style="height: auto;margin: auto; max-width: 70px">
+            </div>
+            <div class="brandLogo" itm="4">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-13.png"
+                    style="height: auto;margin: auto; max-width: 80px">
+            </div>
+            <div class="brandLogo" itm="5">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-09.png"
+                    style="height: auto;margin: auto; max-width: 65px">
+            </div>
+            <div class="brandLogo" itm="6">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-07.png"
+                    style="height: auto;margin: auto; max-width: 91px; transform: translateY(-9px);">
+            </div>
+            <div class="brandLogo" itm="7">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-10.png"
+                    style="height: auto;margin: auto; max-width: 65px; transform: translateY(0px);">
+            </div>
+            <div class="brandLogo" itm="8">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-14.png"
+                    style="height: auto;margin: auto; transform: translateY(-10px);">
+            </div>
+            <div class="brandLogo" itm="9">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-15.png"
+                    style="height: auto;margin: auto; max-width: 75px; transform: translateY(-7px);">
+            </div>
+            <div class="brandLogo" itm="10">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-16.png"
+                    style="height: auto;margin: auto; max-width: 75px; transform: translateY(-7px);">
+            </div>
+            <!---
+
+IMPORTANT: The content below includes clones of the original logos, which are necessary to create a seamless infinite loop effect.
+
+--->
+            <div class="brandLogo" itm="1">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-17.png"
+                    style="height: auto;margin: auto; max-width: 80px">
+            </div>
+            <div class="brandLogo" itm="2">
+
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-08.png"
+                    style="height: -webkit-fill-available;margin: auto; transform: translatey(-9px);">
+            </div>
+            <div class="brandLogo" itm="3">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-12.png"
+                    style="height: auto;margin: auto; max-width: 70px">
+            </div>
+            <div class="brandLogo" itm="4">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-13.png"
+                    style="height: auto;margin: auto; max-width: 80px">
+            </div>
+            <div class="brandLogo" itm="5">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-09.png"
+                    style="height: auto;margin: auto; max-width: 65px">
+            </div>
+            <div class="brandLogo" itm="6">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-07.png"
+                    style="height: auto;margin: auto; max-width: 91px; transform: translateY(-9px);">
+            </div>
+            <div class="brandLogo" itm="7">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-10.png"
+                    style="height: auto;margin: auto; max-width: 65px; transform: translateY(0px);">
+            </div>
+            <div class="brandLogo" itm="8">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-14.png"
+                    style="height: auto;margin: auto; transform: translateY(-10px);">
+            </div>
+            <div class="brandLogo" itm="9">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-15.png"
+                    style="height: auto;margin: auto; max-width: 75px; transform: translateY(-7px);">
+            </div>
+            <div class="brandLogo" itm="10">
+                <img decoding="async" src="https://klef.agency/wp-content/uploads/2024/01/Logos-Web-16.png"
+                    style="height: auto;margin: auto; max-width: 75px; transform: translateY(-7px);">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

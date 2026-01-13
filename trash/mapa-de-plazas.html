@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de plazas</title>
+</head>
+
+<body>
+    <!-- Mapa de plazas -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="shared/components/bottom-sheet/bottom-sheet.css" />
+    <div id="map"></div>
+
+
+
+    <!-- Adaptive Sheet -->
+    <div class="adaptive-sheet" id="sheet">
+        <!-- Header -->
+        <div class="sheet-header" id="header">
+            <div class="sheet-drag-handle"></div>
+            <div class="sheet-title-bar">
+                <h2 class="sheet-title">Ubicaciones</h2>
+                <button class="sheet-close-btn" id="closeBtn">×</button>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="sheet-content" id="content">
+            <!-- Lista de ubicaciones se generará dinámicamente -->
+        </div>
+    </div>
+
+    <script>
+        // =============================
+        // 1. CONFIGURACIÓN GENERAL
+        // =============================
+
+        const MAP_CONFIG = {
+            containerId: 'map',
+            center: [22.8992607, -109.9269988],
+            zoom: 13,
+            tileLayer: {
+                url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                attribution: '© OpenStreetMap contributors',
+                className: 'grayscale'
+            },
+            grayscaleCSS: `
+    .grayscale {
+      filter: contrast(0.9) grayscale(1) sepia(0.1) hue-rotate(141deg);
+    }
+  `
+        };
+
+        // =============================
+        // 2. DATA (JSON LIMPIO)
+        // =============================
+
+        const LOCATIONS = [
+            {
+                id: 'plaza-dhoka',
+                name: 'PLAZA DHOKA',
+                coords: [22.88874583736378, -109.91342782974245],
+                icon: 'https://legacybcs.mx/wp-content/uploads/2024/07/plaza-dhoka-3.png',
+                mapUrl: 'https://maps.app.goo.gl/qScEUZaU8nBZGikQ7'
+            },
+            {
+                id: 'master-plaza-cardones',
+                name: 'MASTER PLAZA CARDONES',
+                coords: [22.903731726379906, -109.95495915412904],
+                icon: 'https://legacybcs.mx/wp-content/uploads/2024/07/master-plaza-cardones-3.png',
+                mapUrl: 'https://maps.app.goo.gl/8ffBbAw84SyjPMeu7'
+            },
+            {
+                id: 'master-center-36',
+                name: 'MASTER PLAZA CENTER 36',
+                coords: [22.900208399932062, -109.91202771663667],
+                icon: 'https://legacybcs.mx/wp-content/uploads/2024/07/master-plaza-center-3.png',
+                mapUrl: 'https://maps.app.goo.gl/18RSBmV8BM5SHMtc6'
+            },
+            {
+                id: 'plaza-white',
+                name: 'PLAZA WHITE',
+                coords: [22.892607981600193, -109.91272509098054],
+                icon: 'https://legacybcs.mx/wp-content/uploads/2024/07/PLAZA-WHITE-12.png',
+                mapUrl: 'https://maps.app.goo.gl/8r77BBcdnuRa8u8p8'
+            },
+            {
+                id: 'plaza-elam',
+                name: 'PLAZA ELAM',
+                coords: [22.90916725383339, -109.95269536972047],
+                icon: 'https://legacybcs.mx/wp-content/uploads/2026/01/Plaza-Elam.png',
+                mapUrl: 'https://maps.app.goo.gl/HnYauUq2CDFHdb36A'
+            },
+            {
+                id: 'shopping-spot',
+                name: 'SHOPPING SPOT',
+                coords: [22.91124257955995, -109.88026499748231],
+                icon: 'https://legacybcs.mx/wp-content/uploads/2024/07/SHOPPING-SPOT.png',
+                mapUrl: 'https://maps.app.goo.gl/wfsEorHnCyFaoPxE9'
+            },
+            {
+                id: 'medical-center',
+                name: 'MEDICAL CENTER',
+                coords: [22.90851006073044, -109.93787348270418],
+                icon: 'https://legacybcs.mx/wp-content/uploads/2026/01/LOGO-CORNER-MEDICAL-CENTER-C.png',
+                mapUrl: 'https://maps.app.goo.gl/EkxYQGvXXtamVLob9'
+            }
+        ];
+
+        // =============================
+        // 3. HELPERS
+        // =============================
+
+        function injectCSS(css) {
+            const style = document.createElement('style');
+            style.innerHTML = css;
+            document.head.appendChild(style);
+        }
+
+        // =============================
+        // 4. HTML MARKERS (DIV ICONS)
+        // =============================
+
+        const size = 70;
+
+        const CARD_CONFIG = {
+            size: [100, size],
+            className: 'leaflet-html-card'
+        };
+
+        function createHtmlCardIcon(location) {
+            return L.divIcon({
+                className: CARD_CONFIG.className,
+                html: `
+      <div class="card" data-id="${location.id}">
+        <div class="card-img" style="background-image:url('${location.icon}')"></div>
+        <div class="card-body">
+          <!--strong>${location.name}</strong-->
+          <span>Ver en Maps</span>
+        </div>
+      </div>
+    `,
+                iconSize: CARD_CONFIG.size,
+                iconAnchor: [CARD_CONFIG.size[0] / 2, CARD_CONFIG.size[1]]
+            });
+        }
+
+        function initHtmlMarkers(map) {
+            LOCATIONS.forEach(location => {
+                L.marker(location.coords, {
+                    icon: createHtmlCardIcon(location)
+                })
+                    .addTo(map)
+                    .on('click', () => window.open(location.mapUrl, '_blank'));
+            });
+        }
+
+
+
+        const htmlMarkerCSS = `
+#map { height: 600px; width: 100%; }
+
+.leaflet-html-card { pointer-events: auto; }
+
+.leaflet-html-card .card {
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  align-items: center;
+}
+
+.leaflet-html-card .card-img {
+  --wh: ${size}px;
+  width: var(--wh);
+  height: var(--wh);
+  background-size: 90%;
+  background-position: 50% ;
+  background-color: #009688;
+  background-repeat: no-repeat;
+  border-radius: 100px;
+}
+
+.leaflet-html-card .card-body {
+  padding: 2px 5px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #009688;
+  border-radius: 100px;
+}
+
+.leaflet-html-card .card-body strong {
+  font-size: 10px;
+}
+
+.leaflet-html-card .card-body span {
+  font-size: 12px;
+  color: white;
+}
+`;
+
+        // =============================
+        // 5. INIT MAP
+        // =============================
+
+        function initMap() {
+            const map = L.map(MAP_CONFIG.containerId)
+                .setView(MAP_CONFIG.center, MAP_CONFIG.zoom);
+
+            L.tileLayer(MAP_CONFIG.tileLayer.url, {
+                attribution: MAP_CONFIG.tileLayer.attribution,
+                className: MAP_CONFIG.tileLayer.className
+            }).addTo(map);
+
+            injectCSS(MAP_CONFIG.grayscaleCSS);
+
+            initHtmlMarkers(map);
+
+            return map;
+        }
+
+        // Función para hacer zoom a una ubicación
+        function zoomToLocation(id) {
+            const location = LOCATIONS.find(loc => loc.id === id);
+            if (location && window.map) {
+                window.map.setView(location.coords, 16);
+            }
+        }
+
+        // =============================
+        // ADAPTIVE SHEET CLASS
+        // =============================
+
+        class AdaptiveSheet {
+            constructor(config = {}) {
+                // Configuración
+                this.sheetId = config.sheetId || "sheet";
+                this.headerId = config.headerId || "header";
+                this.closeBtnId = config.closeBtnId || "closeBtn";
+                this.contentId = config.contentId || "content";
+
+                // Umbrales personalizables
+                this.swipeThreshold = config.swipeThreshold || 100;
+                this.dragThreshold = config.dragThreshold || 5;
+
+                // Callbacks opcionales
+                this.onOpen = config.onOpen || null;
+                this.onClose = config.onClose || null;
+                this.onStateChange = config.onStateChange || null;
+
+                // Elementos DOM
+                this.sheet = document.getElementById(this.sheetId);
+                this.header = document.getElementById(this.headerId);
+                this.closeBtn = document.getElementById(this.closeBtnId);
+                this.content = document.getElementById(this.contentId);
+
+                // Estado
+                this.state = "CLOSED";
+                this.isDragging = false;
+                this.startY = 0;
+                this.currentY = 0;
+                this.startX = 0;
+                this.currentX = 0;
+
+                // Validación
+                if (!this.sheet || !this.header) {
+                    console.error("AdaptiveSheet: Elementos requeridos no encontrados");
+                    return;
+                }
+
+                this.init();
+            }
+
+            init() {
+                // Touch events (mobile)
+                this.header.addEventListener(
+                    "touchstart",
+                    this.handleTouchStart.bind(this),
+                    { passive: true }
+                );
+                this.header.addEventListener("touchmove", this.handleTouchMove.bind(this), {
+                    passive: false,
+                });
+                this.header.addEventListener("touchend", this.handleTouchEnd.bind(this), {
+                    passive: true,
+                });
+
+                // Mouse events (desktop - opcional para drag)
+                this.header.addEventListener("mousedown", this.handleMouseDown.bind(this));
+                document.addEventListener("mousemove", this.handleMouseMove.bind(this));
+                document.addEventListener("mouseup", this.handleMouseEnd.bind(this));
+
+                // Close events
+                if (this.backdrop) {
+                    this.backdrop.addEventListener("click", () => this.close());
+                }
+                if (this.closeBtn) {
+                    this.closeBtn.addEventListener("click", () => this.close());
+                }
+
+                // Keyboard
+                document.addEventListener("keydown", (e) => {
+                    if (e.key === "Escape" && this.state !== "CLOSED") {
+                        this.close();
+                    }
+                });
+
+                // Resize
+                window.addEventListener("resize", () => {
+                    if (this.state !== "CLOSED") {
+                        this.adjustForViewport();
+                    }
+                });
+
+                //console.log("✅ AdaptiveSheet initialized");
+            }
+
+            // ==========================================
+            // UTILITIES
+            // ==========================================
+            isMobile() {
+                return window.innerWidth < 768;
+            }
+
+            adjustForViewport() {
+                // Reset transforms si cambiamos de mobile a desktop
+                if (!this.isMobile()) {
+                    this.sheet.style.transform = "";
+                }
+            }
+
+            // ==========================================
+            // STATE MANAGEMENT
+            // ==========================================
+            open() {
+                if (this.backdrop) {
+                    this.backdrop.classList.add("visible");
+                }
+                this.sheet.classList.add("open");
+                this.state = "NORMAL";
+                document.body.classList.add("sheet-open");
+
+                if (this.onOpen) this.onOpen();
+
+                //console.log("📱 Sheet opened");
+            }
+
+            close() {
+                if (this.backdrop) {
+                    this.backdrop.classList.remove("visible");
+                }
+                this.sheet.classList.remove("open", "full");
+                this.state = "CLOSED";
+                document.body.classList.remove("sheet-open");
+
+                // Reset inline styles
+                this.sheet.style.transform = "";
+
+                if (this.onClose) this.onClose();
+
+                //console.log("❌ Sheet closed");
+            }
+
+            setState(state) {
+                if (state === "FULL") {
+                    this.sheet.classList.add("full");
+                    this.state = "FULL";
+                    //console.log("⬆️ Sheet expanded to FULL");
+                } else if (state === "NORMAL") {
+                    this.sheet.classList.remove("full");
+                    this.state = "NORMAL";
+                    //console.log("⬇️ Sheet reduced to NORMAL");
+                }
+
+                if (this.onStateChange) this.onStateChange(state);
+            }
+
+            toggleFull() {
+                if (this.state === "FULL") {
+                    this.setState("NORMAL");
+                } else if (this.state === "NORMAL") {
+                    this.setState("FULL");
+                }
+            }
+
+            // ==========================================
+            // CONTENT MANAGEMENT
+            // ==========================================
+            setContent(html) {
+                if (this.content) {
+                    this.content.innerHTML = html;
+                }
+            }
+
+            setTitle(title) {
+                const titleEl = this.sheet.querySelector(".sheet-title");
+                if (titleEl) {
+                    titleEl.textContent = title;
+                }
+            }
+
+            // ==========================================
+            // TOUCH HANDLERS (MOBILE)
+            // ==========================================
+            handleTouchStart(e) {
+                if (!this.isMobile()) return;
+
+                this.isDragging = true;
+                this.startY = e.touches[0].clientY;
+                this.currentY = this.startY;
+
+                // Detectar si el contenido está en el top para permitir drag
+                if (this.content) {
+                    const isAtTop = this.content.scrollTop <= 0;
+                    if (!isAtTop && this.state === "NORMAL") {
+                        this.isDragging = false;
+                    }
+                }
+            }
+
+            handleTouchMove(e) {
+                if (!this.isDragging || !this.isMobile()) return;
+
+                this.currentY = e.touches[0].clientY;
+                const deltaY = this.currentY - this.startY;
+
+                // Prevenir scroll del body
+                if (Math.abs(deltaY) > this.dragThreshold) {
+                    e.preventDefault();
+                }
+
+                // Solo permitir drag hacia abajo en NORMAL o cualquier dirección en FULL
+                if (this.state === "NORMAL" && deltaY > 0) {
+                    // Drag down to close
+                    const resistance = 1 - (deltaY / window.innerHeight) * 0.5;
+                    this.sheet.style.transform = `translateY(${deltaY * resistance}px)`;
+                } else if (this.state === "NORMAL" && deltaY < 0) {
+                    // Drag up to expand
+                    const resistance = Math.abs(deltaY) / 200;
+                    this.sheet.style.transform = `translateY(${deltaY * resistance}px)`;
+                } else if (this.state === "FULL" && deltaY > 0) {
+                    // Drag down to reduce
+                    const resistance = deltaY / 200;
+                    this.sheet.style.transform = `translateY(${deltaY * resistance}px)`;
+                }
+            }
+
+            handleTouchEnd(e) {
+                if (!this.isDragging || !this.isMobile()) return;
+
+                const deltaY = this.currentY - this.startY;
+                this.isDragging = false;
+
+                // Reset transform with transition
+                this.sheet.style.transform = "";
+
+                // Determinar acción basada en el swipe
+                if (this.state === "NORMAL") {
+                    if (deltaY > this.swipeThreshold) {
+                        // Swipe down: close
+                        this.close();
+                    } else if (deltaY < -this.swipeThreshold) {
+                        // Swipe up: expand
+                        this.setState("FULL");
+                    }
+                } else if (this.state === "FULL") {
+                    if (deltaY > this.swipeThreshold) {
+                        // Swipe down: reduce to normal
+                        this.setState("NORMAL");
+                    }
+                }
+            }
+
+            // ==========================================
+            // MOUSE HANDLERS (DESKTOP - OPCIONAL)
+            // ==========================================
+            handleMouseDown(e) {
+                if (this.isMobile()) return;
+                // Opcional: agregar drag horizontal en desktop
+            }
+
+            handleMouseMove(e) {
+                if (!this.isDragging || this.isMobile()) return;
+            }
+
+            handleMouseEnd(e) {
+                if (!this.isDragging || this.isMobile()) return;
+            }
+
+            // ==========================================
+            // PUBLIC API
+            // ==========================================
+            isOpen() {
+                return this.state !== "CLOSED";
+            }
+
+            getState() {
+                return this.state;
+            }
+
+            destroy() {
+                // Cleanup event listeners
+                //console.log("🗑️ AdaptiveSheet destroyed");
+            }
+        }
+
+        injectCSS(htmlMarkerCSS);
+
+        // Deshabilitar blurry overlay del bottom-sheet
+        injectCSS(`:root { --backdrop-blur: 0px; }`);
+
+        window.map = initMap();
+
+        // Inicializar bottom-sheet
+        const mapSheet = new AdaptiveSheet({
+            sheetId: "sheet",
+            headerId: "header",
+            closeBtnId: "closeBtn",
+            contentId: "content"
+        });
+
+        // Generar contenido de la lista de ubicaciones
+        const contentHtml = LOCATIONS.map(loc => `
+            <div class="location-item" style="margin-bottom: 16px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9;">
+                <h3 style="margin: 0 0 8px 0; font-size: 16px; color: #333;">${loc.name}</h3>
+                <button onclick="zoomToLocation('${loc.id}')" style="background: #009688; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px;">View on map</button>
+            </div>
+        `).join('');
+
+        mapSheet.setContent(contentHtml);
+
+        // Abrir automáticamente al cargar
+        mapSheet.open();
+    </script>
+    <!-- Mapa de plazas -->
+
+</body>
+
+</html>

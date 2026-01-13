@@ -273,8 +273,14 @@ class AdaptiveSheet {
 }
 
 /* ==========================================
-   INICIALIZACIÓN
-   ========================================== */
+    EXPOSICIÓN GLOBAL
+    ========================================== */
+
+window.AdaptiveSheet = AdaptiveSheet;
+
+/* ==========================================
+    INICIALIZACIÓN
+    ========================================== */
 
 // Crear instancia con configuración personalizada
 const sheet = new AdaptiveSheet({

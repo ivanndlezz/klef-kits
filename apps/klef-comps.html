@@ -1,0 +1,3178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple UI Component Library - HTML/CSS/JS Vanilla</title>
+  <style>
+    /* ============================================
+       DESIGN TOKENS
+       ============================================ */
+    :root {
+      /* Colors */
+      --color-primary: #007AFF;
+      --color-primary-dark: #0066d6;
+      --color-success: #34c759;
+      --color-warning: #ff9500;
+      --color-error: #ff3b30;
+      --color-purple: #5856d6;
+      
+      /* Neutrals */
+      --color-text: #1d1d1f;
+      --color-text-secondary: #86868b;
+      --color-bg: #ffffff;
+      --color-bg-secondary: #f5f5f7;
+      --color-bg-tertiary: #e8e8ed;
+      --color-border: #d2d2d7;
+      --color-border-light: #e8e8ed;
+      
+      /* Spacing */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-2xl: 3rem;
+      
+      /* Radius */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+      --shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
+      
+      /* Typography */
+      --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+      --font-size-xs: 0.6875rem;
+      --font-size-sm: 0.75rem;
+      --font-size-base: 0.875rem;
+      --font-size-lg: 1rem;
+      --font-size-xl: 1.125rem;
+      --font-size-2xl: 1.5rem;
+      --font-size-3xl: 2rem;
+      
+      /* Transitions */
+      --ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --transition-fast: 0.15s var(--ease-apple);
+      --transition-base: 0.2s var(--ease-apple);
+      --transition-slow: 0.3s var(--ease-apple);
+    }
+
+    /* ============================================
+       BASE STYLES
+       ============================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      font-size: var(--font-size-lg);
+      line-height: 1.5;
+      color: var(--color-text);
+      background: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ============================================
+       LAYOUT
+       ============================================ */
+    .app {
+      min-height: 100vh;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-lg) var(--space-xl);
+    }
+
+    .header h1 {
+      font-size: var(--font-size-2xl);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .header p {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-base);
+      margin-top: var(--space-xs);
+    }
+
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-xl);
+    }
+
+    /* ============================================
+       SEARCH & FILTERS
+       ============================================ */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: var(--space-md);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-secondary);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 2.75rem;
+      padding: 0 var(--space-md) 0 2.75rem;
+      font-size: var(--font-size-lg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      background: var(--color-bg);
+      color: var(--color-text);
+      transition: var(--transition-base);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    }
+
+    .filter-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .filter-tab {
+      padding: 0.5rem 1rem;
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      background: var(--color-bg-secondary);
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .filter-tab:hover {
+      background: var(--color-bg-tertiary);
+      color: var(--color-text);
+    }
+
+    .filter-tab.active {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    /* ============================================
+       COMPONENT GRID
+       ============================================ */
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .component-card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--transition-slow);
+    }
+
+    .component-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .component-preview {
+      padding: var(--space-xl);
+      background: var(--color-bg-secondary);
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+
+    .component-info {
+      padding: var(--space-lg);
+      border-top: 1px solid var(--color-border-light);
+    }
+
+    .component-name {
+      font-size: var(--font-size-base);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .component-category {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-xs);
+    }
+
+    /* ============================================
+       MODAL
+       ============================================ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition-slow);
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--color-bg);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      transform: translateY(100%);
+      transition: transform 0.4s var(--ease-spring);
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0);
+    }
+
+    @media (min-width: 768px) {
+      .modal-overlay {
+        align-items: center;
+        padding: var(--space-xl);
+      }
+      
+      .modal {
+        max-width: 700px;
+        max-height: 85vh;
+        border-radius: var(--radius-xl);
+        transform: scale(0.95) translateY(20px);
+        opacity: 0;
+      }
+      
+      .modal-overlay.open .modal {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-lg) var(--space-xl);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .modal-title {
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+    }
+
+    .modal-close {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-bg-secondary);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      transition: var(--transition-fast);
+    }
+
+    .modal-close:hover {
+      background: var(--color-bg-tertiary);
+      color: var(--color-text);
+    }
+
+    .modal-body {
+      padding: var(--space-xl);
+      overflow-y: auto;
+      max-height: calc(90vh - 80px);
+    }
+
+    @media (min-width: 768px) {
+      .modal-body {
+        max-height: calc(85vh - 80px);
+      }
+    }
+
+    .modal-section {
+      margin-bottom: var(--space-xl);
+    }
+
+    .modal-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .modal-section-title {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-md);
+    }
+
+    .modal-description {
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    .modal-preview {
+      padding: var(--space-xl);
+      background: var(--color-bg-secondary);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+
+    .code-block {
+      position: relative;
+      background: #1d1d1f;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-sm) var(--space-md);
+      background: rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .code-lang {
+      font-size: var(--font-size-sm);
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+    }
+
+    .copy-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: 0.25rem 0.5rem;
+      font-size: var(--font-size-sm);
+      color: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .copy-btn.copied {
+      color: var(--color-success);
+    }
+
+    .code-content {
+      padding: var(--space-md);
+      overflow-x: auto;
+    }
+
+    .code-content pre {
+      margin: 0;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+      font-size: var(--font-size-base);
+      line-height: 1.6;
+      color: #e8e8ed;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .tokens-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .token-tag {
+      padding: 0.25rem 0.5rem;
+      font-size: var(--font-size-sm);
+      font-family: 'SF Mono', Monaco, monospace;
+      color: var(--color-primary);
+      background: rgba(0, 122, 255, 0.1);
+      border-radius: var(--radius-sm);
+    }
+
+    /* ============================================
+       TOAST
+       ============================================ */
+    .toast {
+      position: fixed;
+      bottom: var(--space-xl);
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      padding: 0.75rem 1.25rem;
+      background: var(--color-text);
+      color: white;
+      border-radius: var(--radius-lg);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      z-index: 2000;
+      opacity: 0;
+      transition: var(--transition-slow);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ============================================
+       UTILITY: Hide
+       ============================================ */
+    .hidden {
+      display: none !important;
+    }
+
+    /* ============================================
+       COMPONENT STYLES (Copy-Paste Ready)
+       ============================================ */
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: 0.75rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: #007AFF;
+      color: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .btn-primary:hover {
+      background: #0066d6;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .btn-secondary {
+      background: #f5f5f7;
+      color: #1d1d1f;
+    }
+
+    .btn-secondary:hover {
+      background: #e8e8ed;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #1d1d1f;
+      border: 1px solid #d2d2d7;
+    }
+
+    .btn-outline:hover {
+      background: #f5f5f7;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: #1d1d1f;
+    }
+
+    .btn-ghost:hover {
+      background: #f5f5f7;
+    }
+
+    .btn-destructive {
+      background: #ff3b30;
+      color: white;
+    }
+
+    .btn-destructive:hover {
+      background: #d63029;
+    }
+
+    .btn-pill {
+      background: #007AFF;
+      color: white;
+      border-radius: 9999px;
+      padding: 0.625rem 1.5rem;
+    }
+
+    .btn-pill:hover {
+      background: #0066d6;
+    }
+
+    .btn-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      padding: 0;
+      border-radius: 50%;
+      background: #f5f5f7;
+      color: #1d1d1f;
+    }
+
+    .btn-icon:hover {
+      background: #e8e8ed;
+    }
+
+    .btn-loading {
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .btn-sm {
+      padding: 0.5rem 0.875rem;
+      font-size: 0.75rem;
+      border-radius: 0.5rem;
+    }
+
+    .btn-lg {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      border-radius: 1rem;
+    }
+
+    /* Inputs */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+
+    .input-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #1d1d1f;
+    }
+
+    .input {
+      height: 2.75rem;
+      padding: 0 1rem;
+      font-size: 1rem;
+      border: 1px solid #d2d2d7;
+      border-radius: 0.75rem;
+      background: white;
+      color: #1d1d1f;
+      transition: all 0.2s ease;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: #007AFF;
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    }
+
+    .input::placeholder {
+      color: #86868b;
+    }
+
+    .input-helper {
+      font-size: 0.75rem;
+      color: #86868b;
+      margin-top: 0.25rem;
+    }
+
+    .input-error {
+      border-color: #ff3b30;
+    }
+
+    .input-error:focus {
+      border-color: #ff3b30;
+      box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.2);
+    }
+
+    .input-error-text {
+      font-size: 0.75rem;
+      color: #ff3b30;
+      margin-top: 0.25rem;
+    }
+
+    .input-success {
+      border-color: #34c759;
+    }
+
+    .input-success:focus {
+      border-color: #34c759;
+      box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.2);
+    }
+
+    .input-success-text {
+      font-size: 0.75rem;
+      color: #34c759;
+      margin-top: 0.25rem;
+    }
+
+    .input:disabled {
+      background: #f5f5f7;
+      color: #86868b;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    /* Floating Label */
+    .input-floating {
+      position: relative;
+    }
+
+    .input-floating-field {
+      height: 3.5rem;
+      width: 100%;
+      padding: 1.5rem 1rem 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #d2d2d7;
+      border-radius: 0.75rem;
+      background: white;
+      transition: all 0.2s ease;
+    }
+
+    .input-floating-label {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      color: #86868b;
+      pointer-events: none;
+      transition: all 0.2s ease;
+    }
+
+    .input-floating-field:focus,
+    .input-floating-field:not(:placeholder-shown) {
+      border-color: #007AFF;
+    }
+
+    .input-floating-field:focus + .input-floating-label,
+    .input-floating-field:not(:placeholder-shown) + .input-floating-label {
+      top: 0.75rem;
+      transform: translateY(0);
+      font-size: 0.75rem;
+      color: #007AFF;
+    }
+
+    .input-floating-field:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    }
+
+    /* Input with Icon */
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #86868b;
+      pointer-events: none;
+    }
+
+    .input-icon-left {
+      left: 0.875rem;
+    }
+
+    .input-icon-right {
+      right: 0.875rem;
+    }
+
+    .input-has-icon-left {
+      padding-left: 2.75rem;
+    }
+
+    .input-has-icon-right {
+      padding-right: 2.75rem;
+    }
+
+    /* Textarea */
+    .textarea {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 1px solid #d2d2d7;
+      border-radius: 0.75rem;
+      background: white;
+      color: #1d1d1f;
+      resize: vertical;
+      min-height: 100px;
+      transition: all 0.2s ease;
+    }
+
+    .textarea:focus {
+      outline: none;
+      border-color: #007AFF;
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    }
+
+    .textarea::placeholder {
+      color: #86868b;
+    }
+
+    /* Chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: 9999px;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      transition: all 0.2s ease;
+    }
+
+    .chip:hover {
+      background: #e8e8ed;
+    }
+
+    .chip-primary {
+      background: rgba(0, 122, 255, 0.1);
+      color: #007AFF;
+    }
+
+    .chip-success {
+      background: rgba(52, 199, 89, 0.1);
+      color: #34c759;
+    }
+
+    .chip-warning {
+      background: rgba(255, 149, 0, 0.1);
+      color: #ff9500;
+    }
+
+    .chip-error {
+      background: rgba(255, 59, 48, 0.1);
+      color: #ff3b30;
+    }
+
+    .chip-removable {
+      padding-right: 0.375rem;
+      gap: 0.25rem;
+    }
+
+    .chip-remove {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: #86868b;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .chip-remove:hover {
+      background: rgba(0, 0, 0, 0.1);
+      color: #1d1d1f;
+    }
+
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .chip-selectable {
+      border: 1px solid #d2d2d7;
+      background: white;
+      cursor: pointer;
+    }
+
+    .chip-selectable:hover {
+      border-color: #007AFF;
+    }
+
+    .chip-selected {
+      background: #007AFF;
+      border-color: #007AFF;
+      color: white;
+    }
+
+    .chip-selected:hover {
+      background: #0066d6;
+    }
+
+    .chip-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.6875rem;
+    }
+
+    /* Tag Input */
+    .tag-input-container {
+      border: 1px solid #d2d2d7;
+      border-radius: 0.75rem;
+      padding: 0.5rem;
+      background: white;
+      transition: all 0.2s ease;
+    }
+
+    .tag-input-container:focus-within {
+      border-color: #007AFF;
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    }
+
+    .tag-input-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+      align-items: center;
+    }
+
+    .tag-input {
+      flex: 1;
+      min-width: 120px;
+      border: none;
+      outline: none;
+      padding: 0.375rem 0.5rem;
+      font-size: 0.875rem;
+      background: transparent;
+    }
+
+    /* Tooltips */
+    .tooltip-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip {
+      position: absolute;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: white;
+      background: #1d1d1f;
+      border-radius: 0.5rem;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      z-index: 1000;
+    }
+
+    .tooltip-top {
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+    }
+
+    .tooltip-wrapper:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .tooltip-wrapper:hover .tooltip-top {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .tooltip-bottom {
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    .tooltip-wrapper:hover .tooltip-bottom {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .tooltip-left {
+      right: calc(100% + 8px);
+      top: 50%;
+      transform: translateY(-50%) translateX(4px);
+    }
+
+    .tooltip-wrapper:hover .tooltip-left {
+      transform: translateY(-50%) translateX(0);
+    }
+
+    .tooltip-right {
+      left: calc(100% + 8px);
+      top: 50%;
+      transform: translateY(-50%) translateX(-4px);
+    }
+
+    .tooltip-wrapper:hover .tooltip-right {
+      transform: translateY(-50%) translateX(0);
+    }
+
+    .tooltip-arrow::after {
+      content: '';
+      position: absolute;
+      border: 6px solid transparent;
+    }
+
+    .tooltip-top.tooltip-arrow::after {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top-color: #1d1d1f;
+    }
+
+    .tooltip-bottom.tooltip-arrow::after {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: #1d1d1f;
+    }
+
+    /* Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 51px;
+      height: 31px;
+    }
+
+    .switch-input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .switch-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #e9e9eb;
+      border-radius: 31px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .switch-slider::before {
+      content: '';
+      position: absolute;
+      height: 27px;
+      width: 27px;
+      left: 2px;
+      bottom: 2px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .switch-input:checked + .switch-slider {
+      background: #34c759;
+    }
+
+    .switch-input:checked + .switch-slider::before {
+      transform: translateX(20px);
+    }
+
+    .switch-input:focus + .switch-slider {
+      box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.2);
+    }
+
+    /* Checkbox */
+    .checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+
+    .checkbox-input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .checkbox-box {
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 2px solid #d2d2d7;
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .checkbox-icon {
+      width: 0.875rem;
+      height: 0.875rem;
+      color: white;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.2s ease;
+    }
+
+    .checkbox-input:checked + .checkbox-box {
+      background: #007AFF;
+      border-color: #007AFF;
+    }
+
+    .checkbox-input:checked + .checkbox-box .checkbox-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .checkbox-input:focus + .checkbox-box {
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    }
+
+    .checkbox-label {
+      font-size: 0.875rem;
+      color: #1d1d1f;
+    }
+
+    /* Radio */
+    .radio {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+
+    .radio-input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .radio-circle {
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 2px solid #d2d2d7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .radio-circle::after {
+      content: '';
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background: white;
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.2s ease;
+    }
+
+    .radio-input:checked + .radio-circle {
+      background: #007AFF;
+      border-color: #007AFF;
+    }
+
+    .radio-input:checked + .radio-circle::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .radio-input:focus + .radio-circle {
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    }
+
+    .radio-label {
+      font-size: 0.875rem;
+      color: #1d1d1f;
+    }
+
+    /* Slider */
+    .slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: #e9e9eb;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid #007AFF;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+    }
+
+    .slider::-webkit-slider-thumb:active {
+      transform: scale(0.95);
+    }
+
+    .slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid #007AFF;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      cursor: pointer;
+    }
+
+    /* Select */
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select {
+      width: 100%;
+      height: 2.75rem;
+      padding: 0 2.5rem 0 1rem;
+      font-size: 1rem;
+      border: 1px solid #d2d2d7;
+      border-radius: 0.75rem;
+      background: white;
+      color: #1d1d1f;
+      cursor: pointer;
+      appearance: none;
+      transition: all 0.2s ease;
+    }
+
+    .select:focus {
+      outline: none;
+      border-color: #007AFF;
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    }
+
+    .select-arrow {
+      position: absolute;
+      right: 0.875rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #86868b;
+      pointer-events: none;
+    }
+
+    /* Alerts */
+    .alert {
+      display: flex;
+      gap: 0.75rem;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      border: 1px solid;
+    }
+
+    .alert-icon {
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+    }
+
+    .alert-content {
+      flex: 1;
+    }
+
+    .alert-title {
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .alert-message {
+      font-size: 0.875rem;
+      opacity: 0.9;
+    }
+
+    .alert-info {
+      background: rgba(0, 122, 255, 0.08);
+      border-color: rgba(0, 122, 255, 0.2);
+      color: #007AFF;
+    }
+
+    .alert-success {
+      background: rgba(52, 199, 89, 0.08);
+      border-color: rgba(52, 199, 89, 0.2);
+      color: #34c759;
+    }
+
+    .alert-warning {
+      background: rgba(255, 149, 0, 0.08);
+      border-color: rgba(255, 149, 0, 0.2);
+      color: #ff9500;
+    }
+
+    .alert-error {
+      background: rgba(255, 59, 48, 0.08);
+      border-color: rgba(255, 59, 48, 0.2);
+      color: #ff3b30;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.125rem 0.5rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      border-radius: 9999px;
+      background: #007AFF;
+      color: white;
+    }
+
+    .badge-success {
+      background: #34c759;
+    }
+
+    .badge-warning {
+      background: #ff9500;
+    }
+
+    .badge-error {
+      background: #ff3b30;
+    }
+
+    /* Cards */
+    .card {
+      padding: 1.5rem;
+      background: white;
+      border: 1px solid #e8e8ed;
+      border-radius: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-text {
+      font-size: 0.875rem;
+      color: #86868b;
+      line-height: 1.5;
+    }
+
+    .card-elevated {
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-elevated:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
+      transition: all 0.3s ease;
+    }
+
+    .card-glass {
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Navigation */
+    .segmented-control {
+      display: inline-flex;
+      padding: 0.25rem;
+      background: #f5f5f7;
+      border-radius: 0.625rem;
+      gap: 0.125rem;
+    }
+
+    .segmented-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #86868b;
+      background: transparent;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .segmented-btn:hover {
+      color: #1d1d1f;
+    }
+
+    .segmented-active {
+      background: white;
+      color: #1d1d1f;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 2rem;
+      border-bottom: 1px solid #e8e8ed;
+    }
+
+    .tab {
+      position: relative;
+      padding: 0.75rem 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #86868b;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .tab:hover {
+      color: #1d1d1f;
+    }
+
+    .tab-active {
+      color: #1d1d1f;
+    }
+
+    .tab-active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #007AFF;
+      border-radius: 1px;
+    }
+
+    /* Avatar */
+    .avatar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #007AFF, #5856d6);
+      border-radius: 50%;
+    }
+
+    .avatar-sm {
+      width: 2rem;
+      height: 2rem;
+      font-size: 0.75rem;
+    }
+
+    .avatar-lg {
+      width: 3.5rem;
+      height: 3.5rem;
+      font-size: 1.125rem;
+    }
+
+    /* Progress */
+    .progress {
+      height: 0.5rem;
+      background: #e9e9eb;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #007AFF, #5856d6);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+
+    /* Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, #f5f5f7 25%, #e8e8ed 50%, #f5f5f7 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 0.375rem;
+    }
+
+    .skeleton-text {
+      height: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .skeleton-circle {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-2xl);
+      color: var(--color-text-secondary);
+    }
+
+    .empty-state svg {
+      margin-bottom: var(--space-md);
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <h1>Apple UI Library</h1>
+        <p>Componentes HTML/CSS listos para copiar y pegar</p>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Controls -->
+      <div class="controls">
+        <div class="search-box">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input type="text" class="search-input" id="searchInput" placeholder="Buscar componentes...">
+        </div>
+        <div class="filter-tabs" id="filterTabs">
+          <button class="filter-tab active" data-category="all">Todos</button>
+          <button class="filter-tab" data-category="buttons">Buttons</button>
+          <button class="filter-tab" data-category="inputs">Inputs</button>
+          <button class="filter-tab" data-category="chips">Chips</button>
+          <button class="filter-tab" data-category="tooltips">Tooltips</button>
+          <button class="filter-tab" data-category="cards">Cards</button>
+          <button class="filter-tab" data-category="navigation">Navigation</button>
+          <button class="filter-tab" data-category="feedback">Feedback</button>
+        </div>
+      </div>
+
+      <!-- Component Grid -->
+      <div class="component-grid" id="componentGrid"></div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modalTitle">Component</h2>
+          <button class="modal-close" id="modalClose" aria-label="Cerrar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">Copiado al portapapeles</div>
+  </div>
+
+  <script>
+    // ============================================
+    // DATA
+    // ============================================
+    const componentsData = {
+      categories: [
+        { id: "buttons", name: "Buttons", description: "Interactive elements for user actions" },
+        { id: "inputs", name: "Inputs", description: "Form inputs with helpers, states, and validation" },
+        { id: "chips", name: "Chips & Tags", description: "Compact elements for labels, filters, and selections" },
+        { id: "tooltips", name: "Tooltips", description: "Contextual information on hover" },
+        { id: "cards", name: "Cards", description: "Content containers with various styles" },
+        { id: "navigation", name: "Navigation", description: "Navigation components and controls" },
+        { id: "feedback", name: "Feedback", description: "Alerts, toasts, and status indicators" }
+      ],
+      components: [
+        {
+          id: "btn-primary",
+          name: "Primary Button",
+          category: "buttons",
+          description: "Main call-to-action button with Apple-style hover and active states.",
+          html: `<button class="btn btn-primary">Get Started</button>`,
+          css: `.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: #007AFF;
+  color: white;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.btn-primary:hover {
+  background: #0066d6;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}`,
+          tokens: ["--color-primary: #007AFF", "--radius-lg: 0.75rem"]
+        },
+        {
+          id: "btn-secondary",
+          name: "Secondary Button",
+          category: "buttons",
+          description: "Subtle button for secondary actions.",
+          html: `<button class="btn btn-secondary">Learn More</button>`,
+          css: `.btn-secondary {
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
+.btn-secondary:hover {
+  background: #e8e8ed;
+}`,
+          tokens: ["--color-secondary: #f5f5f7"]
+        },
+        {
+          id: "btn-outline",
+          name: "Outline Button",
+          category: "buttons",
+          description: "Bordered button for tertiary actions.",
+          html: `<button class="btn btn-outline">Cancel</button>`,
+          css: `.btn-outline {
+  background: transparent;
+  color: #1d1d1f;
+  border: 1px solid #d2d2d7;
+}
+
+.btn-outline:hover {
+  background: #f5f5f7;
+}`,
+          tokens: ["--color-border: #d2d2d7"]
+        },
+        {
+          id: "btn-ghost",
+          name: "Ghost Button",
+          category: "buttons",
+          description: "Invisible button that appears on hover.",
+          html: `<button class="btn btn-ghost">View All</button>`,
+          css: `.btn-ghost {
+  background: transparent;
+  color: #1d1d1f;
+}
+
+.btn-ghost:hover {
+  background: #f5f5f7;
+}`,
+          tokens: []
+        },
+        {
+          id: "btn-destructive",
+          name: "Destructive Button",
+          category: "buttons",
+          description: "Red button for dangerous actions.",
+          html: `<button class="btn btn-destructive">Delete</button>`,
+          css: `.btn-destructive {
+  background: #ff3b30;
+  color: white;
+}
+
+.btn-destructive:hover {
+  background: #d63029;
+}`,
+          tokens: ["--color-destructive: #ff3b30"]
+        },
+        {
+          id: "btn-pill",
+          name: "Pill Button",
+          category: "buttons",
+          description: "Fully rounded button for tags or floating actions.",
+          html: `<button class="btn btn-pill">Subscribe</button>`,
+          css: `.btn-pill {
+  background: #007AFF;
+  color: white;
+  border-radius: 9999px;
+  padding: 0.625rem 1.5rem;
+}
+
+.btn-pill:hover {
+  background: #0066d6;
+}`,
+          tokens: []
+        },
+        {
+          id: "btn-icon",
+          name: "Icon Button",
+          category: "buttons",
+          description: "Circular button for icon-only actions.",
+          html: `<button class="btn btn-icon" aria-label="Add item">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 5v14M5 12h14"/>
+  </svg>
+</button>`,
+          css: `.btn-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: 50%;
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
+.btn-icon:hover {
+  background: #e8e8ed;
+}`,
+          tokens: []
+        },
+        {
+          id: "btn-loading",
+          name: "Loading Button",
+          category: "buttons",
+          description: "Button with spinner during async operations.",
+          html: `<button class="btn btn-primary btn-loading" disabled>
+  <span class="spinner"></span>
+  Processing...
+</button>`,
+          css: `.btn-loading {
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}`,
+          tokens: []
+        },
+        {
+          id: "btn-sizes",
+          name: "Button Sizes",
+          category: "buttons",
+          description: "Small, medium, and large button variants.",
+          html: `<button class="btn btn-primary btn-sm">Small</button>
+<button class="btn btn-primary">Medium</button>
+<button class="btn btn-primary btn-lg">Large</button>`,
+          css: `.btn-sm {
+  padding: 0.5rem 0.875rem;
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  border-radius: 1rem;
+}`,
+          tokens: []
+        },
+        {
+          id: "input-basic",
+          name: "Basic Input",
+          category: "inputs",
+          description: "Standard text input with Apple-style focus ring.",
+          html: `<div class="input-group">
+  <label class="input-label">Email</label>
+  <input type="email" class="input" placeholder="you@example.com">
+</div>`,
+          css: `.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.input-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1d1d1f;
+}
+
+.input {
+  height: 2.75rem;
+  padding: 0 1rem;
+  font-size: 1rem;
+  border: 1px solid #d2d2d7;
+  border-radius: 0.75rem;
+  background: white;
+  color: #1d1d1f;
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+.input::placeholder {
+  color: #86868b;
+}`,
+          tokens: ["--color-primary: #007AFF", "--color-border: #d2d2d7"]
+        },
+        {
+          id: "input-helper",
+          name: "Input with Helper",
+          category: "inputs",
+          description: "Input with descriptive helper text below.",
+          html: `<div class="input-group">
+  <label class="input-label">Password</label>
+  <input type="password" class="input" placeholder="••••••••">
+  <span class="input-helper">Must be at least 8 characters</span>
+</div>`,
+          css: `.input-helper {
+  font-size: 0.75rem;
+  color: #86868b;
+  margin-top: 0.25rem;
+}`,
+          tokens: ["--color-muted: #86868b"]
+        },
+        {
+          id: "input-error",
+          name: "Input Error State",
+          category: "inputs",
+          description: "Input showing validation error with message.",
+          html: `<div class="input-group">
+  <label class="input-label">Email</label>
+  <input type="email" class="input input-error" value="invalid-email">
+  <span class="input-error-text">Please enter a valid email address</span>
+</div>`,
+          css: `.input-error {
+  border-color: #ff3b30;
+}
+
+.input-error:focus {
+  border-color: #ff3b30;
+  box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.2);
+}
+
+.input-error-text {
+  font-size: 0.75rem;
+  color: #ff3b30;
+  margin-top: 0.25rem;
+}`,
+          tokens: ["--color-error: #ff3b30"]
+        },
+        {
+          id: "input-success",
+          name: "Input Success State",
+          category: "inputs",
+          description: "Input showing successful validation.",
+          html: `<div class="input-group">
+  <label class="input-label">Email</label>
+  <input type="email" class="input input-success" value="valid@email.com">
+  <span class="input-success-text">✓ Email is valid</span>
+</div>`,
+          css: `.input-success {
+  border-color: #34c759;
+}
+
+.input-success:focus {
+  border-color: #34c759;
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.2);
+}
+
+.input-success-text {
+  font-size: 0.75rem;
+  color: #34c759;
+  margin-top: 0.25rem;
+}`,
+          tokens: ["--color-success: #34c759"]
+        },
+        {
+          id: "input-disabled",
+          name: "Disabled Input",
+          category: "inputs",
+          description: "Non-interactive disabled input state.",
+          html: `<div class="input-group">
+  <label class="input-label">Username</label>
+  <input type="text" class="input" value="john_doe" disabled>
+</div>`,
+          css: `.input:disabled {
+  background: #f5f5f7;
+  color: #86868b;
+  cursor: not-allowed;
+  opacity: 0.6;
+}`,
+          tokens: []
+        },
+        {
+          id: "input-floating",
+          name: "Floating Label Input",
+          category: "inputs",
+          description: "Input with animated floating label.",
+          html: `<div class="input-floating">
+  <input type="email" class="input-floating-field" placeholder=" " id="email">
+  <label class="input-floating-label" for="email">Email Address</label>
+</div>`,
+          css: `.input-floating {
+  position: relative;
+}
+
+.input-floating-field {
+  height: 3.5rem;
+  width: 100%;
+  padding: 1.5rem 1rem 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #d2d2d7;
+  border-radius: 0.75rem;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.input-floating-label {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: #86868b;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.input-floating-field:focus,
+.input-floating-field:not(:placeholder-shown) {
+  border-color: #007AFF;
+}
+
+.input-floating-field:focus + .input-floating-label,
+.input-floating-field:not(:placeholder-shown) + .input-floating-label {
+  top: 0.75rem;
+  transform: translateY(0);
+  font-size: 0.75rem;
+  color: #007AFF;
+}
+
+.input-floating-field:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}`,
+          tokens: []
+        },
+        {
+          id: "input-icon",
+          name: "Input with Icon",
+          category: "inputs",
+          description: "Input with leading or trailing icon.",
+          html: `<div class="input-group">
+  <label class="input-label">Search</label>
+  <div class="input-with-icon">
+    <svg class="input-icon input-icon-left" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+    </svg>
+    <input type="text" class="input input-has-icon-left" placeholder="Search...">
+  </div>
+</div>`,
+          css: `.input-with-icon {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #86868b;
+  pointer-events: none;
+}
+
+.input-icon-left {
+  left: 0.875rem;
+}
+
+.input-icon-right {
+  right: 0.875rem;
+}
+
+.input-has-icon-left {
+  padding-left: 2.75rem;
+}
+
+.input-has-icon-right {
+  padding-right: 2.75rem;
+}`,
+          tokens: []
+        },
+        {
+          id: "input-textarea",
+          name: "Textarea",
+          category: "inputs",
+          description: "Multi-line text input area.",
+          html: `<div class="input-group">
+  <label class="input-label">Message</label>
+  <textarea class="textarea" placeholder="Write your message..." rows="4"></textarea>
+  <span class="input-helper">Max 500 characters</span>
+</div>`,
+          css: `.textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 1px solid #d2d2d7;
+  border-radius: 0.75rem;
+  background: white;
+  color: #1d1d1f;
+  resize: vertical;
+  min-height: 100px;
+  transition: all 0.2s ease;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+.textarea::placeholder {
+  color: #86868b;
+}`,
+          tokens: []
+        },
+        {
+          id: "switch",
+          name: "Toggle Switch",
+          category: "inputs",
+          description: "iOS-style toggle switch.",
+          html: `<label class="switch">
+  <input type="checkbox" class="switch-input">
+  <span class="switch-slider"></span>
+</label>`,
+          css: `.switch {
+  position: relative;
+  display: inline-block;
+  width: 51px;
+  height: 31px;
+}
+
+.switch-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: #e9e9eb;
+  border-radius: 31px;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.switch-slider::before {
+  content: '';
+  position: absolute;
+  height: 27px;
+  width: 27px;
+  left: 2px;
+  bottom: 2px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.switch-input:checked + .switch-slider {
+  background: #34c759;
+}
+
+.switch-input:checked + .switch-slider::before {
+  transform: translateX(20px);
+}
+
+.switch-input:focus + .switch-slider {
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.2);
+}`,
+          tokens: ["--color-success: #34c759"]
+        },
+        {
+          id: "checkbox",
+          name: "Checkbox",
+          category: "inputs",
+          description: "Custom styled checkbox.",
+          html: `<label class="checkbox">
+  <input type="checkbox" class="checkbox-input">
+  <span class="checkbox-box">
+    <svg class="checkbox-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </span>
+  <span class="checkbox-label">Accept terms</span>
+</label>`,
+          css: `.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.checkbox-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-box {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #d2d2d7;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.checkbox-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: white;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+}
+
+.checkbox-input:checked + .checkbox-box {
+  background: #007AFF;
+  border-color: #007AFF;
+}
+
+.checkbox-input:checked + .checkbox-box .checkbox-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.checkbox-input:focus + .checkbox-box {
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+.checkbox-label {
+  font-size: 0.875rem;
+  color: #1d1d1f;
+}`,
+          tokens: []
+        },
+        {
+          id: "radio",
+          name: "Radio Button",
+          category: "inputs",
+          description: "Custom styled radio button.",
+          html: `<label class="radio">
+  <input type="radio" name="option" class="radio-input" checked>
+  <span class="radio-circle"></span>
+  <span class="radio-label">Option 1</span>
+</label>`,
+          css: `.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.radio-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radio-circle {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #d2d2d7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.radio-circle::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: white;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.2s ease;
+}
+
+.radio-input:checked + .radio-circle {
+  background: #007AFF;
+  border-color: #007AFF;
+}
+
+.radio-input:checked + .radio-circle::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.radio-input:focus + .radio-circle {
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+.radio-label {
+  font-size: 0.875rem;
+  color: #1d1d1f;
+}`,
+          tokens: []
+        },
+        {
+          id: "slider",
+          name: "Slider",
+          category: "inputs",
+          description: "Range slider for value selection.",
+          html: `<div class="slider-group">
+  <label class="input-label">Volume</label>
+  <input type="range" class="slider" min="0" max="100" value="50">
+</div>`,
+          css: `.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: #e9e9eb;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #007AFF;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.slider::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #007AFF;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  cursor: pointer;
+}`,
+          tokens: []
+        },
+        {
+          id: "select",
+          name: "Select Dropdown",
+          category: "inputs",
+          description: "Custom styled select dropdown.",
+          html: `<div class="input-group">
+  <label class="input-label">Country</label>
+  <div class="select-wrapper">
+    <select class="select">
+      <option>Select a country</option>
+      <option>United States</option>
+      <option>United Kingdom</option>
+      <option>Canada</option>
+    </select>
+    <svg class="select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="m6 9 6 6 6-6"/>
+    </svg>
+  </div>
+</div>`,
+          css: `.select-wrapper {
+  position: relative;
+}
+
+.select {
+  width: 100%;
+  height: 2.75rem;
+  padding: 0 2.5rem 0 1rem;
+  font-size: 1rem;
+  border: 1px solid #d2d2d7;
+  border-radius: 0.75rem;
+  background: white;
+  color: #1d1d1f;
+  cursor: pointer;
+  appearance: none;
+  transition: all 0.2s ease;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+.select-arrow {
+  position: absolute;
+  right: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #86868b;
+  pointer-events: none;
+}`,
+          tokens: []
+        },
+        {
+          id: "chip-basic",
+          name: "Basic Chip",
+          category: "chips",
+          description: "Simple chip for labels and categories.",
+          html: `<span class="chip">Design</span>
+<span class="chip">Development</span>
+<span class="chip">Marketing</span>`,
+          css: `.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  transition: all 0.2s ease;
+}
+
+.chip:hover {
+  background: #e8e8ed;
+}`,
+          tokens: []
+        },
+        {
+          id: "chip-colors",
+          name: "Colored Chips",
+          category: "chips",
+          description: "Chips with different color variants.",
+          html: `<span class="chip chip-primary">Primary</span>
+<span class="chip chip-success">Success</span>
+<span class="chip chip-warning">Warning</span>
+<span class="chip chip-error">Error</span>`,
+          css: `.chip-primary {
+  background: rgba(0, 122, 255, 0.1);
+  color: #007AFF;
+}
+
+.chip-success {
+  background: rgba(52, 199, 89, 0.1);
+  color: #34c759;
+}
+
+.chip-warning {
+  background: rgba(255, 149, 0, 0.1);
+  color: #ff9500;
+}
+
+.chip-error {
+  background: rgba(255, 59, 48, 0.1);
+  color: #ff3b30;
+}`,
+          tokens: []
+        },
+        {
+          id: "chip-removable",
+          name: "Removable Chip",
+          category: "chips",
+          description: "Chip with close button for removal.",
+          html: `<span class="chip chip-removable">
+  React
+  <button class="chip-remove" aria-label="Remove">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M18 6L6 18M6 6l12 12"/>
+    </svg>
+  </button>
+</span>`,
+          css: `.chip-removable {
+  padding-right: 0.375rem;
+  gap: 0.25rem;
+}
+
+.chip-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #86868b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chip-remove:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #1d1d1f;
+}`,
+          tokens: []
+        },
+        {
+          id: "chip-selectable",
+          name: "Selectable Chips",
+          category: "chips",
+          description: "Chips that can be selected/deselected.",
+          html: `<div class="chip-group">
+  <button class="chip chip-selectable chip-selected">All</button>
+  <button class="chip chip-selectable">Design</button>
+  <button class="chip chip-selectable">Code</button>
+</div>`,
+          css: `.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip-selectable {
+  border: 1px solid #d2d2d7;
+  background: white;
+  cursor: pointer;
+}
+
+.chip-selectable:hover {
+  border-color: #007AFF;
+}
+
+.chip-selected {
+  background: #007AFF;
+  border-color: #007AFF;
+  color: white;
+}
+
+.chip-selected:hover {
+  background: #0066d6;
+}`,
+          tokens: []
+        },
+        {
+          id: "tag-input",
+          name: "Tag Input",
+          category: "chips",
+          description: "Input field with removable tags.",
+          html: `<div class="tag-input-container">
+  <div class="tag-input-tags">
+    <span class="chip chip-removable chip-sm">
+      React
+      <button class="chip-remove">&times;</button>
+    </span>
+    <span class="chip chip-removable chip-sm">
+      TypeScript
+      <button class="chip-remove">&times;</button>
+    </span>
+    <input type="text" class="tag-input" placeholder="Add tag...">
+  </div>
+</div>`,
+          css: `.tag-input-container {
+  border: 1px solid #d2d2d7;
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.tag-input-container:focus-within {
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+.tag-input-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  align-items: center;
+}
+
+.tag-input {
+  flex: 1;
+  min-width: 120px;
+  border: none;
+  outline: none;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.875rem;
+  background: transparent;
+}
+
+.chip-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.6875rem;
+}`,
+          tokens: []
+        },
+        {
+          id: "tooltip-basic",
+          name: "Basic Tooltip",
+          category: "tooltips",
+          description: "Simple tooltip on hover with fade animation.",
+          html: `<div class="tooltip-wrapper">
+  <button class="btn btn-secondary">Hover me</button>
+  <div class="tooltip tooltip-top">This is a tooltip</div>
+</div>`,
+          css: `.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  position: absolute;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+  background: #1d1d1f;
+  border-radius: 0.5rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 1000;
+}
+
+.tooltip-top {
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+}
+
+.tooltip-wrapper:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tooltip-wrapper:hover .tooltip-top {
+  transform: translateX(-50%) translateY(0);
+}`,
+          tokens: []
+        },
+        {
+          id: "tooltip-arrow",
+          name: "Tooltip with Arrow",
+          category: "tooltips",
+          description: "Tooltip with pointing arrow.",
+          html: `<div class="tooltip-wrapper">
+  <button class="btn btn-secondary">With Arrow</button>
+  <div class="tooltip tooltip-top tooltip-arrow">Tooltip with arrow</div>
+</div>`,
+          css: `.tooltip-arrow::after {
+  content: '';
+  position: absolute;
+  border: 6px solid transparent;
+}
+
+.tooltip-top.tooltip-arrow::after {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-top-color: #1d1d1f;
+}
+
+.tooltip-bottom.tooltip-arrow::after {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-bottom-color: #1d1d1f;
+}`,
+          tokens: []
+        },
+        {
+          id: "card-basic",
+          name: "Basic Card",
+          category: "cards",
+          description: "Simple content card with border.",
+          html: `<div class="card">
+  <h3 class="card-title">Card Title</h3>
+  <p class="card-text">This is a basic card with some content inside.</p>
+</div>`,
+          css: `.card {
+  padding: 1.5rem;
+  background: white;
+  border: 1px solid #e8e8ed;
+  border-radius: 1rem;
+}
+
+.card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 0.875rem;
+  color: #86868b;
+  line-height: 1.5;
+}`,
+          tokens: []
+        },
+        {
+          id: "card-elevated",
+          name: "Elevated Card",
+          category: "cards",
+          description: "Card with shadow elevation.",
+          html: `<div class="card card-elevated">
+  <h3 class="card-title">Elevated Card</h3>
+  <p class="card-text">Card with shadow for depth.</p>
+</div>`,
+          css: `.card-elevated {
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-elevated:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}`,
+          tokens: []
+        },
+        {
+          id: "card-glass",
+          name: "Glass Card",
+          category: "cards",
+          description: "Frosted glass effect card.",
+          html: `<div class="card card-glass">
+  <h3 class="card-title">Glass Card</h3>
+  <p class="card-text">Translucent with backdrop blur.</p>
+</div>`,
+          css: `.card-glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}`,
+          tokens: []
+        },
+        {
+          id: "segmented-control",
+          name: "Segmented Control",
+          category: "navigation",
+          description: "iOS-style segmented control.",
+          html: `<div class="segmented-control">
+  <button class="segmented-btn segmented-active">Day</button>
+  <button class="segmented-btn">Week</button>
+  <button class="segmented-btn">Month</button>
+</div>`,
+          css: `.segmented-control {
+  display: inline-flex;
+  padding: 0.25rem;
+  background: #f5f5f7;
+  border-radius: 0.625rem;
+  gap: 0.125rem;
+}
+
+.segmented-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #86868b;
+  background: transparent;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.segmented-btn:hover {
+  color: #1d1d1f;
+}
+
+.segmented-active {
+  background: white;
+  color: #1d1d1f;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}`,
+          tokens: []
+        },
+        {
+          id: "tabs",
+          name: "Tabs",
+          category: "navigation",
+          description: "Tab navigation with animated underline.",
+          html: `<div class="tabs">
+  <button class="tab tab-active">Overview</button>
+  <button class="tab">Features</button>
+  <button class="tab">Pricing</button>
+</div>`,
+          css: `.tabs {
+  display: flex;
+  gap: 2rem;
+  border-bottom: 1px solid #e8e8ed;
+}
+
+.tab {
+  position: relative;
+  padding: 0.75rem 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #86868b;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.tab:hover {
+  color: #1d1d1f;
+}
+
+.tab-active {
+  color: #1d1d1f;
+}
+
+.tab-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #007AFF;
+  border-radius: 1px;
+}`,
+          tokens: []
+        },
+        {
+          id: "alert-info",
+          name: "Info Alert",
+          category: "feedback",
+          description: "Informational alert message.",
+          html: `<div class="alert alert-info">
+  <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+  </svg>
+  <div class="alert-content">
+    <p class="alert-title">Information</p>
+    <p class="alert-message">This is an informational message.</p>
+  </div>
+</div>`,
+          css: `.alert {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid;
+}
+
+.alert-icon {
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.alert-message {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.alert-info {
+  background: rgba(0, 122, 255, 0.08);
+  border-color: rgba(0, 122, 255, 0.2);
+  color: #007AFF;
+}`,
+          tokens: []
+        },
+        {
+          id: "alert-success",
+          name: "Success Alert",
+          category: "feedback",
+          description: "Success confirmation alert.",
+          html: `<div class="alert alert-success">
+  <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+  </svg>
+  <div class="alert-content">
+    <p class="alert-title">Success</p>
+    <p class="alert-message">Your changes have been saved.</p>
+  </div>
+</div>`,
+          css: `.alert-success {
+  background: rgba(52, 199, 89, 0.08);
+  border-color: rgba(52, 199, 89, 0.2);
+  color: #34c759;
+}`,
+          tokens: []
+        },
+        {
+          id: "alert-warning",
+          name: "Warning Alert",
+          category: "feedback",
+          description: "Warning alert for caution.",
+          html: `<div class="alert alert-warning">
+  <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4M12 17h.01"/>
+  </svg>
+  <div class="alert-content">
+    <p class="alert-title">Warning</p>
+    <p class="alert-message">Please review before continuing.</p>
+  </div>
+</div>`,
+          css: `.alert-warning {
+  background: rgba(255, 149, 0, 0.08);
+  border-color: rgba(255, 149, 0, 0.2);
+  color: #ff9500;
+}`,
+          tokens: []
+        },
+        {
+          id: "alert-error",
+          name: "Error Alert",
+          category: "feedback",
+          description: "Error alert for critical issues.",
+          html: `<div class="alert alert-error">
+  <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/>
+  </svg>
+  <div class="alert-content">
+    <p class="alert-title">Error</p>
+    <p class="alert-message">Something went wrong. Please try again.</p>
+  </div>
+</div>`,
+          css: `.alert-error {
+  background: rgba(255, 59, 48, 0.08);
+  border-color: rgba(255, 59, 48, 0.2);
+  color: #ff3b30;
+}`,
+          tokens: []
+        },
+        {
+          id: "badge",
+          name: "Badge",
+          category: "feedback",
+          description: "Small status indicators.",
+          html: `<span class="badge">New</span>
+<span class="badge badge-success">Active</span>
+<span class="badge badge-warning">Pending</span>
+<span class="badge badge-error">Expired</span>`,
+          css: `.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border-radius: 9999px;
+  background: #007AFF;
+  color: white;
+}
+
+.badge-success {
+  background: #34c759;
+}
+
+.badge-warning {
+  background: #ff9500;
+}
+
+.badge-error {
+  background: #ff3b30;
+}`,
+          tokens: []
+        },
+        {
+          id: "avatar",
+          name: "Avatar",
+          category: "feedback",
+          description: "User avatar with different sizes.",
+          html: `<div class="avatar avatar-sm">JD</div>
+<div class="avatar">JD</div>
+<div class="avatar avatar-lg">JD</div>`,
+          css: `.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #007AFF, #5856d6);
+  border-radius: 50%;
+}
+
+.avatar-sm {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.75rem;
+}
+
+.avatar-lg {
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 1.125rem;
+}`,
+          tokens: []
+        },
+        {
+          id: "progress",
+          name: "Progress Bar",
+          category: "feedback",
+          description: "Progress indicator bar.",
+          html: `<div class="progress">
+  <div class="progress-bar" style="width: 65%"></div>
+</div>`,
+          css: `.progress {
+  height: 0.5rem;
+  background: #e9e9eb;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #007AFF, #5856d6);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}`,
+          tokens: []
+        },
+        {
+          id: "skeleton",
+          name: "Skeleton Loader",
+          category: "feedback",
+          description: "Loading placeholder animation.",
+          html: `<div class="skeleton skeleton-text"></div>
+<div class="skeleton skeleton-text" style="width: 80%"></div>
+<div class="skeleton skeleton-circle"></div>`,
+          css: `.skeleton {
+  background: linear-gradient(90deg, #f5f5f7 25%, #e8e8ed 50%, #f5f5f7 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 0.375rem;
+}
+
+.skeleton-text {
+  height: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-circle {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}`,
+          tokens: []
+        }
+      ]
+    };
+
+    // ============================================
+    // STATE
+    // ============================================
+    let currentCategory = 'all';
+    let searchQuery = '';
+
+    // ============================================
+    // DOM ELEMENTS
+    // ============================================
+    const componentGrid = document.getElementById('componentGrid');
+    const searchInput = document.getElementById('searchInput');
+    const filterTabs = document.getElementById('filterTabs');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalClose = document.getElementById('modalClose');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const toast = document.getElementById('toast');
+
+    // ============================================
+    // FUNCTIONS
+    // ============================================
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function showToast(message = 'Copiado al portapapeles') {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    function copyToClipboard(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast();
+        if (btn) {
+          btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copiado`;
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar`;
+            btn.classList.remove('copied');
+          }, 2000);
+        }
+      });
+    }
+
+    function getCategoryName(categoryId) {
+      const cat = componentsData.categories.find(c => c.id === categoryId);
+      return cat ? cat.name : categoryId;
+    }
+
+    function filterComponents() {
+      return componentsData.components.filter(comp => {
+        const matchesCategory = currentCategory === 'all' || comp.category === currentCategory;
+        const matchesSearch = comp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                             comp.description.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+      });
+    }
+
+    function renderGrid() {
+      const filtered = filterComponents();
+      
+      if (filtered.length === 0) {
+        componentGrid.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+            <p>No se encontraron componentes</p>
+          </div>
+        `;
+        return;
+      }
+
+      componentGrid.innerHTML = filtered.map(comp => `
+        <article class="component-card" data-id="${comp.id}">
+          <div class="component-preview">${comp.html}</div>
+          <div class="component-info">
+            <h3 class="component-name">${comp.name}</h3>
+            <p class="component-category">${getCategoryName(comp.category)}</p>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function openModal(componentId) {
+      const comp = componentsData.components.find(c => c.id === componentId);
+      if (!comp) return;
+
+      modalTitle.textContent = comp.name;
+      modalBody.innerHTML = `
+        <section class="modal-section">
+          <h3 class="modal-section-title">Descripción</h3>
+          <p class="modal-description">${comp.description}</p>
+        </section>
+        
+        <section class="modal-section">
+          <h3 class="modal-section-title">Vista Previa</h3>
+          <div class="modal-preview">${comp.html}</div>
+        </section>
+        
+        <section class="modal-section">
+          <h3 class="modal-section-title">HTML</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">HTML</span>
+              <button class="copy-btn" data-code="html" data-id="${comp.id}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Copiar
+              </button>
+            </div>
+            <div class="code-content"><pre>${escapeHtml(comp.html)}</pre></div>
+          </div>
+        </section>
+        
+        <section class="modal-section">
+          <h3 class="modal-section-title">CSS</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">CSS</span>
+              <button class="copy-btn" data-code="css" data-id="${comp.id}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Copiar
+              </button>
+            </div>
+            <div class="code-content"><pre>${escapeHtml(comp.css)}</pre></div>
+          </div>
+        </section>
+        
+        ${comp.tokens && comp.tokens.length > 0 ? `
+        <section class="modal-section">
+          <h3 class="modal-section-title">Design Tokens</h3>
+          <div class="tokens-list">
+            ${comp.tokens.map(t => `<code class="token-tag">${t}</code>`).join('')}
+          </div>
+        </section>
+        ` : ''}
+      `;
+
+      modalOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // ============================================
+    // EVENT LISTENERS
+    // ============================================
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderGrid();
+    });
+
+    filterTabs.addEventListener('click', (e) => {
+      if (e.target.classList.contains('filter-tab')) {
+        filterTabs.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        currentCategory = e.target.dataset.category;
+        renderGrid();
+      }
+    });
+
+    componentGrid.addEventListener('click', (e) => {
+      const card = e.target.closest('.component-card');
+      if (card) {
+        openModal(card.dataset.id);
+      }
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+
+    modalBody.addEventListener('click', (e) => {
+      const copyBtn = e.target.closest('.copy-btn');
+      if (copyBtn) {
+        const compId = copyBtn.dataset.id;
+        const codeType = copyBtn.dataset.code;
+        const comp = componentsData.components.find(c => c.id === compId);
+        if (comp) {
+          copyToClipboard(codeType === 'html' ? comp.html : comp.css, copyBtn);
+        }
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ============================================
+    // INIT
+    // ============================================
+    renderGrid();
+  </script>
+</body>
+</html>

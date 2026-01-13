@@ -4,15 +4,9 @@
   padding: 0;
 }
 
-body {
-  font-family: system-ui, -apple-system, sans-serif;
-  background: #0b0b0c;
-  color: #e5e5e5;
-}
-
 .layout {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   height: 100vh;
 }
 
@@ -21,11 +15,37 @@ section {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  height: -webkit-fill-available;
+}
+
+section:not(:last-child) textarea:not(#extraCSS) {
+  position: absolute;
+  min-width: 350px;
+  min-height: 150px;
+  transform: translateY(99px);
+}
+
+section:first-child textarea:not(#extraCSS) {
+  transform: translateY(90px);
+  z-index: 995;
+}
+
+#preview-block {
+  width: calc(100% - 401px);
 }
 
 section:last-child {
   border-right: none;
+}
+
+#presetsSection {
+  max-height: fit-content;
+}
+
+.extras-form {
+  display: flex;
+  flex-direction: column;
+  height: -webkit-fill-available;
 }
 
 h3 {
@@ -58,8 +78,14 @@ textarea {
   font-family: ui-monospace, "Courier New", monospace;
   font-size: 12px;
   line-height: 1.6;
-  resize: none;
-  overflow: auto;
+}
+
+.coding-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: -webkit-fill-available;
+  min-width: 400px;
 }
 
 .code-viewer {
@@ -172,6 +198,11 @@ button.secondary {
   background: #dc2626;
 }
 
+#extraCSS {
+  position: absolute;
+  width: calc(93% - (calc(16px + 1rem)));
+}
+
 @media (max-width: 1200px) {
   .layout {
     grid-template-columns: 1fr 1fr;
@@ -180,5 +211,9 @@ button.secondary {
 
   section {
     min-height: 400px;
+  }
+
+  #preview-block {
+    width: -webkit-fill-available;
   }
 }

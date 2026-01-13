@@ -9,6 +9,10 @@
     <link href="../mega-menu/styles.css" rel="stylesheet">
     <link href="/assets/styles/design-system.css" rel="stylesheet">
     <link href="/assets/styles/css-short.css" rel="stylesheet">
+    <link href="../../../shared/components/bottom-sheet/bottom-sheet.css" rel="stylesheet">
+    <script src="../../../shared/utilities/icon-loader/iconloader.js"></script>
+    <script> constructIcons("/assets/icons/symbols-svg.txt"); </script>
+
     <style>
         .badge-sm {
             color: #fff;
@@ -27,15 +31,15 @@
 </head>
 
 <body>
-
     <div class="layout">
-        <!-- MARKDOWN -->
-        <section>
-            <h3>
-                Markdown Definition
-                <span class="badge-sm" style="--bg: var(--blue)">.md</span>
-            </h3>
-            <textarea id="markdown"># Mega Menu
+        <div class="coding-inputs">
+            <!-- MARKDOWN -->
+            <section>
+                <h3>
+                    Markdown Definition
+                    <span class="badge-sm" style="--bg: var(--blue)">.md</span>
+                </h3>
+                <textarea id="markdown" class="code"># Mega Menu
 
 ## Controllers
 - Home → /
@@ -65,62 +69,79 @@
 - Integrations → /integrations
   icon: plug
   color: green
-  desc: Connect tools</textarea>
-            <div class="actions">
-                <button id="btnExample" class="secondary">Example</button>
-                <button id="btnGenerate">Generate</button>
-            </div>
-        </section>
-
-        <!-- JSON MODEL -->
-        <section>
-            <h3>
-                Data Model
-                <span class="badge-sm" style="--bg: var(--blue)">JSON</span>
-            </h3>
-            <div class="code-viewer" id="jsonOutput"></div>
-        </section>
-
-        <!-- HTML TEMPLATE -->
-        <section>
-            <h3>
-                HTML Template
-                <span class="badge-sm" style="--bg: var(--blue)">data-bind</span>
-            </h3>
-            <textarea id="htmlTemplate"><nav class="navbar">
-  <button data-repeat="controllers" 
-          data-text="label" 
-          data-menu="target"
-          data-align="align"
-          data-if-megamenu="isMegaMenu"></button>
-</nav>
-
-<div data-repeat-menus="menus" 
-     class="mega-menu" 
-     data-id="id">
-  
-  <div data-repeat="sections" 
-       class="section">
-    <h3 data-text="title"></h3>
-    
-    <a data-repeat="items" 
-       data-href="url"
-       data-class="className"
-       data-color="props.color"
-       class="card">
-      <span class="icon" data-text="props.icon"></span>
-      <strong data-text="label"></strong>
-      <span data-text="props.desc"></span>
-    </a>
-  </div>
-</div></textarea>
-            <div class="actions">
-                <button id="btnRender">Render Preview</button>
-            </div>
-        </section>
-
+  desc: Connect tools
+</textarea>
+                <div class="actions">
+                    <button id="btnExample" class="secondary">Example</button>
+                    <button id="btnGenerate">Generate</button>
+                </div>
+            </section>
+            <!-- HTML TEMPLATE -->
+            <section>
+                <h3>
+                    HTML Template
+                    <span class="badge-sm" style="--bg: var(--blue)">data-bind</span>
+                </h3>
+                <textarea id="htmlTemplate" class="code">
+&#x3C;nav data-class=&#x22;navbar.class&#x22; data-id=&#x22;navbar.id&#x22;&#x3E;
+   &#x3C;a data-repeat=&#x22;controllers&#x22;
+      data-href=&#x22;href&#x22;
+      data-mega=&#x22;mega&#x22;
+      data-align=&#x22;align&#x22;
+      data-name=&#x22;label&#x22;&#x3E;
+   &#x3C;span class=&#x22;icon&#x22; data-text=&#x22;props.icon&#x22;&#x3E;&#x3C;/span&#x3E;
+   &#x3C;span class=&#x22;label&#x22; data-text=&#x22;label&#x22;&#x3E;&#x3C;/span&#x3E;
+   &#x3C;/a&#x3E;
+&#x3C;/nav&#x3E;
+&#x3C;div class=&#x22;mega-menus-container&#x22;&#x3E;
+   &#x3C;div data-repeat-menus=&#x22;menus&#x22;
+      class=&#x22;section mega-menu&#x22;
+      data-id=&#x22;id&#x22;&#x3E;
+      &#x3C;h3 data-text=&#x22;title&#x22;&#x3E;&#x3C;/h3&#x3E;
+      &#x3C;div class=&#x22;mm-grid&#x22;&#x3E;
+         &#x3C;a data-repeat=&#x22;items&#x22;
+            data-href=&#x22;url&#x22;
+            data-class=&#x22;className&#x22;
+            data-color=&#x22;props.color&#x22;
+            class=&#x22;card&#x22;&#x3E;
+         &#x3C;span class=&#x22;icon&#x22; data-text=&#x22;props.icon&#x22;&#x3E;&#x3C;/span&#x3E;
+         &#x3C;div&#x3E;
+            &#x3C;strong data-text=&#x22;label&#x22;&#x3E;&#x3C;/strong&#x3E;
+            &#x3C;div data-text=&#x22;props.desc&#x22;&#x3E;&#x3C;/div&#x3E;
+         &#x3C;/div&#x3E;
+         &#x3C;/a&#x3E;
+      &#x3C;/div&#x3E;
+   &#x3C;/div&#x3E;
+&#x3C;/div&#x3E;
+&#x3C;style&#x3E;
+   nav.navbar a:before {
+   content: &#x27;k&#x27;;
+   position: absolute;
+   width: 10ch;
+   background: transparent;
+   color: transparent;
+   transform: translateY(27px);
+   }
+&#x3C;/style&#x3E;
+&#x3C;script src=&#x22;../../../shared/utilities/icon-loader/iconloader.js&#x22;&#x3E;&#x3C;/script&#x3E;
+&#x3C;script&#x3E; constructIcons(&#x22;/assets/icons/symbols-svg.txt&#x22;); &#x3C;/script&#x3E;
+                </textarea>
+                <div class="actions">
+                    <button id="btnRender">Render Preview</button>
+                    <button id="btnExtras" class="btn-secondary" style="--c: white; border-color: white">Extras</button>
+                </div>
+            </section>
+            <!-- JSON MODEL -->
+            <section>
+                <h3>
+                    Data Model
+                    <span class="badge-sm" style="--bg: var(--blue)">JSON</span>
+                </h3>
+                <textarea class="code-viewer code" id="jsonOutput" readonly></textarea>
+            </section>
+        </div>
         <!-- PREVIEW -->
-        <section>
+        <section id="preview-block">
             <h3>
                 Live Preview
                 <span class="badge-sm" style="--bg: var(--blue)">hydrated</span>
@@ -129,10 +150,42 @@
         </section>
     </div>
 
+    <!-- Bottom Sheet for Extra JS/CSS -->
+    <div class="adaptive-backdrop" id="backdrop"></div>
+    <div class="adaptive-sheet" id="sheet">
+        <div class="sheet-header" id="header">
+            <div class="sheet-drag-handle"></div>
+            <div class="sheet-title-bar">
+                <h2 class="sheet-title">Extras</h2>
+                <button class="sheet-close-btn" id="closeBtn">×</button>
+            </div>
+        </div>
+        <div class="sheet-content" id="content">
+            <div class="extras-form">
+                <section id="presetsSection">
+                    <h3>Presets</h3>
+                    <select id="presetSelector" class="form-input form-select">
+                        <option value="">Select a preset...</option>
+                    </select>
+                    <div class="actions" style="margin-top: 8px;">
+                        <button id="loadPreset">Load Preset</button>
+                    </div>
+                </section>
+                <section>
+                    <h3>Extra CSS</h3>
+                    <textarea id="extraCSS" class="code" placeholder="Add custom CSS here..."></textarea>
+                </section>
+                <section>
+                    <h3>Extra JS</h3>
+                    <textarea id="extraJS" class="code" placeholder="Add custom JavaScript here..."></textarea>
+                </section>
+            </div>
+        </div>
+    </div>
+
     <div class="status" id="status"></div>
-
+    <script src="../../../shared/components/bottom-sheet/bottom-sheet.js"></script>
     <script src="script.js"></script>
-
 </body>
 
 </html>

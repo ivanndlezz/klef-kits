@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klef Tools - Menu Actualizado</title>
+    <link rel="stylesheet" href="../../../assets/styles/design-system.css">
+    <link rel="stylesheet" href="../../../assets/styles/css-short.css">
+    <style>
+        :root {
+            --k-blue: 211 100% 50%;
+            --k-purple: 280 73% 58%;
+            --muted-foreground: 220 9% 46%;
+            --space-3: 0.75rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+        }
+
+        /* ============================================
+    NAVBAR - ESTILOS BASE (DESKTOP)
+    ============================================ */
+        .navbar {
+            display: flex;
+            gap: 24px;
+            padding: 16px 32px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a:not([data-name="#GitHub"]) {
+            background: none;
+            border: none;
+            color: #000;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .navbar>a {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .navbar a:hover {
+            opacity: 0.6;
+        }
+
+        [data-align="right"] {
+            margin-left: auto;
+        }
+
+        #main-nav {
+            pointer-events: none;
+        }
+
+        #main-nav * {
+            pointer-events: all;
+        }
+
+        nav.navbar a:not(.logo):before {
+            content: 'k';
+            position: absolute;
+            width: 10ch;
+            background: transparent;
+            color: transparent;
+            --h: 29px;
+            transform: translateY(var(--h));
+            height: var(--h)
+        }
+
+        [data-name="#GitHub"] {
+            margin-left: 8%;
+        }
+
+        /* ============================================
+    MEGA MENUS - ESTILOS BASE (DESKTOP)
+    ============================================ */
+        .mega-menu {
+            display: none;
+            position: absolute;
+            left: 0;
+            right: 0;
+            background: #fff;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            padding: 32px;
+            z-index: 1001;
+            width: fit-content;
+            margin: 0 auto;
+            --rad: 15px;
+            border-radius: 0px 0px var(--rad) var(--rad);
+        }
+
+        .mega-menu.active {
+            display: grid;
+        }
+
+        .menu-section h3,
+        .menu-section-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 12px;
+            letter-spacing: 0.05em;
+        }
+
+        .section-label.menu {
+            display: none;
+        }
+
+        .menu-section {
+            margin-bottom: 32px;
+        }
+
+        .menu-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .mm-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        /* ============================================
+    CARDS
+    ============================================ */
+        .card {
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            padding: 20px;
+            margin-bottom: 12px;
+            background: #f8f8f8;
+            border-radius: 16px;
+            text-decoration: none;
+            color: #000;
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            background: #eee;
+            transform: translateY(-2px);
+        }
+
+        .card .icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+
+        .card .icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .card[data-color="purple"] .icon {
+            background: #e8e3ff;
+        }
+
+        .card[data-color="orange"] .icon {
+            background: #ffe8e3;
+        }
+
+        .card[data-color="green"] .icon {
+            background: #d1fae5;
+        }
+
+        .card[data-color="blue"] .icon {
+            background: #dbeafe;
+        }
+
+        .card[data-color="red"] .icon {
+            background: #fee2e2;
+        }
+
+        .card strong {
+            font-size: 16px;
+        }
+
+        .card span:last-child,
+        .card div:last-child {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* ============================================
+    TOPBARS (MOBILE Y MEGA MENU)
+    ============================================ */
+        .mega-topbar,
+        .mobile-topbar {
+            background: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .mobile-topbar {
+            display: none;
+        }
+
+        .mega-topbar {
+            display: none;
+        }
+
+        .back-btn,
+        .close-btn {
+            background: #f0f0f0;
+            border: none;
+            color: #000;
+            cursor: pointer;
+            padding: 0.6rem 1.3rem;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover,
+        .close-btn:hover {
+            background: #e5e5e5;
+        }
+
+        .back-btn {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .back-btn.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ============================================
+    LOGO
+    ============================================ */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            text-decoration: none;
+            color: hsl(var(--foreground));
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, hsl(var(--k-blue)), hsl(var(--k-purple)));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .logo-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .logo-title {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .menu-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        /* ============================================
+    RESPONSIVE: TABLETS (< 900px)
+    ============================================ */
+        @media (max-width: 900px) {
+            .logo-subtitle {
+                display: none;
+            }
+        }
+
+        /* ============================================
+    RESPONSIVE: MOBILE (< 768px)
+    ============================================ */
+        @media (max-width: 768px) {
+
+            /* --- TOPBAR MÓVIL --- */
+            .mobile-topbar {
+                display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+            }
+
+            /* --- MEGA TOPBAR --- */
+            .mega-topbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1002;
+                transform: translateY(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .mega-topbar.active {
+                display: flex;
+                transform: translateY(0);
+            }
+
+            /* --- NAVBAR MÓVIL --- */
+            .navbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                overflow-y: auto;
+                z-index: 999;
+                padding-top: 80px;
+                flex-direction: column;
+                box-shadow: none;
+            }
+
+            .navbar.mobile-open {
+                transform: translateX(0);
+            }
+
+            /* --- HEADER Y LOGO EN MÓVIL --- */
+            .logo-subtitle,
+            .header-left {
+                display: none;
+            }
+
+            .section-label.menu {
+                display: block;
+                margin-top: 1rem;
+            }
+
+            /* --- LINKS DEL NAVBAR EN MÓVIL --- */
+            [data-name="#GitHub"] {
+                margin-left: auto;
+            }
+
+            .menu-links {
+                flex-direction: column;
+                align-items: normal;
+            }
+
+
+            .navbar .menu-links a {
+                display: flex;
+                padding: 1.2rem 1.5rem;
+                text-decoration: none;
+                background: #f8f8f8;
+                border-radius: 10px;
+                box-shadow: 0 0px 3px rgba(0, 0, 0, 0.08);
+                gap: 1rem;
+                min-height: 56px;
+            }
+
+            .navbar>a .icon {
+                min-width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .navbar>a .label {
+                font-weight: 500;
+            }
+
+            /* Flecha para items con mega menu */
+            [data-mega*="#"]:not(nav) {
+                justify-content: space-between;
+            }
+
+            [data-mega*="#"]:not(nav):after {
+                content: 'k';
+                color: transparent;
+                width: -webkit-fill-available;
+                text-align: end;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='main-menu-arrow' fill='none' stroke='currentColor' viewBox='0 0 24 24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7'%3E%3C/path%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: 100%;
+            }
+
+            nav.navbar a:before {
+                display: none;
+            }
+
+            .mega-menus-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: white;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                overflow-y: auto;
+                z-index: 1001;
+                padding-top: 80px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .mega-menus-container:has(.mega-menu.active) {
+                transform: translateX(0);
+            }
+
+            .mega-menu.active {
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                transform: translateX(0);
+                padding: 1.5rem;
+                box-shadow: none;
+                animation: slideInRight 0.3s ease;
+            }
+
+            .menu-section h3 {
+                font-size: 11px;
+                margin-bottom: 8px;
+            }
+
+            .menu-section h3:before {
+                content: 'Menu • '
+            }
+
+            /* --- GRID Y CARDS EN MÓVIL --- */
+            .mm-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .card {
+                flex-direction: row;
+                align-items: center;
+                padding: 16px;
+                gap: 12px;
+                min-height: 56px;
+                touch-action: manipulation;
+            }
+
+            .card>div {
+                flex: 1;
+            }
+
+            .card:hover {
+                transform: none;
+            }
+
+            .card:active {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
+            }
+
+            .navbar>a:active {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
+            }
+
+            /* --- OVERLAY OSCURO --- */
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+                z-index: 998;
+            }
+
+            body:has(.navbar.mobile-open)::before {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+
+
+            /* --- ANIMACIONES --- */
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            /* --- MEJORAS DE TOUCH --- */
+            * {
+                touch-action: manipulation;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- SVG Sprite -->
+    <div id="svg-symbols" style="display: none;">
+        <svg id="sprite" xmlns="http://www.w3.org/2000/svg">
+            <symbol id="icon-globe" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418"
+                    fill="none" stroke="currentColor" stroke-width="1.5" />
+            </symbol>
+            <symbol id="icon-code-app" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M14.25 9.75 16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z"
+                    fill="none" stroke="currentColor" stroke-width="1.5" />
+            </symbol>
+            <symbol id="icon-code" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" fill="none"
+                    stroke="currentColor" stroke-width="1.5" />
+            </symbol>
+            <symbol id="icon-book" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"
+                    fill="none" stroke="currentColor" stroke-width="1.5" />
+            </symbol>
+            <symbol id="icon-paint" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42"
+                    fill="none" stroke="currentColor" stroke-width="1.5" />
+            </symbol>
+            <symbol id="icon-folder" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"
+                    fill="none" stroke="currentColor" stroke-width="1.5" />
+            </symbol>
+            <symbol id="icon-star-sparks" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"
+                    fill="none" stroke="currentColor" stroke-width="1.5" />
+            </symbol>
+            <symbol id="icon-modules" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 0 1-1.125-1.125v-3.75ZM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-8.25ZM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-2.25Z"
+                    fill="none" stroke="currentColor" stroke-width="1.5" />
+            </symbol>
+            <symbol id="icon-stacked-list" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"
+                    fill="none" stroke="currentColor" stroke-width="1.5" />
+            </symbol>
+            <symbol id="icon-home" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                    fill="none" stroke="currentColor" stroke-width="1.5" />
+            </symbol>
+            <symbol id="icon-color-palette" viewBox="0 0 24 24">
+                <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+                <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
+                <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+                <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+                <path
+                    d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
+                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </symbol>
+        </svg>
+    </div>
+
+    <!-- Mobile Topbar -->
+    <div class="mobile-topbar">
+        <div class="header-left-mobile">
+            <a href="https://ivanndlezz.github.io/klef-tools/" class="logo">
+                <div class="logo-icon">
+                    <svg>
+                        <use href="#icon-code"></use>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-title">Klef Apps</span>
+                    <span class="logo-subtitle">Tool Library</span>
+                </div>
+            </a>
+        </div>
+        <button class="close-btn" onclick="toggleMenu()">Menu</button>
+    </div>
+
+    <!-- Mega Topbar -->
+    <div class="mega-topbar" id="sub-menu">
+        <button class="back-btn" onclick="goBack()">Go Back</button>
+        <button class="close-btn" onclick="closeMenu()">Close</button>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar" id="main-nav">
+        <div class="header-left">
+            <a href="https://ivanndlezz.github.io/klef-tools/" class="logo">
+                <div class="logo-icon">
+                    <svg>
+                        <use href="#icon-code"></use>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-title">Klef Apps</span>
+                    <span class="logo-subtitle">Tool Library</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="menu-links center">
+            <div class="section-label menu">MENU</div>
+
+            <a href="https://ivanndlezz.github.io/klef-tools/" data-name="#Home">
+                <span class="icon"><svg width="16" height="16">
+                        <use href="#icon-home"></use>
+                    </svg></span>
+                <span class="label">Home</span>
+            </a>
+
+            <a data-mega="#Apps" data-name="#Apps">
+                <span class="icon"><svg width="16" height="16">
+                        <use href="#icon-modules"></use>
+                    </svg></span>
+                <span class="label">Apps</span>
+            </a>
+
+            <a data-mega="#Docs" data-name="#Docs">
+                <span class="icon"><svg width="16" height="16">
+                        <use href="#icon-book"></use>
+                    </svg></span>
+                <span class="label">Docs</span>
+            </a>
+        </div>
+
+        <a data-name="#GitHub" class="btn btn-sm btn-primary" style="--flex: 1;"
+            href="https://github.com/ivanndlezz/klef-tools">
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path
+                        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+                </svg>
+            </span>
+            <span class="label">GitHub</span>
+        </a>
+    </nav>
+
+    <!-- Mega Menus Container -->
+    <div class="mega-menus-container">
+
+        <!-- Apps Mega Menu -->
+        <div class="mega-menu" id="Apps">
+            <!-- Directorio -->
+            <div class="menu-section">
+                <h3>Directorio</h3>
+                <div class="mm-grid">
+                    <a class="card" data-color="blue" href="https://ivanndlezz.github.io/klef-tools/apps/">
+                        <span class="icon"><svg width="16" height="16">
+                                <use href="#icon-globe"></use>
+                            </svg></span>
+                        <div>
+                            <strong>Lista de apps</strong>
+                            <div>Directorio completo de herramientas</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- UI Libraries -->
+            <div class="menu-section">
+                <h3>UI Libraries</h3>
+                <div class="mm-grid">
+                    <a class="card" data-color="purple"
+                        href="https://ivanndlezz.github.io/klef-tools/apps/ui/design-system/">
+                        <span class="icon"><svg width="16" height="16">
+                                <use href="#icon-color-palette"></use>
+                            </svg></span>
+                        <div>
+                            <strong>Design System</strong>
+                            <div>Sistema de diseño completo</div>
+                        </div>
+                    </a>
+                    <a class="card" data-color="green"
+                        href="https://ivanndlezz.github.io/klef-tools/apps/ui/component-library">
+                        <span class="icon"><svg width="16" height="16">
+                                <use href="#icon-folder"></use>
+                            </svg></span>
+                        <div>
+                            <strong>Component Library</strong>
+                            <div>Librería de componentes reutilizables</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Herramientas -->
+            <div class="menu-section">
+                <h3>Herramientas</h3>
+                <div class="mm-grid">
+                    <a class="card" data-color="orange"
+                        href="https://ivanndlezz.github.io/klef-tools/apps/svg-symbol-creator/">
+                        <span class="icon"><svg width="16" height="16">
+                                <use href="#icon-star-sparks"></use>
+                            </svg></span>
+                        <div>
+                            <strong>SVG Symbol Creator</strong>
+                            <div>Crea y gestiona símbolos SVG</div>
+                        </div>
+                    </a>
+                    <a class="card" data-color="purple"
+                        href="https://ivanndlezz.github.io/klef-tools/apps/modular-creatio-playground/">
+                        <span class="icon"><svg width="16" height="16">
+                                <use href="#icon-modules"></use>
+                            </svg></span>
+                        <div>
+                            <strong>Modular Creatio Playground</strong>
+                            <div>Entorno de desarrollo modular</div>
+                        </div>
+                    </a>
+                    <a class="card" data-color="blue" href="https://ivanndlezz.github.io/klef-tools/apps/mega-menu/">
+                        <span class="icon"><svg width="16" height="16">
+                                <use href="#icon-stacked-list"></use>
+                            </svg></span>
+                        <div>
+                            <strong>Mega Menu Demo</strong>
+                            <div>Demo interactiva de mega menús</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Docs Mega Menu -->
+        <div class="mega-menu" id="Docs">
+            <div class="menu-section">
+                <h3>Documentación</h3>
+                <div class="mm-grid">
+                    <a class="card" data-color="green"
+                        href="https://ivanndlezz.github.io/klef-tools/docs/ux-ui-architecture-principles.html">
+                        <span class="icon"><svg width="16" height="16">
+                                <use href="#icon-code-app"></use>
+                            </svg></span>
+                        <div>
+                            <strong>Principios UX/UI</strong>
+                            <div>Arquitectura y mejores prácticas</div>
+                        </div>
+                    </a>
+                    <a class="card" data-color="purple"
+                        href="https://ivanndlezz.github.io/klef-tools/docs/about-styles.html">
+                        <span class="icon"><svg width="16" height="16">
+                                <use href="#icon-paint"></use>
+                            </svg></span>
+                        <div>
+                            <strong>Acerca de Estilos</strong>
+                            <div>Guía de estilos y convenciones</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Configuración de menús
+        const MENU = {
+            el: {
+                nav: "#main-nav",
+                barraTop: ".mega-topbar",
+                btnVolver: ".back-btn",
+                btnCerrar: ".close-btn",
+                botones: "a[data-name]",
+                submenus: ".mega-menu"
+            },
+            viewport: {
+                movil: 768
+            }
+        };
+
+        // Estado del menú
+        let currentMegaMenu = null;
+        let navigationStack = [];
+        let dynamicStyle = null;
+
+        // Referencias a elementos del DOM
+        const navbar = document.querySelector(MENU.el.nav);
+        const megaTopbar = document.querySelector(MENU.el.barraTop);
+        const backBtn = document.querySelector(MENU.el.btnVolver);
+        const closeBtn = document.querySelector(MENU.el.btnCerrar);
+        const megaBtns = document.querySelectorAll(MENU.el.botones);
+        const megaMenus = document.querySelectorAll(MENU.el.submenus);
+
+        // Función para toggle del menú móvil
+        function toggleMenu() {
+            const isOpen = navbar.classList.toggle("mobile-open");
+            document.body.style.overflow = isOpen ? "hidden" : "";
+        }
+
+        // Función para cerrar completamente el menú
+        function closeMenu() {
+            navbar.classList.remove("mobile-open");
+            megaTopbar.classList.remove("active");
+            backBtn.classList.remove("visible");
+            document.body.style.overflow = "";
+            megaMenus.forEach(menu => menu.classList.remove("active"));
+            currentMegaMenu = null;
+            navigationStack = [];
+            removeDynamicStyle();
+        }
+
+        // Función para retroceder en navegación móvil
+        function goBack() {
+            if (currentMegaMenu) currentMegaMenu.classList.remove("active");
+            currentMegaMenu = null;
+            navigationStack = [];
+            megaTopbar.classList.remove("active");
+            backBtn.classList.remove("visible");
+        }
+
+        // Función para abrir un mega menú desde data-mega
+        function openMegaMenu(selector) {
+            const menu = document.querySelector(selector);
+            if (!menu) return console.error(`No se encontró el mega menú: ${selector}`);
+            megaMenus.forEach(m => m.classList.remove("active"));
+            navigationStack = [selector];
+            currentMegaMenu = menu;
+            menu.classList.add("active");
+            megaTopbar.classList.add("active");
+            backBtn.classList.add("visible");
+        }
+
+        // Función para crear y aplicar estilo dinámico en hover desktop
+        function applyDynamicStyle(value) {
+            removeDynamicStyle();
+            dynamicStyle = document.createElement("style");
+            dynamicStyle.dataset.origin = "mega-menu-runtime";
+            dynamicStyle.textContent = `
+        @media (min-width: ${MENU.viewport.movil + 1}px) {
+          [data-mega*="${value}"]:hover + .mega-menus-container ${value},
+          [data-mega*="${value}"] + .mega-menus-container ${value}:hover {
+            display: flex;
+            flex-direction: column;
+          }
+        }
+      `;
+            document.head.appendChild(dynamicStyle);
+        }
+
+        function removeDynamicStyle() {
+            if (dynamicStyle) {
+                dynamicStyle.remove();
+                dynamicStyle = null;
+            }
+        }
+
+        // Event listeners para mobile
+        megaBtns.forEach(btn => {
+            btn.addEventListener("click", e => {
+                if (window.innerWidth <= MENU.viewport.movil) {
+                    e.preventDefault();
+                    const selector = btn.dataset.mega;
+                    if (selector) openMegaMenu(selector);
+                }
+            });
+        });
+
+        // Event listeners para desktop hover
+        megaBtns.forEach(btn => {
+            btn.addEventListener("mouseenter", e => {
+                if (window.innerWidth > MENU.viewport.movil) {
+                    const value = e.currentTarget.dataset.name;
+                    navbar.dataset.mega = value;
+                    applyDynamicStyle(value);
+                }
+            });
+        });
+
+        // Cerrar mega menús al salir con el mouse en desktop
+        document.addEventListener("mousemove", e => {
+            if (window.innerWidth > MENU.viewport.movil) {
+                const overNavbar = navbar.contains(e.target);
+                const overMega = Array.from(megaMenus).some(menu => menu.contains(e.target));
+                if (!overNavbar && !overMega) removeDynamicStyle();
+            }
+        });
+
+        // Cerrar menú al cambiar tamaño a desktop
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > MENU.viewport.movil) closeMenu();
+        });
+    </script>
+</body>
+
+</html>

@@ -107,6 +107,8 @@ HEADER
   --wh: var(--sp-6);
   width: var(--wh);
   height: var(--wh);
+  max-width: var(--wh);
+  max-height: var(--wh);
   border-radius: var(--radius-full);
   cursor: pointer;
   align-items: center;
