@@ -561,6 +561,11 @@
             display: none !important;
         }
 
+
+        .dynamic-island-container:not(.visible):has([data-status="toast"]) .dynamic-island.full-width[data-status="toast"] {
+            transform: translateY(-70%);
+        }
+
         /* ============================================
            RESPONSIVE - MOBILE
         ============================================ */
